@@ -1,5 +1,5 @@
-#include "../libft/libft.h"
+#include "../includes/minirt.h"
 
 int main() {
-    ft_atoi("23");
+    ft_printf("%i", ft_atoi("23"));
 }
