@@ -16,19 +16,17 @@ OBJS		= $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 
 # Compiler
 CC			= cc
-CFLAGS		= -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR)
-# CFLAGS		= -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR)
+CFLAGS		= -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR)
 
 # Libraries
 LIBFT		= $(LIBFT_DIR)/libft.a
-MLX 		= -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
+MLX			= -L$(MLX_DIR) -lXext -lX11 -lm
 
 # Targets
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJ_DIR) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
-	# $(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLX) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLX) -o $(NAME)
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
