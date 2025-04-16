@@ -1,5 +1,6 @@
 #include "../includes/minirt.h"
 
-int main() {
-    ft_printf("%i", ft_atoi("23"));
+int main(int argc, char **argv) {
+
+    parse(argc, argv);
 }
