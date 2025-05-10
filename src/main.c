@@ -1,5 +1,6 @@
-#include "../libft/libft.h"
+#include "../includes/minirt.h"
 
-int main() {
-    ft_atoi("23");
+int main(int argc, char **argv) {
+
+    parse(argc, argv);
 }
