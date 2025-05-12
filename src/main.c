@@ -2,5 +2,8 @@
 
 int main(int argc, char **argv) {
 
-    parse(argc, argv);
+    t_scene *scene;
+
+    scene = malloc(sizeof(t_scene));
+    scene = parse(argc, argv);
 }

@@ -3,16 +3,25 @@
 
 #include "../libft/libft.h"
 #include "../mlx/mlx.h"
+#include <cstdint> // check if allowed
 #include <fcntl.h>
 
-enum e_id {
-    AMBIENT,
-    CAM,
-    LIGHT,
-    PLANE,
-    SPHERE,
-    CYLINDER
-};
+#define WIDTH 200;
+#define HEIGHT 200;
+
+// enum e_id {
+//     AMBIENT,
+//     CAM,
+//     LIGHT,
+//     PLANE,
+//     SPHERE,
+//     CYLINDER
+// };
+
+// typedef struct s_fixed {
+//     unsigned int bits;
+//     int fraction;
+// } t_fixed;
 
 typedef struct s_sphere {
     float coordinates[3]; // except A - because its ambient
@@ -48,16 +57,17 @@ typedef struct s_light {
 } t_light;
 
 typedef struct s_scene {
-    t_camera *camera;
-    t_light *ambient_light;
+    t_camera camera;
+    t_light ambient_light;
     t_light *light;
 
     t_sphere *spheres;
     t_plane *planes;
     t_cylinder *cylinders;
+    uint32_t *img;
 } t_scene;
 
 // parse.c
-void    parse(int argc, char **argv);
+t_scene *parse(int argc, char **argv);
 
 #endif
