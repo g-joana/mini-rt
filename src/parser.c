@@ -7,6 +7,11 @@ void ft_error(char *msg, int ret)
     exit(ret);
 }
 
+float   ft_atof(char *str)
+{
+
+}
+
 t_scene    *parse(int argc, char **argv) {
     if (argc != 2)
         ft_error("input: [file.rt]", 1);

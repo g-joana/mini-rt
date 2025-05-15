@@ -3,7 +3,7 @@
 
 #include "../libft/libft.h"
 #include "../mlx/mlx.h"
-#include <cstdint> // check if allowed
+#include <cstdint> // check if allowed (uint32)
 #include <fcntl.h>
 
 #define WIDTH 200;
@@ -50,7 +50,7 @@ typedef struct s_camera {
 } t_camera;
 
 typedef struct s_light {
-    int ambient; // flag to know light type
+    bool ambient; // flag to know light type
     float coordinates[3]; // except A - because its ambient
     float brightness[3]; // only A and L - because lights
     float rgb[3]; // except C
