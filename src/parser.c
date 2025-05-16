@@ -1,6 +1,4 @@
 #include "../includes/minirt.h"
-#include <fcntl.h>
-#include <unistd.h>
 
 t_scene malloc_scene(int *amount)
 {
