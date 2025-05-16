@@ -37,9 +37,7 @@ t_scene init_scene(char *file)
     char *line = get_next_line(fd);
     while (line)
     {
-        if (line[0] == '\n')
-            continue ;
-        else if (ft_strncmp("A ", line, 2) == 0)
+        if (ft_strncmp("A ", line, 2) == 0)
             amount[0]++;
         else if (ft_strncmp("C ", line, 2) == 0)
             amount[1]++;
