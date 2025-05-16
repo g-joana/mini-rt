@@ -75,4 +75,7 @@ t_scene    parse(char *file);
 // free.c
 void free_scene(t_scene *scene);
 
+// error.c
+void exit_error(t_scene* scene, char *msg, int ret);
+
 #endif

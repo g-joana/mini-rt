@@ -1,14 +1,6 @@
 #include "../includes/minirt.h"
-
-void exit_error(t_scene* scene, char *msg, int ret)
-{
-    if (scene != NULL)
-        free_scene(scene);
-    ft_putstr_fd("Error: ", 2);
-    ft_putstr_fd(msg, 2);
-    ft_putstr_fd("\n", 2);
-    exit(ret);
-}
+#include <fcntl.h>
+#include <unistd.h>
 
 t_scene malloc_scene(int *amount)
 {
@@ -68,6 +60,8 @@ t_scene init_scene(char *file)
     int amount[6] = {0, 0, 0, 0, 0, 0};
     int fd = open(file, O_RDONLY);
     char *id = extract_first_word(get_next_line(fd));
+    if (!id)
+        exit_error(NULL, "empty file", 1);
     while (id)
     {
         if (ft_strncmp("A", id, 2) == 0)
@@ -105,6 +99,10 @@ t_scene init_scene(char *file)
 t_scene    parse(char *file) {
     t_scene scene;
 
+    if (ft_strlen(ft_strstr(file, ".rt")) != 3)
+        exit_error(NULL, "invalid file extension", 1);
+    if (access(file, O_RDONLY) != 0)
+        exit_error(NULL, "invalid file", 1);
     scene = init_scene(file);
     // scene.ambient_light = get_amblight_info(file);
     // scene.camera = get_camera_info(file);

@@ -6,7 +6,7 @@ int main(int argc, char **argv) {
     t_scene scene;
 
     if (argc != 2)
-        return (1);
+        exit_error(NULL, "no file", 1);
     scene = parse(argv[1]);
     if (scene.planes == NULL)
         ft_printf("NULL scene\n");
