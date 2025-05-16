@@ -7,8 +7,8 @@
 #include <stdbool.h>
 #include <fcntl.h>
 
-#define WIDTH 200;
-#define HEIGHT 200;
+#define WIDTH 200
+#define HEIGHT 200
 
 // enum e_id {
 //     AMBIENT,
@@ -55,6 +55,7 @@ typedef struct s_light {
     float coordinates[3]; // except A - because its ambient
     float brightness[3]; // only A and L - because lights
     float rgb[3]; // except C
+    int test;
 } t_light;
 
 typedef struct s_scene {
@@ -65,7 +66,7 @@ typedef struct s_scene {
     t_sphere *spheres;
     t_plane *planes;
     t_cylinder *cylinders;
-    uint32_t *img;
+    uint32_t img[WIDTH * HEIGHT];
 } t_scene;
 
 // parse.c
