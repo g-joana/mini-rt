@@ -10,14 +10,14 @@
 #define WIDTH 200
 #define HEIGHT 200
 
-// enum e_id {
-//     AMBIENT,
-//     CAM,
-//     LIGHT,
-//     PLANE,
-//     SPHERE,
-//     CYLINDER
-// };
+enum e_id {
+    A,
+    C,
+    L,
+    PL,
+    SP,
+    CY
+};
 
 // typedef struct s_fixed {
 //     unsigned int bits;
@@ -26,16 +26,16 @@
 
 typedef struct s_sphere {
     float coordinates[3]; // except A - because its ambient
-    float diameter; // only sp and cy - because theyre circulars
     float rgb[3]; // except C - camera
+    float diameter; // only sp and cy - because theyre circulars
 } t_sphere;
 
 typedef struct s_cylinder {
     float coordinates[3]; // except A - because its ambient
     float normalized[3]; // only pl, cy and C - because have planes
+    float rgb[3]; // except C - camera
     float diameter; // only sp and cy - because theyre circulars
     float height; // only cy - because of volume
-    float rgb[3]; // except C - camera
 } t_cylinder;
 
 typedef struct s_plane {
@@ -55,7 +55,6 @@ typedef struct s_light {
     float coordinates[3]; // except A - because its ambient
     float brightness[3]; // only A and L - because lights
     float rgb[3]; // except C
-    int test;
 } t_light;
 
 typedef struct s_scene {
@@ -67,6 +66,7 @@ typedef struct s_scene {
     t_plane *planes;
     t_cylinder *cylinders;
     uint32_t img[WIDTH * HEIGHT];
+    int amount[6];
 } t_scene;
 
 // parse.c
