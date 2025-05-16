@@ -2,8 +2,13 @@
 
 int main(int argc, char **argv) {
 
-    t_scene *scene;
+    t_scene scene;
 
-    scene = malloc(sizeof(t_scene));
-    scene = parse(argc, argv);
+    if (argc != 2)
+        return (1);
+    scene = parse(argv[1]);
+    if (scene.planes == NULL)
+        ft_printf("NULL scene\n");
+    free_scene(&scene);
+    return (0);
 }

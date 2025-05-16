@@ -3,7 +3,8 @@
 
 #include "../libft/libft.h"
 #include "../mlx/mlx.h"
-#include <cstdint> // check if allowed (uint32)
+#include <stdint.h> // check if allowed (uint32)
+#include <stdbool.h>
 #include <fcntl.h>
 
 #define WIDTH 200;
@@ -59,7 +60,7 @@ typedef struct s_light {
 typedef struct s_scene {
     t_camera camera;
     t_light ambient_light;
-    t_light *light;
+    t_light *lights;
 
     t_sphere *spheres;
     t_plane *planes;
@@ -68,6 +69,9 @@ typedef struct s_scene {
 } t_scene;
 
 // parse.c
-t_scene *parse(int argc, char **argv);
+t_scene    parse(char *file);
+
+// free.c
+void free_scene(t_scene *scene);
 
 #endif
