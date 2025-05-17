@@ -74,8 +74,19 @@ t_scene    parse(char *file);
 
 // free.c
 void free_scene(t_scene *scene);
+void free_gnl(int fd);
 
 // error.c
 void exit_error(t_scene* scene, char *msg, int ret);
+
+// init.c
+t_camera    init_camera();
+t_light    init_ambient();
+t_light    *init_lights(int amount);
+t_plane    *init_planes(int amount);
+t_sphere    *init_spheres(int amount);
+
+// init2.c
+t_cylinder    *init_cylinders(int amount);
 
 #endif

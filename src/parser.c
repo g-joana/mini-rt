@@ -1,121 +1,5 @@
 #include "../includes/minirt.h"
 
-t_camera    init_camera(int amount, int ambient)
-{
-    t_camera camera ;
-
-    camera.coordinates[0] = 0;
-    camera.coordinates[1] = 0;
-    camera.coordinates[2] = 0;
-    camera.normalized[0] = 0;
-    camera.normalized[1] = 0;
-    camera.normalized[2] = 0;
-    camera.fov = 0;
-    return (camera);
-}
-
-t_light    init_ambient(int amount)
-{
-    t_light ambient;
-
-    ambient.ambient = 1;
-    ambient.coordinates[0] = 0;
-    ambient.coordinates[1] = 0;
-    ambient.coordinates[2] = 0;
-    ambient.brightness[0] = 0;
-    ambient.brightness[1] = 0;
-    ambient.brightness[2] = 0;
-    ambient.rgb[0] = 0;
-    ambient.rgb[1] = 0;
-    ambient.rgb[2] = 0;
-    return (ambient);
-}
-
-t_light    *init_lights(int amount)
-{
-    t_light *lights ;
-
-    lights = malloc(sizeof(t_light) * amount);
-    int i = 0;
-    while (i < amount)
-    {
-        lights[i].ambient = 0;
-        lights[i].coordinates[0] = 0;
-        lights[i].coordinates[1] = 0;
-        lights[i].coordinates[2] = 0;
-        lights[i].brightness[0] = 0;
-        lights[i].brightness[1] = 0;
-        lights[i].brightness[2] = 0;
-        lights[i].rgb[0] = 0;
-        lights[i].rgb[1] = 0;
-        lights[i].rgb[2] = 0;
-    }
-    return (lights);
-}
-
-t_plane    *init_planes(int amount)
-{
-    t_plane *planes ;
-
-    planes = malloc(sizeof(t_plane) * amount);
-    int i = 0;
-    while (i < amount)
-    {
-        planes[i].coordinates[0] = 0;
-        planes[i].coordinates[1] = 0;
-        planes[i].coordinates[2] = 0;
-        planes[i].normalized[0] = 0;
-        planes[i].normalized[1] = 0;
-        planes[i].normalized[2] = 0;
-        planes[i].rgb[0] = 0;
-        planes[i].rgb[1] = 0;
-        planes[i].rgb[2] = 0;
-    }
-    return (planes);
-}
-
-t_sphere    *init_spheres(int amount)
-{
-    t_sphere *spheres ;
-
-    spheres = malloc(sizeof(t_sphere) * amount);
-    int i = 0;
-    while (i < amount)
-    {
-        spheres[i].coordinates[0] = 0;
-        spheres[i].coordinates[1] = 0;
-        spheres[i].coordinates[2] = 0;
-        spheres[i].rgb[0] = 0;
-        spheres[i].rgb[1] = 0;
-        spheres[i].rgb[2] = 0;
-        spheres[i].diameter = 0;
-    }
-    return (spheres);
-}
-
-t_cylinder    *init_cylinders(int amount)
-{
-    t_cylinder *cylinders ;
-
-    cylinders = malloc(sizeof(t_cylinder) * amount);
-    int i = 0;
-    while (i < amount)
-    {
-        cylinders[i].coordinates[0] = 0;
-        cylinders[i].coordinates[1] = 0;
-        cylinders[i].coordinates[2] = 0;
-        cylinders[i].normalized[0] = 0;
-        cylinders[i].normalized[1] = 0;
-        cylinders[i].normalized[2] = 0;
-        cylinders[i].rgb[0] = 0;
-        cylinders[i].rgb[1] = 0;
-        cylinders[i].rgb[2] = 0;
-        cylinders[i].diameter = 0;
-        cylinders[i].height = 0;
-    }
-    return (cylinders);
-}
-
 t_scene malloc_scene(int *amount)
 {
     t_scene scene;
@@ -124,6 +8,8 @@ t_scene malloc_scene(int *amount)
         exit_error(NULL, "scene needs 1 ambient light placed", 1);
     if (amount[C] != 1)
         exit_error(NULL, "scene needs 1 camera placed", 1);
+    // scene.ambient_light = init_ambient();
+    // scene.camera = init_camera();
     if (amount[L])
         scene.lights = init_lights(amount[L]);
     if (amount[PL])
@@ -156,17 +42,6 @@ char *extract_first_word(char *str)
     word[count] = '\0';
     free(str);
     return (word);
-}
-
-void free_gnl(int fd)
-{
-    char *buf = get_next_line(fd);
-    while (buf != NULL)
-    {
-        free(buf);
-        buf = get_next_line(fd);
-    }
-    close(fd);
 }
 
 t_scene init_scene(char *file)
@@ -209,6 +84,8 @@ t_scene init_scene(char *file)
     // ft_printf("cylinders: %i\n", amount[5]);
     return(malloc_scene(amount));
 }
+
+
 
 t_scene    parse(char *file) {
     t_scene scene;

@@ -21,3 +21,13 @@ void free_scene(t_scene *scene)
         free(scene->cylinders);
 }
 
+void free_gnl(int fd)
+{
+    char *buf = get_next_line(fd);
+    while (buf != NULL)
+    {
+        free(buf);
+        buf = get_next_line(fd);
+    }
+    close(fd);
+}

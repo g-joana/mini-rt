@@ -8,7 +8,7 @@ LIBFT_DIR	= libft
 MLX_DIR		= mlx
 
 # Sources
-SRCS		= main.c parser.c free.c error.c
+SRCS		= main.c parser.c free.c error.c init.c init2.c
 
 # Object files
 OBJS		= $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
