@@ -44,6 +44,28 @@ char *extract_first_word(char *str)
     return (word);
 }
 
+char *get_first_word(char *str)
+{
+    int i = 0;
+    int count = 0;
+
+    if (str == NULL)
+        return (NULL);
+    while (str && str[i] == ' ')
+        i++;
+    while (str && str[i + count] != '\0' && str[i + count] != ' ')
+        count++;
+    char *word = malloc((count + 1) * sizeof(char));
+    count = 0;
+    while (str && str[i + count] != '\0' && str[i + count] != ' ')
+    {
+        word[count] = str[i + count];
+        count++;
+    }
+    word[count] = '\0';
+    return (word);
+}
+
 t_scene init_scene(char *file)
 {
     int amount[6] = {0, 0, 0, 0, 0, 0};
@@ -85,7 +107,16 @@ t_scene init_scene(char *file)
     return(malloc_scene(amount));
 }
 
+t_camera    get_camera_info(char *line)
+{
+    t_camera    camera;
+    char **properties = ft_split(line, ' ');
+    char **temp;
+    
+    camera.
 
+    return (camera);
+}
 
 t_scene    parse(char *file) {
     t_scene scene;
@@ -99,12 +130,37 @@ t_scene    parse(char *file) {
     // scene.camera = get_camera_info(file);
     // scene.lights = get_light_info(file);
 
-    // int fd = open(file, O_RDONLY);
-    // char *line = get_next_line(fd);
-    // while (line)
-    // {
-    // }
-    // close(fd);
+    int fd = open(file, O_RDONLY);
+    char *line = get_next_line(fd);
+    char *id = get_first_word(line);
+    while (line)
+    {
+        if (ft_strncmp("A", id, 2) == 0)
+            scene.camera = get_camera_info(line);
+        else if (ft_strncmp("C", id, 2) == 0)
+            amount[C]++;
+        else if (ft_strncmp("L", id, 2) == 0)
+            amount[L]++;
+        else if (ft_strncmp("pl", id, 3) == 0)
+            amount[PL]++;
+        else if (ft_strncmp("sp", id, 3) == 0)
+            amount[SP]++;
+        else if (ft_strncmp("cy", id, 3) == 0)
+            amount[CY]++;
+        else if (id[0] != '\n')
+        {
+            free(id);
+            free_gnl(fd);
+            exit_error(NULL, "invalid id", 1);
+        }
+        free(line);
+        line = get_next_line(fd);
+        free(id);
+        id = get_first_word(line);
+    }
+    free(line);
+    free(id);
+    close(fd);
     return (scene);
 }
 
