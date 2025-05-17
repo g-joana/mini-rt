@@ -31,3 +31,18 @@ void free_gnl(int fd)
     }
     close(fd);
 }
+
+void	free_split(char **array)
+{
+	int	i;
+
+	if (!array)
+		return ;
+	i = 0;
+	while (array[i] != NULL)
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
+}

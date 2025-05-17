@@ -1,7 +1,4 @@
 #include "../includes/minirt.h"
-#include <cstdlib>
-#include <stdlib.h>
-#include <stdio.h>
 
 t_scene malloc_scene(int *amount)
 {
@@ -110,7 +107,6 @@ t_scene init_scene(char *file)
     return(malloc_scene(amount));
 }
 
-
 float round4(float value) {
     // val= 3.141592
     // * 10000 = 31415.92
@@ -147,6 +143,16 @@ float   ft_atof(char *str)
     // ret = round4(ret);
     return(ret);
 }
+
+t_camera    get_camera_info(char *line)
+{
+    t_camera    camera;
+    char **properties = ft_split(line, ' ');
+    char **temp;
+
+    return (camera);
+}
+
 t_scene    parse(char *file) {
     t_scene scene;
 
@@ -155,7 +161,6 @@ t_scene    parse(char *file) {
     if (access(file, O_RDONLY) != 0)
         exit_error(NULL, "invalid file", 1);
     scene = init_scene(file);
-    printf("%f\n", ft_atof("23.5834"));
     // scene.ambient_light = get_amblight_info(file);
     // scene.camera = get_camera_info(file);
     // scene.lights = get_light_info(file);

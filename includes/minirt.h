@@ -27,14 +27,14 @@ enum e_id {
 
 typedef struct s_sphere {
     float coordinates[3]; // except A - because its ambient
-    float rgb[3]; // except C - camera
+    uint8_t rgb[3]; // except C - camera
     float diameter; // only sp and cy - because theyre circulars
 } t_sphere;
 
 typedef struct s_cylinder {
     float coordinates[3]; // except A - because its ambient
     float normalized[3]; // only pl, cy and C - because have planes
-    float rgb[3]; // except C - camera
+    uint8_t rgb[3]; // except C - camera
     float diameter; // only sp and cy - because theyre circulars
     float height; // only cy - because of volume
 } t_cylinder;
@@ -42,7 +42,7 @@ typedef struct s_cylinder {
 typedef struct s_plane {
     float coordinates[3]; // except A - because its ambient
     float normalized[3]; // only pl, cy and C - because ?
-    float rgb[3]; // except C - camera
+    uint8_t rgb[3]; // except C - camera
 } t_plane;
 
 typedef struct s_camera {
@@ -55,7 +55,7 @@ typedef struct s_light {
     bool ambient; // flag to know light type
     float coordinates[3]; // except A - because its ambient
     float brightness[3]; // only A and L - because lights
-    float rgb[3]; // except C
+    uint8_t rgb[3]; // except C
 } t_light;
 
 typedef struct s_scene {
@@ -72,10 +72,12 @@ typedef struct s_scene {
 
 // parse.c
 t_scene    parse(char *file);
+float   ft_atof(char *str);
 
 // free.c
 void free_scene(t_scene *scene);
 void free_gnl(int fd);
+void	free_split(char **array);
 
 // error.c
 void exit_error(t_scene* scene, char *msg, int ret);
@@ -89,5 +91,14 @@ t_sphere    *init_spheres(int amount);
 
 // init2.c
 t_cylinder    *init_cylinders(int amount);
+
+// set_parser.c
+float   *coordinates(char *str);
+float   *normalization(char *str);
+float   brightness(char *str);
+float   diameter(char *str);
+float   height(char *str);
+uint8_t   *rgb(char *str);
+uint8_t   fov(char *str);
 
 #endif

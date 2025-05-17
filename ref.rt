@@ -22,5 +22,5 @@ bright = float [0.0~1.0];
 norm = float[3] [-1~1];
 diam = float [positivo];
 height = float [positivo];
-rgb = uint32[3] [0~255];
+rgb = uint8[3] [0~255];
 fov = int [0~180];
