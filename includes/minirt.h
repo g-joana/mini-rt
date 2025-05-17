@@ -6,6 +6,7 @@
 #include <stdint.h> // check if allowed (uint32)
 #include <stdbool.h>
 #include <fcntl.h>
+#include <math.h>
 
 #define WIDTH 200
 #define HEIGHT 200
