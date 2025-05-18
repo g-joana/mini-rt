@@ -4,9 +4,11 @@ t_camera    init_camera()
 {
     t_camera camera ;
 
+    camera.coordinates = malloc(sizeof(float) * 3);
     camera.coordinates[0] = 0;
     camera.coordinates[1] = 0;
     camera.coordinates[2] = 0;
+    camera.normalized = malloc(sizeof(float) * 3);
     camera.normalized[0] = 0;
     camera.normalized[1] = 0;
     camera.normalized[2] = 0;

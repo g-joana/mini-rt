@@ -5,6 +5,7 @@
 #include "../mlx/mlx.h"
 #include <stdint.h> // check if allowed (uint32)
 #include <stdbool.h>
+#include <stdio.h>
 #include <fcntl.h>
 #include <math.h>
 
@@ -46,8 +47,8 @@ typedef struct s_plane {
 } t_plane;
 
 typedef struct s_camera {
-    float coordinates[3]; // except A
-    float normalized[3]; // only pl, cy and C
+    float *coordinates; // except A
+    float *normalized; // only pl, cy and C
     float fov; // only C - camera
 } t_camera;
 
@@ -93,7 +94,7 @@ t_sphere    *init_spheres(int amount);
 t_cylinder    *init_cylinders(int amount);
 
 // set_parser.c
-float   *coordinates(char *str);
+void    set_coordinates(char *str, float *coordinates);
 float   *normalization(char *str);
 float   brightness(char *str);
 float   diameter(char *str);

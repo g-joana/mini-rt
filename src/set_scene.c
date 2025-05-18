@@ -1,8 +1,7 @@
 #include "../includes/minirt.h"
 
-float   *coordinates(char *str)
+void set_coordinates(char *str, float *coordinates)
 {
-    float *coordinates = malloc(sizeof(float) * 3);
     char **values = ft_split(str, ',');
 
     // range: fe
@@ -10,9 +9,9 @@ float   *coordinates(char *str)
     coordinates[1] = ft_atof(values[1]);
     coordinates[2] = ft_atof(values[2]);
     free_split(values);
-    return (coordinates);
 }
 
+// move set-scene mallocs to init.c!!!
 float   *normalization(char *str)
 {
     float *normalization = malloc(sizeof(float) * 3);

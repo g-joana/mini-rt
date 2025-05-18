@@ -8,8 +8,8 @@ t_scene malloc_scene(int *amount)
         exit_error(NULL, "scene needs 1 ambient light placed", 1);
     if (amount[C] != 1)
         exit_error(NULL, "scene needs 1 camera placed", 1);
-    // scene.ambient_light = init_ambient();
-    // scene.camera = init_camera();
+    scene.ambient_light = init_ambient();
+    scene.camera = init_camera();
     if (amount[L])
         scene.lights = init_lights(amount[L]);
     if (amount[PL])
@@ -144,13 +144,13 @@ float   ft_atof(char *str)
     return(ret);
 }
 
-t_camera    get_camera_info(char *line)
+void    set_camera_info(char *line, t_camera *camera)
 {
-    t_camera    camera;
     char **properties = ft_split(line, ' ');
-    char **temp;
 
-    return (camera);
+    set_coordinates(properties[1], camera->coordinates);
+    camera->normalized = normalization(properties[2]);
+    camera->fov = fov(properties[3]);
 }
 
 t_scene    parse(char *file) {
@@ -165,31 +165,33 @@ t_scene    parse(char *file) {
     // scene.camera = get_camera_info(file);
     // scene.lights = get_light_info(file);
 
-    // int fd = open(file, O_RDONLY);
-    // char *line = get_next_line(fd);
-    // char *id = get_first_word(line);
-    // while (line)
-    // {
-    //     if (ft_strncmp("A", id, 2) == 0)
-    //         scene.camera = get_camera_info(line);
-    //     else if (ft_strncmp("C", id, 2) == 0)
-    //         amount[C]++;
-    //     else if (ft_strncmp("L", id, 2) == 0)
-    //         amount[L]++;
-    //     else if (ft_strncmp("pl", id, 3) == 0)
-    //         amount[PL]++;
-    //     else if (ft_strncmp("sp", id, 3) == 0)
-    //         amount[SP]++;
-    //     else if (ft_strncmp("cy", id, 3) == 0)
-    //         amount[CY]++;
-    //     free(line);
-    //     line = get_next_line(fd);
-    //     free(id);
-    //     id = get_first_word(line);
-    // }
-    // free(line);
-    // free(id);
-    // close(fd);
+    int fd = open(file, O_RDONLY);
+    char *line = get_next_line(fd);
+    char *id = get_first_word(line);
+    while (line)
+    {
+        // if (ft_strncmp("A", id, 2) == 0)
+        //     set_ambient_info(line, &scene.camera);
+        //else
+        if (ft_strncmp("C", id, 2) == 0)
+            set_camera_info(line, &scene.camera);
+        //     amount[C]++;
+        // else if (ft_strncmp("L", id, 2) == 0)
+        //     amount[L]++;
+        // else if (ft_strncmp("pl", id, 3) == 0)
+        //     amount[PL]++;
+        // else if (ft_strncmp("sp", id, 3) == 0)
+        //     amount[SP]++;
+        // else if (ft_strncmp("cy", id, 3) == 0)
+        //     amount[CY]++;
+        free(line);
+        line = get_next_line(fd);
+        free(id);
+        id = get_first_word(line);
+    }
+    free(line);
+    free(id);
+    close(fd);
     return (scene);
 }
 

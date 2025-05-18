@@ -8,14 +8,14 @@ LIBFT_DIR	= libft
 MLX_DIR		= mlx
 
 # Sources
-SRCS		= main.c parser.c free.c error.c init.c init2.c
+SRCS		= main.c parser.c free.c error.c init.c init2.c set_scene.c
 
 # Object files
 OBJS		= $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 
 # Compiler
 CC			= cc
-CFLAGS		= -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR)
+CFLAGS		= -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -ggdb3
 
 # Libraries
 LIBFT		= $(LIBFT_DIR)/libft.a
