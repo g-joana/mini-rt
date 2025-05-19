@@ -21,12 +21,15 @@ t_light    init_ambient()
     t_light ambient;
 
     ambient.ambient = 1;
+    ambient.coordinates = malloc(sizeof(float) * 3);
     ambient.coordinates[0] = 0;
     ambient.coordinates[1] = 0;
     ambient.coordinates[2] = 0;
+    ambient.brightness = malloc(sizeof(float) * 3);
     ambient.brightness[0] = 0;
     ambient.brightness[1] = 0;
     ambient.brightness[2] = 0;
+    ambient.rgb = malloc(sizeof(uint8_t) * 3);
     ambient.rgb[0] = 0;
     ambient.rgb[1] = 0;
     ambient.rgb[2] = 0;
@@ -42,12 +45,15 @@ t_light    *init_lights(int amount)
     while (i < amount)
     {
         lights[i].ambient = 0;
+        lights[i].coordinates = malloc(sizeof(float) * 3);
         lights[i].coordinates[0] = 0;
         lights[i].coordinates[1] = 0;
         lights[i].coordinates[2] = 0;
+        lights[i].brightness = malloc(sizeof(float) * 3);
         lights[i].brightness[0] = 0;
         lights[i].brightness[1] = 0;
         lights[i].brightness[2] = 0;
+        lights[i].rgb = malloc(sizeof(uint8_t) * 3);
         lights[i].rgb[0] = 0;
         lights[i].rgb[1] = 0;
         lights[i].rgb[2] = 0;
@@ -64,12 +70,15 @@ t_plane    *init_planes(int amount)
     int i = 0;
     while (i < amount)
     {
+        planes[i].coordinates = malloc(sizeof(float) * 3);
         planes[i].coordinates[0] = 0;
         planes[i].coordinates[1] = 0;
         planes[i].coordinates[2] = 0;
+        planes[i].normalized = malloc(sizeof(float) * 3);
         planes[i].normalized[0] = 0;
         planes[i].normalized[1] = 0;
         planes[i].normalized[2] = 0;
+        planes[i].rgb = malloc(sizeof(uint8_t) * 3);
         planes[i].rgb[0] = 0;
         planes[i].rgb[1] = 0;
         planes[i].rgb[2] = 0;
@@ -86,9 +95,11 @@ t_sphere    *init_spheres(int amount)
     int i = 0;
     while (i < amount)
     {
+        spheres[i].coordinates = malloc(sizeof(float) * 3);
         spheres[i].coordinates[0] = 0;
         spheres[i].coordinates[1] = 0;
         spheres[i].coordinates[2] = 0;
+        spheres[i].rgb = malloc(sizeof(uint8_t) * 3);
         spheres[i].rgb[0] = 0;
         spheres[i].rgb[1] = 0;
         spheres[i].rgb[2] = 0;
