@@ -1,27 +1,6 @@
 #include "../includes/minirt.h"
 
-t_scene malloc_scene(int *amount)
-{
-    t_scene scene;
-
-    if (amount[A] != 1)
-        exit_error(NULL, "scene needs 1 ambient light placed", 1);
-    if (amount[C] != 1)
-        exit_error(NULL, "scene needs 1 camera placed", 1);
-    scene.ambient_light = init_ambient();
-    scene.camera = init_camera();
-    if (amount[L])
-        scene.lights = init_lights(amount[L]);
-    if (amount[PL])
-        scene.planes = init_planes(amount[PL]);
-    if (amount[SP])
-        scene.spheres = init_spheres(amount[SP]);
-    if (amount[CY])
-        scene.cylinders = init_cylinders(amount[CY]);
-    return (scene);
-}
-
-char *extract_first_word(char *str)
+char *get_first_word(char *str, bool free_str)
 {
     int i = 0;
     int count = 0;
@@ -40,37 +19,17 @@ char *extract_first_word(char *str)
         count++;
     }
     word[count] = '\0';
-    free(str);
+    if (free_str)
+        free(str);
     return (word);
 }
 
-char *get_first_word(char *str)
+int *count_elements(char *file)
 {
-    int i = 0;
-    int count = 0;
-
-    if (str == NULL)
-        return (NULL);
-    while (str && str[i] == ' ')
-        i++;
-    while (str && str[i + count] != '\0' && str[i + count] != ' ')
-        count++;
-    char *word = malloc((count + 1) * sizeof(char));
-    count = 0;
-    while (str && str[i + count] != '\0' && str[i + count] != ' ')
-    {
-        word[count] = str[i + count];
-        count++;
-    }
-    word[count] = '\0';
-    return (word);
-}
-
-t_scene init_scene(char *file)
-{
-    int amount[6] = {0, 0, 0, 0, 0, 0};
+    int *amount;
+    amount = malloc(sizeof(int) * 6);
     int fd = open(file, O_RDONLY);
-    char *id = extract_first_word(get_next_line(fd));
+    char *id = get_first_word(get_next_line(fd), 1);
     if (!id)
         exit_error(NULL, "empty file", 1);
     while (id)
@@ -94,7 +53,7 @@ t_scene init_scene(char *file)
             exit_error(NULL, "invalid id", 1);
         }
         free(id);
-        id = extract_first_word(get_next_line(fd));
+        id = get_first_word(get_next_line(fd), 1);
     }
     free(id);
     close(fd);
@@ -104,44 +63,34 @@ t_scene init_scene(char *file)
     // ft_printf("spheres: %i\n", amount[3]);
     // ft_printf("planes: %i\n", amount[4]);
     // ft_printf("cylinders: %i\n", amount[5]);
-    return(malloc_scene(amount));
+    return(amount);
 }
 
-float round4(float value) {
-    // val= 3.141592
-    // * 10000 = 31415.92
-    // + 0.5f (round & cast to int)
-    // / 10000 = 3.1416
-    return ((int)(value * 10000 + 0.5f)) / 10000.0f;
-}
-
-int	power(int base, int expoent)
+t_scene *init_scene(char *file)
 {
-	int	ret;
+    t_scene *scene;
 
-	ret = 1;
-	while (expoent--)
-		ret *= base;
-	return (ret);
-}
-
-float   ft_atof(char *str)
-{
-    int i = 0;
-    int count = 0;
-    float ret = ft_atoi(str);
-    while (str && str[i] && str[i] != '.')
-        i++;
-    if (str[i] && str[i] == '.')
-    {
-        i++;
-        while (str[i+count] && ft_isdigit(str[i + count]))
-            count++;
-        if (count)
-            ret += (float)ft_atoi(&str[i]) / power(10, count);
-    }
-    // ret = round4(ret);
-    return(ret);
+    scene = malloc(sizeof(t_scene));
+    scene->amount = count_elements(file);
+    // printf("%i\n", scene->amount[0]);
+    // printf("%i\n", scene->amount[1]);
+    // printf("%i\n", scene->amount[2]);
+    // printf("%i\n", scene->amount[3]);
+    if (scene->amount[A] != 1)
+        exit_error(NULL, "scene needs 1 ambient light placed", 1);
+    if (scene->amount[C] != 1)
+        exit_error(NULL, "scene needs 1 camera placed", 1);
+    scene->ambient_light = init_ambient();
+    scene->camera = init_camera();
+    if (scene->amount[L])
+        scene->lights = init_lights(scene->amount[L]);
+    if (scene->amount[PL])
+        scene->planes = init_planes(scene->amount[PL]);
+    if (scene->amount[SP])
+        scene->spheres = init_spheres(scene->amount[SP]);
+    if (scene->amount[CY])
+        scene->cylinders = init_cylinders(scene->amount[CY]);
+    return (scene);
 }
 
 void    set_camera_info(char *line, t_camera *camera)
@@ -149,12 +98,13 @@ void    set_camera_info(char *line, t_camera *camera)
     char **properties = ft_split(line, ' ');
 
     set_coordinates(properties[1], camera->coordinates);
-    camera->normalized = normalization(properties[2]);
-    camera->fov = fov(properties[3]);
+    set_normalization(properties[1], camera->normalized);
+    set_fov(properties[1], &camera->fov);
 }
 
-t_scene    parse(char *file) {
-    t_scene scene;
+t_scene    *parse(char *file) {
+    t_scene *scene;
+    // int count[6] = {0,0,0,0,0,0};
 
     if (ft_strlen(ft_strstr(file, ".rt")) != 3)
         exit_error(NULL, "invalid file extension", 1);
@@ -167,15 +117,14 @@ t_scene    parse(char *file) {
 
     int fd = open(file, O_RDONLY);
     char *line = get_next_line(fd);
-    char *id = get_first_word(line);
+    char *id = get_first_word(line, 0);
     while (line)
     {
         // if (ft_strncmp("A", id, 2) == 0)
         //     set_ambient_info(line, &scene.camera);
         //else
         if (ft_strncmp("C", id, 2) == 0)
-            set_camera_info(line, &scene.camera);
-        //     amount[C]++;
+            set_camera_info(line, &scene->camera);
         // else if (ft_strncmp("L", id, 2) == 0)
         //     amount[L]++;
         // else if (ft_strncmp("pl", id, 3) == 0)
@@ -187,7 +136,7 @@ t_scene    parse(char *file) {
         free(line);
         line = get_next_line(fd);
         free(id);
-        id = get_first_word(line);
+        id = get_first_word(line, 0);
     }
     free(line);
     free(id);

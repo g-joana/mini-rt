@@ -11,6 +11,8 @@ void free_scene(t_scene *scene)
     // if (scene->cylinders)
     //     ft_putstr_fd("free cylinders\n", 1);
 
+
+    // dar free nas propriedades de cada um!!!
     if (scene->lights)
         free(scene->lights);
     if (scene->spheres)
@@ -19,6 +21,7 @@ void free_scene(t_scene *scene)
         free(scene->planes);
     if (scene->cylinders)
         free(scene->cylinders);
+    free(scene->amount);
 }
 
 void free_gnl(int fd)

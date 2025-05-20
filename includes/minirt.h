@@ -49,7 +49,7 @@ typedef struct s_plane {
 typedef struct s_camera {
     float *coordinates; // except A
     float *normalized; // only pl, cy and C
-    float fov; // only C - camera
+    uint8_t fov; // only C - camera
 } t_camera;
 
 typedef struct s_light {
@@ -101,5 +101,10 @@ void    set_diameter(char *str, float *diameter);
 void    set_height(char *str, float *height);
 void    set_rgb(char *str, uint8_t* rgb);
 void    set_fov(char *str, uint8_t *fov);
+
+// parser_utils.c
+float round4(float value);
+int	power(int base, int expoent);
+float   ft_atof(char *str);
 
 #endif
