@@ -93,15 +93,6 @@ t_scene *init_scene(char *file)
     return (scene);
 }
 
-void    set_camera_info(char *line, t_camera *camera)
-{
-    char **properties = ft_split(line, ' ');
-
-    set_coordinates(properties[1], camera->coordinates);
-    set_normalization(properties[1], camera->normalized);
-    set_fov(properties[1], &camera->fov);
-}
-
 t_scene    *parse(char *file) {
     t_scene *scene;
     // int count[6] = {0,0,0,0,0,0};
@@ -120,11 +111,10 @@ t_scene    *parse(char *file) {
     char *id = get_first_word(line, 0);
     while (line)
     {
-        // if (ft_strncmp("A", id, 2) == 0)
-        //     set_ambient_info(line, &scene.camera);
-        //else
-        if (ft_strncmp("C", id, 2) == 0)
-            set_camera_info(line, &scene->camera);
+        if (ft_strncmp("A", id, 2) == 0)
+            set_ambient(line, scene);
+        else if (ft_strncmp("C", id, 2) == 0)
+            set_camera(line, scene);
         // else if (ft_strncmp("L", id, 2) == 0)
         //     amount[L]++;
         // else if (ft_strncmp("pl", id, 3) == 0)

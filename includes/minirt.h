@@ -107,4 +107,12 @@ float round4(float value);
 int	power(int base, int expoent);
 float   ft_atof(char *str);
 
+// set_scene.c
+void    set_camera(char *line, t_scene *scene);
+void    set_ambient(char *line, t_scene *scene);
+void   set_light(char *line, t_scene *scene, int i);
+void    set_plane(char *line, t_scene *scene, int i);
+void    set_sphere(char *line, t_scene *scene, int i);
+void    set_cylinder(char *line, t_scene *scene, int i);
+
 #endif

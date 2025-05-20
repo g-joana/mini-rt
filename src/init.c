@@ -21,10 +21,6 @@ t_light    init_ambient()
     t_light ambient;
 
     ambient.ambient = 1;
-    ambient.coordinates = malloc(sizeof(float) * 3);
-    ambient.coordinates[0] = 0;
-    ambient.coordinates[1] = 0;
-    ambient.coordinates[2] = 0;
     ambient.brightness = malloc(sizeof(float) * 3);
     ambient.brightness[0] = 0;
     ambient.brightness[1] = 0;
