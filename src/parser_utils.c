@@ -8,7 +8,6 @@ float round4(float value) {
     return ((int)(value * 10000 + 0.5f)) / 10000.0f;
 }
 
-float round4(float value) {
 int	power(int base, int expoent)
 {
 	int	ret;
@@ -19,8 +18,6 @@ int	power(int base, int expoent)
 	return (ret);
 }
 
-float round4(float value) {
-int	power(int base, int expoent)
 float   ft_atof(char *str)
 {
     int i = 0;
@@ -39,4 +36,3 @@ float   ft_atof(char *str)
     // ret = round4(ret);
     return(ret);
 }
-
