@@ -27,36 +27,36 @@ enum e_id {
 // } t_fixed;
 
 typedef struct s_sphere {
-    float *coordinates; // except A - because its ambient
-    uint8_t *rgb; // except C - camera
-    float diameter; // only sp and cy - because theyre circulars
+    float *coordinates;
+    uint8_t *rgb;
+    float diameter;
 } t_sphere;
 
 typedef struct s_cylinder {
-    float *coordinates; // except A - because its ambient
-    float *normalized; // only pl, cy and C - because have planes
-    uint8_t *rgb; // except C - camera
-    float diameter; // only sp and cy - because theyre circulars
-    float height; // only cy - because of volume
+    float *coordinates;
+    float *normalized;
+    uint8_t *rgb;
+    float diameter;
+    float height;
 } t_cylinder;
 
 typedef struct s_plane {
-    float *coordinates; // except A - because its ambient
-    float *normalized; // only pl, cy and C - because ?
-    uint8_t *rgb; // except C - camera
+    float *coordinates;
+    float *normalized;
+    uint8_t *rgb;
 } t_plane;
 
 typedef struct s_camera {
-    float *coordinates; // except A
-    float *normalized; // only pl, cy and C
-    uint8_t fov; // only C - camera
+    float *coordinates;
+    float *normalized;
+    uint8_t fov; // (horizontal) field of view
 } t_camera;
 
 typedef struct s_light {
     bool ambient; // flag to know light type
     float *coordinates; // except A - because its ambient
-    float *brightness; // only A and L - because lights
-    uint8_t *rgb; // except C
+    float *brightness;
+    uint8_t *rgb;
 } t_light;
 
 typedef struct s_scene {
@@ -68,7 +68,7 @@ typedef struct s_scene {
     t_sphere *spheres;
     t_plane *planes;
     t_cylinder *cylinders;
-    uint32_t img[WIDTH * HEIGHT];
+    // uint32_t img[WIDTH * HEIGHT];
     int *amount;
 } t_scene;
 

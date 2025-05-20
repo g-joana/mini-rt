@@ -29,6 +29,12 @@ int *count_elements(char *file)
 {
     int *amount;
     amount = malloc(sizeof(int) * 6);
+    amount[0] = 0;
+    amount[1] = 0;
+    amount[2] = 0;
+    amount[3] = 0;
+    amount[4] = 0;
+    amount[5] = 0;
     int fd = open(file, O_RDONLY);
     char *id = get_first_word(get_next_line(fd), 1);
     if (!id)
