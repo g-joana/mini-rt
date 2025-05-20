@@ -1,4 +1,6 @@
 #include "../includes/minirt.h"
+// set = seta os valores no seu devido campo da struct
+// cada elemento da cena tem sua propriedade, nesse arquivo setamos as propriedades
 
 void set_coordinates(char *str, float *coordinates)
 {

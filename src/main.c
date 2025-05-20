@@ -1,4 +1,5 @@
 #include "../includes/minirt.h"
+// checar leaks
 
 int main(int argc, char **argv) {
 

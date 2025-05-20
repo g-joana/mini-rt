@@ -1,5 +1,6 @@
 #include "../includes/minirt.h"
 
+// arredonda para 4 casas decimais
 float round4(float value) {
     // val= 3.141592
     // * 10000 = 31415.92

@@ -1,4 +1,5 @@
 #include "../includes/minirt.h"
+// init = malloca e seta os valores pra 0
 
 t_cylinder    *init_cylinders(int amount)
 {

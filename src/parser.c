@@ -24,6 +24,7 @@ char *get_first_word(char *str, bool free_str)
     return (word);
 }
 
+// contagem de elementos na cena. quantidade de cada um retornada em um ponteiro de 6 int
 int *count_elements(char *file)
 {
     int *amount;
@@ -66,6 +67,7 @@ int *count_elements(char *file)
     return(amount);
 }
 
+// inicializa a cena = malloca e zera tudo
 t_scene *init_scene(char *file)
 {
     t_scene *scene;
@@ -93,6 +95,7 @@ t_scene *init_scene(char *file)
     return (scene);
 }
 
+// retorna um t_scene mallocado e preenchido
 t_scene    *parse(char *file) {
     t_scene *scene;
     // int count[6] = {0,0,0,0,0,0};

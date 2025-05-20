@@ -1,5 +1,8 @@
 #include "../includes/minirt.h"
-// tratar erros: passando t_scene para exit_error
+// set = seta os valores no seu devido campo da struct
+// cada elemento da cena tem sua propriedade, nesse arquivo setamos os elementos
+//
+// tratar erros: se nao houver input (properties[index]) chamar exit_error
 
 void    set_camera(char *line, t_scene *scene)
 {
