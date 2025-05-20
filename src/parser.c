@@ -98,19 +98,15 @@ t_scene *init_scene(char *file)
 // retorna um t_scene mallocado e preenchido
 t_scene    *parse(char *file) {
     t_scene *scene;
-    // int count[6] = {0,0,0,0,0,0};
+    int count[6] = {0,0,0,0,0,0};
 
     if (ft_strlen(ft_strstr(file, ".rt")) != 3)
         exit_error(NULL, "invalid file extension", 1);
     if (access(file, O_RDONLY) != 0)
         exit_error(NULL, "invalid file", 1);
     scene = init_scene(file);
-    // scene.ambient_light = get_amblight_info(file);
-    // scene.camera = get_camera_info(file);
-    // scene.lights = get_light_info(file);
-
-    int fd = open(file, O_RDONLY);
-    char *line = get_next_line(fd);
+    scene->fd = open(file, O_RDONLY);
+    char *line = get_next_line(scene->fd);
     char *id = get_first_word(line, 0);
     while (line)
     {
@@ -118,22 +114,22 @@ t_scene    *parse(char *file) {
             set_ambient(line, scene);
         else if (ft_strncmp("C", id, 2) == 0)
             set_camera(line, scene);
-        // else if (ft_strncmp("L", id, 2) == 0)
-        //     amount[L]++;
-        // else if (ft_strncmp("pl", id, 3) == 0)
-        //     amount[PL]++;
-        // else if (ft_strncmp("sp", id, 3) == 0)
-        //     amount[SP]++;
-        // else if (ft_strncmp("cy", id, 3) == 0)
-        //     amount[CY]++;
+        else if (ft_strncmp("L", id, 2) == 0)
+            set_light(line, scene, count[L]++);
+        else if (ft_strncmp("pl", id, 3) == 0)
+            set_plane(line, scene, count[PL]++);
+        else if (ft_strncmp("sp", id, 3) == 0)
+            set_sphere(line, scene, count[SP]++);
+        else if (ft_strncmp("cy", id, 3) == 0)
+            set_cylinder(line, scene, count[CY]++);
         free(line);
-        line = get_next_line(fd);
+        line = get_next_line(scene->fd);
         free(id);
         id = get_first_word(line, 0);
     }
     free(line);
     free(id);
-    close(fd);
+    close(scene->fd);
     return (scene);
 }
 

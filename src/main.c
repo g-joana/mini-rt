@@ -18,6 +18,10 @@ int main(int argc, char **argv) {
     printf("coords[0]: %f\n", scene->camera.normalized[0]);
     printf("coords[1]: %f\n", scene->camera.normalized[1]);
     printf("coords[2]: %f\n", scene->camera.normalized[2]);
+    printf("\n");
+    printf("sp[0]: %f\n", scene->spheres[0].diameter);
+    printf("sp[1]: %f\n", scene->spheres[1].diameter);
+    printf("coords[2]: %f\n", scene->camera.normalized[2]);
     free_scene(scene);
     return (0);
 }

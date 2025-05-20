@@ -60,6 +60,7 @@ typedef struct s_light {
 } t_light;
 
 typedef struct s_scene {
+    int fd; // gambi de norma
     t_camera camera;
     t_light ambient_light;
     t_light *lights;
