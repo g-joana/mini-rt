@@ -1,4 +1,4 @@
-#include "../includes/minirt.h"
+#include "../../includes/minirt.h"
 // init = malloca e seta os valores pra 0
 // setup = camera, light, ambient light (elements that can only be declared once - capital letter)
 

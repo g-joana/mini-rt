@@ -6,12 +6,18 @@ INC_DIR		= includes
 OBJ_DIR		= obj
 LIBFT_DIR	= libft
 MLX_DIR		= mlx
+PARS_DIR	= $(SRC_DIR)/parser
 
 # Sources
-SRCS		= main.c parser.c free.c error.c init_setup.c init_shapes.c set_properties.c parser_utils.c set_scene.c print.c
+SRCS		= main.c free.c error.c print.c
+
+# Parser files
+PARS		= init_setup.c init_shapes.c parser.c parser_utils.c set_properties.c set_scene.c
 
 # Object files
-OBJS		= $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
+OBJS		= \
+			$(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o)) \
+			$(addprefix $(OBJ_DIR)/, $(PARS:.c=.o))
 
 # Compiler
 CC			= cc
@@ -30,7 +36,12 @@ $(NAME): $(LIBFT) $(OBJ_DIR) $(OBJS)
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
+# src files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# parser files
+$(OBJ_DIR)/%.o: $(PARS_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT):

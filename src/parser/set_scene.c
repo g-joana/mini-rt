@@ -1,4 +1,4 @@
-#include "../includes/minirt.h"
+#include "../../includes/minirt.h"
 // set = seta os valores no seu devido campo da struct
 // cada elemento da cena tem sua propriedade, nesse arquivo setamos os elementos
 //

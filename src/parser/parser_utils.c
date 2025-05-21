@@ -1,4 +1,4 @@
-#include "../includes/minirt.h"
+#include "../../includes/minirt.h"
 
 // arredonda para 4 casas decimais
 float round4(float value) {

@@ -1,4 +1,4 @@
-#include "../includes/minirt.h"
+#include "../../includes/minirt.h"
 
 char *get_first_word(char *str, bool free_str)
 {
