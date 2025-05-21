@@ -35,11 +35,10 @@ void    set_ambient(char *line, t_scene *scene)
     }
     set_brightness(properties[1], scene->ambient_light.brightness);
     set_rgb(properties[2], scene->ambient_light.rgb);
-    scene->ambient_light.ambient = 1;
     free_split(properties);
 }
 
-void   set_light(char *line, t_scene *scene, int i)
+void   set_light(char *line, t_scene *scene)
 {
     char **properties = ft_split(line, ' ');
 
@@ -50,9 +49,9 @@ void   set_light(char *line, t_scene *scene, int i)
         free_gnl(scene->fd);
         exit_error(scene, "missing light (L) settings", 1);
     }
-    set_coordinates(properties[1], scene->lights[i].coordinates);
-    set_brightness(properties[2], scene->lights[i].brightness);
-    set_rgb(properties[3], scene->lights[i].rgb);
+    set_coordinates(properties[1], scene->light.coordinates);
+    set_brightness(properties[2], scene->light.brightness);
+    set_rgb(properties[3], scene->light.rgb);
     free_split(properties);
 }
 

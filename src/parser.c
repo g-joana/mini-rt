@@ -91,10 +91,11 @@ t_scene *init_scene(char *file)
         exit_error(NULL, "scene needs 1 ambient light placed", 1);
     if (scene->amount[C] != 1)
         exit_error(NULL, "scene needs 1 camera placed", 1);
+    if (scene->amount[L] != 1)
+        exit_error(NULL, "scene needs 1 camera placed", 1);
     scene->ambient_light = init_ambient();
     scene->camera = init_camera();
-    if (scene->amount[L])
-        scene->lights = init_lights(scene->amount[L]);
+    scene->light = init_light();
     if (scene->amount[PL])
         scene->planes = init_planes(scene->amount[PL]);
     if (scene->amount[SP])
@@ -124,7 +125,7 @@ t_scene    *parse(char *file) {
         else if (ft_strncmp("C", id, 2) == 0)
             set_camera(line, scene);
         else if (ft_strncmp("L", id, 2) == 0)
-            set_light(line, scene, count[L]++);
+            set_light(line, scene);
         else if (ft_strncmp("pl", id, 3) == 0)
             set_plane(line, scene, count[PL]++);
         else if (ft_strncmp("sp", id, 3) == 0)

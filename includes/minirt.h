@@ -52,9 +52,13 @@ typedef struct s_camera {
     uint8_t fov; // (horizontal) field of view
 } t_camera;
 
+typedef struct s_alight {
+    float *brightness;
+    uint8_t *rgb;
+} t_alight;
+
 typedef struct s_light {
-    bool ambient; // flag to know light type
-    float *coordinates; // except A - because its ambient
+    float *coordinates;
     float *brightness;
     uint8_t *rgb;
 } t_light;
@@ -62,8 +66,8 @@ typedef struct s_light {
 typedef struct s_scene {
     int fd; // gambi de norma
     t_camera camera;
-    t_light ambient_light;
-    t_light *lights;
+    t_alight ambient_light;
+    t_light light;
 
     t_sphere *spheres;
     t_plane *planes;
@@ -86,8 +90,8 @@ void exit_error(t_scene* scene, char *msg, int ret);
 
 // init.c
 t_camera    init_camera();
-t_light    init_ambient();
-t_light    *init_lights(int amount);
+t_alight    init_ambient();
+t_light    init_light();
 t_plane    *init_planes(int amount);
 t_sphere    *init_spheres(int amount);
 
@@ -111,7 +115,7 @@ float   ft_atof(char *str);
 // set_scene.c
 void    set_camera(char *line, t_scene *scene);
 void    set_ambient(char *line, t_scene *scene);
-void   set_light(char *line, t_scene *scene, int i);
+void   set_light(char *line, t_scene *scene);
 void    set_plane(char *line, t_scene *scene, int i);
 void    set_sphere(char *line, t_scene *scene, int i);
 void    set_cylinder(char *line, t_scene *scene, int i);

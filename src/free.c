@@ -3,33 +3,13 @@
 void free_scene(t_scene *scene)
 {
     int count = 0;
-    // if (scene->lights)
-    //     ft_putstr_fd("free lights\n", 1);
-    // if (scene->spheres)
-    //     ft_putstr_fd("free shperes\n", 1);
-    // if (scene->planes)
-    //     ft_putstr_fd("free planes\n", 1);
-    // if (scene->cylinders)
-    //     ft_putstr_fd("free cylinders\n", 1);
-
-
     free(scene->camera.coordinates);
     free(scene->camera.normalized);
     free(scene->ambient_light.brightness);
     free(scene->ambient_light.rgb);
-    // dar free nas propriedades de cada um!!!
-    if (scene->lights)
-    {
-        count = 0;
-        while (count < scene->amount[L])
-        {
-            free(scene->lights[count].coordinates);
-            free(scene->lights[count].brightness);
-            free(scene->lights[count].rgb);
-            count++;
-        }
-        free(scene->lights);
-    }
+    free(scene->light.coordinates);
+    free(scene->light.brightness);
+    free(scene->light.rgb);
     if (scene->spheres)
     {
         count = 0;

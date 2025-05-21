@@ -17,11 +17,10 @@ t_camera    init_camera()
     return (camera);
 }
 
-t_light    init_ambient()
+t_alight    init_ambient()
 {
-    t_light ambient;
+    t_alight ambient;
 
-    ambient.ambient = 1;
     ambient.brightness = malloc(sizeof(float) * 3);
     ambient.brightness[0] = 0;
     ambient.brightness[1] = 0;
@@ -33,30 +32,23 @@ t_light    init_ambient()
     return (ambient);
 }
 
-t_light    *init_lights(int amount)
+t_light    init_light()
 {
-    t_light *lights ;
+    t_light light ;
 
-    lights = malloc(sizeof(t_light) * amount);
-    int i = 0;
-    while (i < amount)
-    {
-        lights[i].ambient = 0;
-        lights[i].coordinates = malloc(sizeof(float) * 3);
-        lights[i].coordinates[0] = 0;
-        lights[i].coordinates[1] = 0;
-        lights[i].coordinates[2] = 0;
-        lights[i].brightness = malloc(sizeof(float) * 3);
-        lights[i].brightness[0] = 0;
-        lights[i].brightness[1] = 0;
-        lights[i].brightness[2] = 0;
-        lights[i].rgb = malloc(sizeof(uint8_t) * 3);
-        lights[i].rgb[0] = 0;
-        lights[i].rgb[1] = 0;
-        lights[i].rgb[2] = 0;
-        i++;
-    }
-    return (lights);
+    light.coordinates = malloc(sizeof(float) * 3);
+    light.coordinates[0] = 0;
+    light.coordinates[1] = 0;
+    light.coordinates[2] = 0;
+    light.brightness = malloc(sizeof(float) * 3);
+    light.brightness[0] = 0;
+    light.brightness[1] = 0;
+    light.brightness[2] = 0;
+    light.rgb = malloc(sizeof(uint8_t) * 3);
+    light.rgb[0] = 0;
+    light.rgb[1] = 0;
+    light.rgb[2] = 0;
+    return (light);
 }
 
 t_plane    *init_planes(int amount)
