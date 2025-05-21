@@ -53,7 +53,7 @@ typedef struct s_camera {
 } t_camera;
 
 typedef struct s_alight {
-    float *brightness;
+    float   brightness;
     uint8_t *rgb;
 } t_alight;
 
@@ -118,5 +118,8 @@ void   set_light(char *line, t_scene *scene);
 void    set_plane(char *line, t_scene *scene, int i);
 void    set_sphere(char *line, t_scene *scene, int i);
 void    set_cylinder(char *line, t_scene *scene, int i);
+
+// print.c
+void print_scene(t_scene *scene);
 
 #endif

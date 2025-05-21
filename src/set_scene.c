@@ -33,7 +33,7 @@ void    set_ambient(char *line, t_scene *scene)
         free_gnl(scene->fd);
         exit_error(scene, "missing ambient light (A) settings", 1);
     }
-    set_brightness(properties[1], scene->ambient_light.brightness);
+    set_brightness(properties[1], &scene->ambient_light.brightness);
     set_rgb(properties[2], scene->ambient_light.rgb);
     free_split(properties);
 }

@@ -22,10 +22,7 @@ t_alight    init_ambient()
 {
     t_alight ambient;
 
-    ambient.brightness = malloc(sizeof(float) * 3);
-    ambient.brightness[0] = 0;
-    ambient.brightness[1] = 0;
-    ambient.brightness[2] = 0;
+    ambient.brightness = 0;
     ambient.rgb = malloc(sizeof(uint8_t) * 3);
     ambient.rgb[0] = 0;
     ambient.rgb[1] = 0;

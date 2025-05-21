@@ -5,7 +5,6 @@ void free_scene(t_scene *scene)
     int count = 0;
     free(scene->camera.coordinates);
     free(scene->camera.normalized);
-    free(scene->ambient_light.brightness);
     free(scene->ambient_light.rgb);
     free(scene->light.coordinates);
     free(scene->light.brightness);
