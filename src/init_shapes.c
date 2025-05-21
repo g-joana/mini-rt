@@ -1,55 +1,6 @@
 #include "../includes/minirt.h"
 // init = malloca e seta os valores pra 0
-
-t_camera    init_camera()
-{
-    t_camera camera ;
-
-    camera.coordinates = malloc(sizeof(float) * 3);
-    camera.coordinates[0] = 0;
-    camera.coordinates[1] = 0;
-    camera.coordinates[2] = 0;
-    camera.normalized = malloc(sizeof(float) * 3);
-    camera.normalized[0] = 0;
-    camera.normalized[1] = 0;
-    camera.normalized[2] = 0;
-    camera.fov = 0;
-    return (camera);
-}
-
-t_alight    init_ambient()
-{
-    t_alight ambient;
-
-    ambient.brightness = malloc(sizeof(float) * 3);
-    ambient.brightness[0] = 0;
-    ambient.brightness[1] = 0;
-    ambient.brightness[2] = 0;
-    ambient.rgb = malloc(sizeof(uint8_t) * 3);
-    ambient.rgb[0] = 0;
-    ambient.rgb[1] = 0;
-    ambient.rgb[2] = 0;
-    return (ambient);
-}
-
-t_light    init_light()
-{
-    t_light light ;
-
-    light.coordinates = malloc(sizeof(float) * 3);
-    light.coordinates[0] = 0;
-    light.coordinates[1] = 0;
-    light.coordinates[2] = 0;
-    light.brightness = malloc(sizeof(float) * 3);
-    light.brightness[0] = 0;
-    light.brightness[1] = 0;
-    light.brightness[2] = 0;
-    light.rgb = malloc(sizeof(uint8_t) * 3);
-    light.rgb[0] = 0;
-    light.rgb[1] = 0;
-    light.rgb[2] = 0;
-    return (light);
-}
+// shapes = sphere, plane, cylinder
 
 t_plane    *init_planes(int amount)
 {
@@ -96,4 +47,31 @@ t_sphere    *init_spheres(int amount)
         i++;
     }
     return (spheres);
+}
+
+t_cylinder    *init_cylinders(int amount)
+{
+    t_cylinder *cylinders ;
+
+    cylinders = malloc(sizeof(t_cylinder) * amount);
+    int i = 0;
+    while (i < amount)
+    {
+        cylinders[i].coordinates = malloc(sizeof(float) * 3);
+        cylinders[i].coordinates[0] = 0;
+        cylinders[i].coordinates[1] = 0;
+        cylinders[i].coordinates[2] = 0;
+        cylinders[i].normalized = malloc(sizeof(float) * 3);
+        cylinders[i].normalized[0] = 0;
+        cylinders[i].normalized[1] = 0;
+        cylinders[i].normalized[2] = 0;
+        cylinders[i].rgb = malloc(sizeof(uint8_t) * 3);
+        cylinders[i].rgb[0] = 0;
+        cylinders[i].rgb[1] = 0;
+        cylinders[i].rgb[2] = 0;
+        cylinders[i].diameter = 0;
+        cylinders[i].height = 0;
+        i++;
+    }
+    return (cylinders);
 }

@@ -78,7 +78,6 @@ typedef struct s_scene {
 
 // parse.c
 t_scene    *parse(char *file);
-float   ft_atof(char *str);
 
 // free.c
 void free_scene(t_scene *scene);
@@ -88,15 +87,15 @@ void	free_split(char **array);
 // error.c
 void exit_error(t_scene* scene, char *msg, int ret);
 
-// init.c
+// init_setup.c
 t_camera    init_camera();
 t_alight    init_ambient();
 t_light    init_light();
+
+// init_shapes.c
+t_cylinder    *init_cylinders(int amount);
 t_plane    *init_planes(int amount);
 t_sphere    *init_spheres(int amount);
-
-// init2.c
-t_cylinder    *init_cylinders(int amount);
 
 // set_properties.c
 void    set_coordinates(char *str, float *coordinates);
