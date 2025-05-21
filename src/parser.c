@@ -29,6 +29,7 @@ int *count_elements(char *file)
 {
     int *amount;
     amount = malloc(sizeof(int) * 6);
+    // mudar inicializacao
     amount[0] = 0;
     amount[1] = 0;
     amount[2] = 0;
@@ -55,6 +56,7 @@ int *count_elements(char *file)
             amount[CY]++;
         else if (id[0] != '\n')
         {
+            free(amount);
             free(id);
             free_gnl(fd);
             exit_error(NULL, "invalid id", 1);
@@ -78,8 +80,9 @@ t_scene *init_scene(char *file)
 {
     t_scene *scene;
 
+    int *amount = count_elements(file);
     scene = malloc(sizeof(t_scene));
-    scene->amount = count_elements(file);
+    scene->amount = amount;
     // printf("%i\n", scene->amount[0]);
     // printf("%i\n", scene->amount[1]);
     // printf("%i\n", scene->amount[2]);
@@ -107,7 +110,7 @@ t_scene    *parse(char *file) {
     int count[6] = {0,0,0,0,0,0};
 
     if (ft_strlen(ft_strstr(file, ".rt")) != 3)
-        exit_error(NULL, "invalid file extension", 1);
+        exit_error(NULL, "invalid file format", 1);
     if (access(file, O_RDONLY) != 0)
         exit_error(NULL, "invalid file", 1);
     scene = init_scene(file);
