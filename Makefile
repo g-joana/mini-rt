@@ -6,34 +6,42 @@ INC_DIR		= includes
 OBJ_DIR		= obj
 LIBFT_DIR	= libft
 MLX_DIR		= mlx
+PARS_DIR	= $(SRC_DIR)/parser
 
 # Sources
-SRCS		= main.c
-# SRCS		= main.c parse.c render.c
+SRCS		= main.c free.c error.c print.c
+
+# Parser files
+PARS		= init_setup.c init_shapes.c parser.c parser_utils.c set_properties.c set_scene.c
 
 # Object files
-OBJS		= $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
+OBJS		= \
+			$(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o)) \
+			$(addprefix $(OBJ_DIR)/, $(PARS:.c=.o))
 
 # Compiler
 CC			= cc
-CFLAGS		= -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR)
-# CFLAGS		= -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR)
+CFLAGS		= -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -ggdb3
 
 # Libraries
 LIBFT		= $(LIBFT_DIR)/libft.a
-MLX 		= -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
+MLX			= -L$(MLX_DIR) -lXext -lX11 -lm
 
 # Targets
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJ_DIR) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
-	# $(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLX) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLX) -o $(NAME)
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
+# src files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# parser files
+$(OBJ_DIR)/%.o: $(PARS_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT):
