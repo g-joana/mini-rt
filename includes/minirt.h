@@ -3,6 +3,7 @@
 
 #include "../libft/libft.h"
 #include "../mlx/mlx.h"
+// #include "../mlx/mlx_int.h"
 #include <stdint.h> // check if allowed (uint32)
 #include <stdbool.h>
 #include <stdio.h>
@@ -63,6 +64,15 @@ typedef struct s_light {
     uint8_t *rgb;
 } t_light;
 
+typedef struct s_data
+{
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}			t_data;
+
 typedef struct s_scene {
     int fd; // gambi de norma
     t_camera camera;
@@ -74,6 +84,10 @@ typedef struct s_scene {
     t_cylinder *cylinders;
     // uint32_t img[WIDTH * HEIGHT];
     int *amount;
+
+    void	*mlx;
+    void	*mlx_win;
+    t_data	img;
 } t_scene;
 
 // parse.c
@@ -121,5 +135,9 @@ void    set_cylinder(char *line, t_scene *scene, int i);
 
 // print.c
 void print_scene(t_scene *scene);
+
+// render.c
+int    render(t_scene *scene);
+void	start_mlx(t_scene *scene);
 
 #endif
