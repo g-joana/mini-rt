@@ -1,4 +1,5 @@
 #include "../includes/minirt.h"
+#include <math.h>
 
 void	start_mlx(t_scene *scene)
 {
@@ -36,6 +37,15 @@ uint32_t color_per_pixel(float x_origin, float y_origin)
 	return 0xff000000 | (r << 16) | (g << 8);
 }
 
+float normalize(float n){
+
+	float min = -1;
+	float max = 1;
+
+	float normal = (n - min) / (max - min);
+	return normal;
+}
+
 uint32_t per_pixel(float x, float y, float z, t_scene *scene)
 {
 	// uint8_t r = (uint8_t)(x_origin * 255.0f);
@@ -58,23 +68,18 @@ uint32_t per_pixel(float x, float y, float z, t_scene *scene)
 		// + scene->camera.normalized[2] * scene->camera.normalized[2];
 
 	// a -> b (ray origin)
-		// (
-		// scene->camera.coordinates[0] * scene->camera.normalized[0]
-		// + scene->camera.coordinates[1] * scene->camera.normalized[1]
-		// + scene->camera.coordinates[2] * scene->camera.normalized[2]
-		// );
 	float b =
 		2.0f *
-		(
-		0.0f * x
-		+ 0.0f * y
-		+ (-2.0f * z)
-		);
 		// (
-		// scene->camera.coordinates[0] * x
-		// + scene->camera.coordinates[1] * y
-		// + scene->camera.coordinates[2] * z
+		// 0.0f * x
+		// + 0.0f * y
+		// + (-2.0f * z)
 		// );
+		(
+		scene->camera.coordinates[0] * x
+		+ scene->camera.coordinates[1] * y
+		+ scene->camera.coordinates[2] * z
+		);
 		// (
 		// scene->camera.coordinates[0] * scene->camera.normalized[0]
 		// + scene->camera.coordinates[1] * scene->camera.normalized[1]
@@ -82,19 +87,18 @@ uint32_t per_pixel(float x, float y, float z, t_scene *scene)
 		// );
 	
 	(void)scene;
-	// float r = scene->spheres[0].diameter/2;
-	float r = 0.5f;
+	float r = scene->spheres[0].diameter/2;
 	float c =
-		(
-		0.0f * 0.0f
-		+ 0.0f * 0.0f
-		+ (-2.0f * -2.0f)
-		) - r * r;
 		// (
-		// scene->camera.coordinates[0] * scene->camera.coordinates[0]
-		// + scene->camera.coordinates[1] * scene->camera.coordinates[1]
-		// + scene->camera.coordinates[2] * scene->camera.coordinates[2]
-		// ) - (scene->spheres[0].diameter/2) * (scene->spheres[0].diameter/2);
+		// 0.0f * 0.0f
+		// + 0.0f * 0.0f
+		// + (-2.0f * -2.0f)
+		// ) - r * r;
+		(
+		scene->camera.coordinates[0] * scene->camera.coordinates[0]
+		+ scene->camera.coordinates[1] * scene->camera.coordinates[1]
+		+ scene->camera.coordinates[2] * scene->camera.coordinates[2]
+		) - r * r;
 
 
 	// discriminant = t = distance / point
@@ -104,7 +108,33 @@ uint32_t per_pixel(float x, float y, float z, t_scene *scene)
 		- 4.0f * a * c;
 
 	if (discriminant >= 0.0f)
+	{
+		// float t0 = (-b - sqrtf(discriminant)) / (2.0f * a);
+		// float t1 = (+b - sqrtf(discriminant)) / (2.0f * a);
+
+		float t[2] = {(-b - sqrtf(discriminant)) / (2.0f * a),
+			(+b - sqrtf(discriminant)) / (2.0f * a)};
+		// float n[3];
+		// n[0] = x - scene->spheres[0].coordinates[0];
+		// n[1] = y - scene->spheres[1].coordinates[2];
+		// n[2] = z - scene->spheres[3].coordinates[3];
+		
+		int i = 0;
+		while (i < 2)
+		{
+			float hitpos[3];
+			hitpos[0] = scene->camera.coordinates[0] + x * t[i];
+			hitpos[1] = scene->camera.coordinates[1] + y * t[i];
+			hitpos[2] = scene->camera.coordinates[2] + z * t[i];
+			float n[3];
+			n[0] = hitpos[i] - scene->spheres[0].coordinates[0];
+			n[1] = hitpos[i] - scene->spheres[1].coordinates[2];
+			n[2] = hitpos[i] - scene->spheres[3].coordinates[3];
+			aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+			i++;
+		}
 		return 0xff48e448;
+	}
 
 	return 0xff000000;
 }

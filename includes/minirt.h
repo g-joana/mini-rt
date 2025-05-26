@@ -10,8 +10,8 @@
 #include <fcntl.h>
 #include <math.h>
 
-#define WIDTH 200
-#define HEIGHT 200
+#define WIDTH 400
+#define HEIGHT 400
 
 enum e_id {
     A,
