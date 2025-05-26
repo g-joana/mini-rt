@@ -28,11 +28,19 @@ void	my_mlx_pixel_put2(t_data *data, int px, int color)
 	*(unsigned int *)dest = color;
 }
 
+uint32_t color_per_pixel(float x_origin, float y_origin)
+{
+	uint8_t r = (uint8_t)(x_origin * 255.0f);
+	uint8_t g = (uint8_t)(y_origin * 255.0f);
+
+	return 0xff000000 | (r << 16) | (g << 8);
+}
+
 int    render(t_scene *scene)
 {
-	static int count;
-	int x = 0;
-	int y = 0;
+	// static int count;
+	uint32_t x = 0;
+	uint32_t y = 0;
 	int i = 0;
 	while (y < HEIGHT && i < (WIDTH * HEIGHT))
 	// while (i < (WIDTH * HEIGHT))
@@ -48,7 +56,7 @@ int    render(t_scene *scene)
 		// t - distance
 		// int t =  
 		// p[0] = scene->camera.coordinates[0] + (scene->camera.normalized[0] * t);
-		my_mlx_pixel_put(&scene->img, x, y, 0x48E448);
+		my_mlx_pixel_put(&scene->img, x, y, color_per_pixel((float)x/(float)WIDTH, (float)y/(float)HEIGHT));
 		// my_mlx_pixel_put2(&scene->img, i, 0x48E448);
 		x++;
 		i++;
@@ -56,10 +64,10 @@ int    render(t_scene *scene)
 			y++;
 		if (x == WIDTH)
 			x = 0;
-		count++;
-		printf("%i\n", count);
+		// count++;
+		// printf("%i\n", count);
 	}
     mlx_put_image_to_window(scene->mlx, scene->mlx_win, scene->img.img, 0, 0);
+	mlx_string_put(scene->mlx, scene->mlx_win, 5, 12, 0xFFFFFF, "render");
 	return 0;
 }
-
