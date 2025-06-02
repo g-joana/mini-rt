@@ -4,36 +4,34 @@ void print_scene(t_scene *scene)
 {
     // Print ambient light
     printf("Ambient Light:\n");
-    printf("  Brightness: %f\n", scene->ambient_light.brightness);
+    printf("  Brightness: %f\n", scene->amb_light.bright);
     printf("  RGB: [%u, %u, %u]\n", 
-        scene->ambient_light.rgb[0], 
-        scene->ambient_light.rgb[1], 
-        scene->ambient_light.rgb[2]);
+        scene->amb_light.rgb[0], 
+        scene->amb_light.rgb[1], 
+        scene->amb_light.rgb[2]);
     printf("\n");
 
     // Print camera
     printf("Camera:\n");
     printf("  Coordinates: [%f, %f, %f]\n", 
-        scene->camera.coordinates[0], 
-        scene->camera.coordinates[1], 
-        scene->camera.coordinates[2]);
+        scene->cam.coord->x, 
+        scene->cam.coord->y, 
+        scene->cam.coord->z); 
     printf("  Normalized: [%f, %f, %f]\n", 
-        scene->camera.normalized[0], 
-        scene->camera.normalized[1], 
-        scene->camera.normalized[2]);
-    printf("  FOV: %u\n", scene->camera.fov);
+        scene->cam.norm->x, 
+        scene->cam.norm->y, 
+        scene->cam.norm->z);
+    printf("  FOV: %u\n", scene->cam.fov);
     printf("\n");
 
     // Print light
     printf("Light:\n");
     printf("  Coordinates: [%f, %f, %f]\n", 
-        scene->light.coordinates[0], 
-        scene->light.coordinates[1], 
-        scene->light.coordinates[2]);
-    printf("  Brightness: [%f, %f, %f]\n", 
-        scene->light.brightness[0], 
-        scene->light.brightness[1], 
-        scene->light.brightness[2]);
+        scene->light.coord->x, 
+        scene->light.coord->y, 
+        scene->light.coord->z);
+    printf("  Brightness: %f\n", 
+        scene->light.bright); 
     printf("  RGB: [%u, %u, %u]\n", 
         scene->light.rgb[0], 
         scene->light.rgb[1], 
@@ -45,14 +43,14 @@ void print_scene(t_scene *scene)
     for (int i = 0; i < scene->amount[0]; i++) {
         printf("  Sphere %d:\n", i + 1);
         printf("    Coordinates: [%f, %f, %f]\n", 
-            scene->spheres[i].coordinates[0], 
-            scene->spheres[i].coordinates[1], 
-            scene->spheres[i].coordinates[2]);
+            scene->spheres[i].coord->x, 
+            scene->spheres[i].coord->y, 
+            scene->spheres[i].coord->z);
         printf("    RGB: [%u, %u, %u]\n", 
             scene->spheres[i].rgb[0], 
             scene->spheres[i].rgb[1], 
             scene->spheres[i].rgb[2]);
-        printf("    Diameter: %f\n", scene->spheres[i].diameter);
+        printf("    Diameter: %f\n", scene->spheres[i].diam);
     }
     printf("\n");
 
@@ -61,13 +59,13 @@ void print_scene(t_scene *scene)
     for (int i = 0; i < scene->amount[1]; i++) {
         printf("  Plane %d:\n", i + 1);
         printf("    Coordinates: [%f, %f, %f]\n", 
-            scene->planes[i].coordinates[0], 
-            scene->planes[i].coordinates[1], 
-            scene->planes[i].coordinates[2]);
+            scene->planes[i].coord->x, 
+            scene->planes[i].coord->y, 
+            scene->planes[i].coord->z);
         printf("    Normalized: [%f, %f, %f]\n", 
-            scene->planes[i].normalized[0], 
-            scene->planes[i].normalized[1], 
-            scene->planes[i].normalized[2]);
+            scene->planes[i].norm->x, 
+            scene->planes[i].norm->y, 
+            scene->planes[i].norm->z);
         printf("    RGB: [%u, %u, %u]\n", 
             scene->planes[i].rgb[0], 
             scene->planes[i].rgb[1], 
@@ -80,18 +78,18 @@ void print_scene(t_scene *scene)
     for (int i = 0; i < scene->amount[2]; i++) {
         printf("  Cylinder %d:\n", i + 1);
         printf("    Coordinates: [%f, %f, %f]\n", 
-            scene->cylinders[i].coordinates[0], 
-            scene->cylinders[i].coordinates[1], 
-            scene->cylinders[i].coordinates[2]);
+            scene->cylinders[i].coord->x, 
+            scene->cylinders[i].coord->y, 
+            scene->cylinders[i].coord->z);
         printf("    Normalized: [%f, %f, %f]\n", 
-            scene->cylinders[i].normalized[0], 
-            scene->cylinders[i].normalized[1], 
-            scene->cylinders[i].normalized[2]);
+            scene->cylinders[i].norm->x, 
+            scene->cylinders[i].norm->y, 
+            scene->cylinders[i].norm->z);
         printf("    RGB: [%u, %u, %u]\n", 
             scene->cylinders[i].rgb[0], 
             scene->cylinders[i].rgb[1], 
             scene->cylinders[i].rgb[2]);
-        printf("    Diameter: %f\n", scene->cylinders[i].diameter);
+        printf("    Diameter: %f\n", scene->cylinders[i].diam);
         printf("    Height: %f\n", scene->cylinders[i].height);
     }
     printf("\n");
