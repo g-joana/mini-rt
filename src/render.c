@@ -93,21 +93,21 @@ uint32_t per_pixel(float x, float y, t_scene *scene)
 	// n[2] = z - scene->spheres[3].coordinates[3];
 
 	int i = 0;
-	t_vec3d sp_normal;
+	t_vec3d norm;
 	while (i < 2)
 	{
 		t_vec3d hitpos;
 		hitpos.x = ray_origin.x + ray_dir.x * t[i];
-		hitpos.x = ray_origin.y + ray_dir.y * t[i];
-		hitpos.x = ray_origin.z + ray_dir.z * t[i];
-		sp_normal.x = hitpos.x - scene->spheres[0].coord->x;
-		sp_normal.y = hitpos.y - scene->spheres[0].coord->y;
-		sp_normal.z = hitpos.z - scene->spheres[0].coord->z;
+		hitpos.y = ray_origin.y + ray_dir.y * t[i];
+		hitpos.z = ray_origin.z + ray_dir.z * t[i];
+		norm.x = hitpos.x - scene->spheres[0].coord->x;
+		norm.y = hitpos.y - scene->spheres[0].coord->y;
+		norm.z = hitpos.z - scene->spheres[0].coord->z;
 		i++;
 	}
 
-	uint8_t red = (uint8_t)(normalize(sp_normal.x) * 255.0f);
-	uint8_t green = (uint8_t)(normalize(sp_normal.y) * 255.0f);
+	uint8_t red = (uint8_t)(normalize(norm.x) * 255.0f);
+	uint8_t green = (uint8_t)(normalize(norm.y) * 255.0f);
 
 	return 0xff000000 | (red << 16) | (green << 8);
 	// return 0xff48e448;
