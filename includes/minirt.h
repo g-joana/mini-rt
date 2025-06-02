@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <math.h>
+#include "../trivec/trivec.h"
 
 #define WIDTH 400
 #define HEIGHT 400
