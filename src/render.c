@@ -1,5 +1,4 @@
 #include "../includes/minirt.h"
-#include <math.h>
 
 void	start_mlx(t_scene *scene)
 {
@@ -130,7 +129,7 @@ uint32_t per_pixel(float x, float y, float z, t_scene *scene)
 			n[0] = hitpos[i] - scene->spheres[0].coordinates[0];
 			n[1] = hitpos[i] - scene->spheres[1].coordinates[2];
 			n[2] = hitpos[i] - scene->spheres[3].coordinates[3];
-			aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+			// aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 			i++;
 		}
 		return 0xff48e448;

@@ -21,24 +21,20 @@ OBJS		= \
 			$(addprefix $(OBJ_DIR)/, $(PARS:.c=.o))
 
 # Compiler
-CC			= cc
+CC			= clang
 CFLAGS		= -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -I$(VEC_DIR) -ggdb3
+# CFLAGS		= -Wall -Wextra -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -I$(VEC_DIR) -ggdb3
 
 # Libraries
 LIBFT		= $(LIBFT_DIR)/libft.a
-MLX			= -L$(MLX_DIR) -lXext -lX11 -lm
+MLX			= $(MLX_DIR)/libmlx.a -lXext -lX11 -lm
 VEC			= $(VEC_DIR)/trivec.a
 
 # Targets
 all: $(NAME)
 
-<<<<<<< HEAD
-$(NAME): $(LIBFT) $(OBJ_DIR) $(OBJS)
-	$(CC) $(CFLAGS_DEV) $(OBJS) $(LIBFT) ./mlx/libmlx.a -lXext -lX11 -lm -o $(NAME)
-=======
-$(NAME): $(LIBFT) $(VEC) $(OBJ_DIR) $(OBJS)
+$(NAME): $(LIBFT) $(MLX) $(VEC) $(OBJ_DIR) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLX) $(VEC) -o $(NAME)
->>>>>>> main
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
@@ -54,17 +50,16 @@ $(OBJ_DIR)/%.o: $(PARS_DIR)/%.c
 $(LIBFT):
 	make -C $(LIBFT_DIR)
 
-<<<<<<< HEAD
 $(MLX):
 	make -C $(MLX_DIR)
-=======
+
 $(VEC):
 	make -C $(VEC_DIR)
->>>>>>> main
 
 clean:
 	rm -rf $(OBJ_DIR)
 	make -C $(LIBFT_DIR) clean
+	make -C $(MLX_DIR) clean
 	make -C $(VEC_DIR) clean
 
 fclean: clean
