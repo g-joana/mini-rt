@@ -96,9 +96,7 @@ uint32_t per_pixel(float x, float y, float z, t_scene *scene)
 		(
 		scene->camera.coordinates[0] * scene->camera.coordinates[0]
 		+ scene->camera.coordinates[1] * scene->camera.coordinates[1]
-		+ scene->camera.coordinates[2] * scene->camera.coordinates[2]
-		) - r * r;
-
+	float c = dot_vecs(scene->camera.coordinates, &cam) - r * r;
 
 	// discriminant = t = distance / point
 	// b^2 - 4ac
