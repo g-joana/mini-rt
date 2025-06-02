@@ -28,21 +28,23 @@ void	my_mlx_pixel_put2(t_data *data, int px, int color)
 	*(unsigned int *)dest = color;
 }
 
-uint32_t color_per_pixel(float x_origin, float y_origin)
-{
-	uint8_t r = (uint8_t)(x_origin * 255.0f);
-	uint8_t g = (uint8_t)(y_origin * 255.0f);
+float clamp_color(float n){
 
-	return 0xff000000 | (r << 16) | (g << 8);
+	if (n < 0)
+		return 0;
+	if (n > 1)
+		return 1;
+	return n;
 }
 
-float normalize(float n){
+uint32_t color_per_pixel(t_vec3d *vec, float alpha)
+{
+	uint8_t r = (uint8_t)(clamp_color(vec->x) * 255.0f);
+	uint8_t g = (uint8_t)(clamp_color(vec->y) * 255.0f);
+	uint8_t b = (uint8_t)(clamp_color(vec->z) * 255.0f);
+	uint8_t a = (uint8_t)(clamp_color(alpha) * 255.0f);
 
-	float min = -1;
-	float max = 1;
-
-	float normal = (n - min) / (max - min);
-	return normal;
+	return (a << 24) | (r << 16) | (g << 8) | b;
 }
 
 uint32_t per_pixel(float x, float y, t_scene *scene)
@@ -55,16 +57,19 @@ uint32_t per_pixel(float x, float y, t_scene *scene)
 	// ray direction
 	// x = scene->cam.norm->x;
 	// y = scene->cam.norm->y;
-	float z = scene->cam.norm->z;
+	// float z = scene->cam.norm->z;
 
+	(void)scene;
 	// (dx^2 + dy^2)t^2 + (2(axdx + aydy))t + (ax^2 + ay^2 - r^2) = 0;
-	const t_vec3d ray_dir = {x, y, z};
-	const t_vec3d ray_origin = {
-		scene->cam.coord->x,
-		scene->cam.coord->y,
-		scene->cam.coord->z
-	};
-	float r = scene->spheres[0].diam/2;
+	const t_vec3d ray_origin = {0, 0, 2.0f};
+	const t_vec3d ray_dir = {x, y, -1.0f};
+	// const t_vec3d ray_origin = {
+	// 	scene->cam.coord->x,
+	// 	scene->cam.coord->y,
+	// 	scene->cam.coord->z
+	// };
+	// float r = scene->spheres[0].diam/2;
+	float r = 0.5f;
 
 	// d -> a (ray direction)
 	float a = dot_vecs(&ray_dir, &ray_dir);
@@ -77,40 +82,30 @@ uint32_t per_pixel(float x, float y, t_scene *scene)
 
 	// discriminant = t = hit distance / point
 	// b^2 - 4ac
-	float discriminant = b * b - 4.0f * a * c;
+	float delta = b * b - 4.0f * a * c;
 
-	if (discriminant < 0.0f)
+	if (delta < 0.0f)
 		return 0xff000000;
-
 	// float t0 = (-b - sqrtf(discriminant)) / (2.0f * a);
 	// float t1 = (+b - sqrtf(discriminant)) / (2.0f * a);
 
-	float t[2] = {(-b - sqrtf(discriminant)) / (2.0f * a),
-		(+b - sqrtf(discriminant)) / (2.0f * a)};
+	float t0 = (-b - sqrtf(delta)) / (2.0f * a);
+	// float t1 = (-b + sqrtf(delta)) / (2.0f * a);
 	// float n[3];
 	// n[0] = x - scene->spheres[0].coordinates[0];
 	// n[1] = y - scene->spheres[1].coordinates[2];
 	// n[2] = z - scene->spheres[3].coordinates[3];
 
-	int i = 0;
-	t_vec3d norm;
-	while (i < 2)
-	{
-		t_vec3d hitpos;
-		hitpos.x = ray_origin.x + ray_dir.x * t[i];
-		hitpos.y = ray_origin.y + ray_dir.y * t[i];
-		hitpos.z = ray_origin.z + ray_dir.z * t[i];
-		norm.x = hitpos.x - scene->spheres[0].coord->x;
-		norm.y = hitpos.y - scene->spheres[0].coord->y;
-		norm.z = hitpos.z - scene->spheres[0].coord->z;
-		i++;
-	}
+	t_vec3d hitpos;
+	// t_vec3d norm;
+	hitpos.x = ray_origin.x + ray_dir.x * t0;
+	hitpos.y = ray_origin.y + ray_dir.y * t0;
+	hitpos.z = ray_origin.z + ray_dir.z * t0;
+	// norm.x = hitpos.x - scene->spheres[0].coord->x;
+	// norm.y = hitpos.y - scene->spheres[0].coord->y;
+	// norm.z = hitpos.z - scene->spheres[0].coord->z;
 
-	uint8_t red = (uint8_t)(normalize(norm.x) * 255.0f);
-	uint8_t green = (uint8_t)(normalize(norm.y) * 255.0f);
-
-	return 0xff000000 | (red << 16) | (green << 8);
-	// return 0xff48e448;
+	return (color_per_pixel(&hitpos, 1));
 }
 
 int    render(t_scene *scene)
@@ -126,7 +121,6 @@ int    render(t_scene *scene)
 		coord[0] = ((float)x/(float)WIDTH);
 		coord[1] = ((float)y/(float)HEIGHT);
 		// z is the ray direction (1 or -1)
-		coord[2] = -1.0f;
 		// remap screen coords so xy(0,0) is in the middle
 		coord[0] = coord[0] * 2.0f - 1.0f;
 		coord[1] = coord[1] * 2.0f - 1.0f;
@@ -136,9 +130,10 @@ int    render(t_scene *scene)
 		x++;
 		i++;
 		if (x == WIDTH)
+		{
 			y++;
-		if (x == WIDTH)
 			x = 0;
+		}
 		count++;
 		printf("%i\n", count);
 	}
