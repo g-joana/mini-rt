@@ -61,7 +61,7 @@ uint32_t per_pixel(float x, float y, t_scene *scene)
 
 	(void)scene;
 	// (dx^2 + dy^2)t^2 + (2(axdx + aydy))t + (ax^2 + ay^2 - r^2) = 0;
-	const t_vec3d ray_origin = {0, 0, 2.0f};
+	const t_vec3d ray_origin = {0, 0, 1.0f};
 	const t_vec3d ray_dir = {x, y, -1.0f};
 	// const t_vec3d ray_origin = {
 	// 	scene->cam.coord->x,
@@ -97,15 +97,20 @@ uint32_t per_pixel(float x, float y, t_scene *scene)
 	// n[2] = z - scene->spheres[3].coordinates[3];
 
 	t_vec3d hitpos;
-	// t_vec3d norm;
 	hitpos.x = ray_origin.x + ray_dir.x * t0;
 	hitpos.y = ray_origin.y + ray_dir.y * t0;
 	hitpos.z = ray_origin.z + ray_dir.z * t0;
-	// norm.x = hitpos.x - scene->spheres[0].coord->x;
-	// norm.y = hitpos.y - scene->spheres[0].coord->y;
-	// norm.z = hitpos.z - scene->spheres[0].coord->z;
+	t_vec3d norm;
+	norm.x = hitpos.x - scene->spheres[0].coord->x;
+	norm.y = hitpos.y - scene->spheres[0].coord->y;
+	norm.z = hitpos.z - scene->spheres[0].coord->z;
+	norm = norm_vec(&norm);
+	// study
+	norm.x = norm.x * 0.5f + 0.5f;
+	norm.y = norm.y * 0.5f + 0.5f;
+	norm.z = norm.z * 0.5f + 0.5f;
 
-	return (color_per_pixel(&hitpos, 1));
+	return (color_per_pixel(&norm, 1));
 }
 
 int    render(t_scene *scene)
