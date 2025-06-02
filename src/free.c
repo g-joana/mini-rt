@@ -72,3 +72,13 @@ void	free_split(char **array)
 	}
 	free(array);
 }
+
+int	key_hook(int key, t_scene *scene)
+{
+	if (key == 65307)
+	{
+            free_scene(scene);
+	    exit(1);
+	}
+	return (0);
+}

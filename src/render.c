@@ -7,7 +7,7 @@ void	start_mlx(t_scene *scene)
 	scene->img.img = mlx_new_image(scene->mlx, WIDTH, HEIGHT);
 	scene->img.addr = mlx_get_data_addr(scene->img.img, &scene->img.bits_per_pixel,
 			&scene->img.line_len, &scene->img.endian);
-	// mlx_key_hook(scene->mlx_win, key_hook, scene);
+	mlx_key_hook(scene->mlx_win, key_hook, scene);
 	// mlx_hook(scene->mlx_win, 17, 1L << 17, mouse_hook, scene);
 }
 
@@ -131,6 +131,6 @@ int    render(t_scene *scene)
 		printf("%i\n", count);
 	}
 	mlx_put_image_to_window(scene->mlx, scene->mlx_win, scene->img.img, 0, 0);
-	mlx_string_put(scene->mlx, scene->mlx_win, 5, 12, 0xFFFFFF, "render");
+	// mlx_string_put(scene->mlx, scene->mlx_win, 5, 12, 0xFFFFFF, "render");
 	return 0;
 }
