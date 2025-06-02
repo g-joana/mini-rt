@@ -89,15 +89,14 @@ uint32_t per_pixel(float x, float y, float z, t_scene *scene)
 		int i = 0;
 		while (i < 2)
 		{
-			float hitpos[3];
-			hitpos[0] = scene->cam.coord->x + x * t[i];
-			hitpos[1] = scene->cam.coord->y + y * t[i];
-			hitpos[2] = scene->cam.coord->z + z * t[i];
-			float n[3];
-			n[0] = hitpos[i] - scene->spheres[0].coord->x;
-			n[1] = hitpos[i] - scene->spheres[1].coord->y;
-			n[2] = hitpos[i] - scene->spheres[3].coord->z;
-			// aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+			t_vec3d hitpos;
+			hitpos.x = scene->cam.coord->x + x * t[i];
+			hitpos.y = scene->cam.coord->y + y * t[i];
+			hitpos.z = scene->cam.coord->z + z * t[i];
+			t_vec3d n;
+			n.x = hitpos.x - scene->spheres[0].coord->x;
+			n.y = hitpos.y - scene->spheres[0].coord->y;
+			n.z = hitpos.z - scene->spheres[0].coord->z;
 			i++;
 		}
 		return 0xff48e448;
