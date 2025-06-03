@@ -28,6 +28,15 @@ void	my_mlx_pixel_put2(t_data *data, int px, int color)
 	*(unsigned int *)dest = color;
 }
 
+float clamp(float n, float min, float max){
+
+	if (n < min)
+		return min;
+	if (n > max)
+		return max;
+	return n;
+}
+
 float clamp_color(float n){
 
 	if (n < 0)
@@ -106,12 +115,28 @@ uint32_t per_pixel(float x, float y, t_scene *scene)
 	norm.y = hitpos.y - scene->spheres[0].coord->y;
 	norm.z = hitpos.z - scene->spheres[0].coord->z;
 	norm = norm_vec(&norm);
-	// study
-	norm.x = norm.x * 0.5f + 0.5f;
-	norm.y = norm.y * 0.5f + 0.5f;
-	norm.z = norm.z * 0.5f + 0.5f;
+	// ajusts color channels to appear equal
+	// norm.x = norm.x * 0.5f + 0.5f;
+	// norm.y = norm.y * 0.5f + 0.5f;
+	// norm.z = norm.z * 0.5f + 0.5f;
 
-	return (color_per_pixel(&norm, 1));
+    t_vec3d light_dir = {-1, -1, -1};
+    
+
+    light_dir = norm_vec(&light_dir);
+
+    // negative light dir
+    light_dir = vec_x_scalar(&light_dir, -1);
+    float d = dot_vecs(&norm, &light_dir); // == cos(angle) | if angle > 90 = negative result | cos(90) == 0
+    // dot product = always in -1->1 range
+    // this angle is the surface angle - reflects the light
+
+    // calmping only min, so there is no negative (if angle > 90)
+    d = clamp(d, 0.0f, d);
+
+    t_vec3d sphere_color = {0, 1, 0};
+    sphere_color = vec_x_scalar(&sphere_color, d);
+	return (color_per_pixel(&sphere_color, 1));
 }
 
 int    render(t_scene *scene)
