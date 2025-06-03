@@ -39,6 +39,7 @@ float clamp_color(float n){
 
 uint32_t color_per_pixel(t_vec3d *vec, float alpha)
 {
+    // y is upside down
 	uint8_t r = (uint8_t)(clamp_color(vec->x) * 255.0f);
 	uint8_t g = (uint8_t)(clamp_color(vec->y) * 255.0f);
 	uint8_t b = (uint8_t)(clamp_color(vec->z) * 255.0f);
@@ -123,12 +124,13 @@ int    render(t_scene *scene)
 	while (y < HEIGHT && i < (WIDTH * HEIGHT))
 	// while (i < (WIDTH * HEIGHT))
 	{
+        // 0 -> 1 range
 		coord[0] = ((float)x/(float)WIDTH);
 		coord[1] = ((float)y/(float)HEIGHT);
 		// z is the ray direction (1 or -1)
 		// remap screen coords so xy(0,0) is in the middle
 		coord[0] = coord[0] * 2.0f - 1.0f;
-		coord[1] = coord[1] * 2.0f - 1.0f;
+		coord[1] = (1.0 - coord[1]) * 2.0f - 1.0f;
 		my_mlx_pixel_put(&scene->img, x, y, per_pixel(coord[0], coord[1], scene));
 		// my_mlx_pixel_put(&scene->img, x, y, color_per_pixel(coord[0], coord[1]));
 		// my_mlx_pixel_put2(&scene->img, i, 0x48E448);
