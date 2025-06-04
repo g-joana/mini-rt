@@ -3,18 +3,17 @@
 void free_scene(t_scene *scene)
 {
     int count = 0;
-    free(scene->camera.coordinates);
-    free(scene->camera.normalized);
-    free(scene->ambient_light.rgb);
-    free(scene->light.coordinates);
-    free(scene->light.brightness);
+    free(scene->cam.coord);
+    free(scene->cam.norm);
+    free(scene->amb_light.rgb);
+    free(scene->light.coord);
     free(scene->light.rgb);
     if (scene->spheres)
     {
         count = 0;
         while (count < scene->amount[SP])
         {
-            free(scene->spheres[count].coordinates);
+            free(scene->spheres[count].coord);
             free(scene->spheres[count].rgb);
             count++;
         }
@@ -25,8 +24,8 @@ void free_scene(t_scene *scene)
         count = 0;
         while (count < scene->amount[PL])
         {
-            free(scene->planes[count].coordinates);
-            free(scene->planes[count].normalized);
+            free(scene->planes[count].coord);
+            free(scene->planes[count].norm);
             free(scene->planes[count].rgb);
             count++;
         }
@@ -37,8 +36,8 @@ void free_scene(t_scene *scene)
         count = 0;
         while (count < scene->amount[CY])
         {
-            free(scene->cylinders[count].coordinates);
-            free(scene->cylinders[count].normalized);
+            free(scene->cylinders[count].coord);
+            free(scene->cylinders[count].norm);
             free(scene->cylinders[count].rgb);
             count++;
         }
@@ -72,4 +71,14 @@ void	free_split(char **array)
 		i++;
 	}
 	free(array);
+}
+
+int	key_hook(int key, t_scene *scene)
+{
+	if (key == 65307)
+	{
+            free_scene(scene);
+	    exit(1);
+	}
+	return (0);
 }

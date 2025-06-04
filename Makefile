@@ -10,7 +10,7 @@ PARS_DIR	= $(SRC_DIR)/parser
 VEC_DIR		= trivec
 
 # Sources
-SRCS		= main.c free.c error.c print.c
+SRCS		= main.c free.c error.c print.c render.c
 
 # Parser files
 PARS		= init_setup.c init_shapes.c parser.c parser_utils.c set_properties.c set_scene.c
@@ -21,18 +21,19 @@ OBJS		= \
 			$(addprefix $(OBJ_DIR)/, $(PARS:.c=.o))
 
 # Compiler
-CC			= cc
+CC			= clang
 CFLAGS		= -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -I$(VEC_DIR) -ggdb3
+# CFLAGS		= -Wall -Wextra -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -I$(VEC_DIR) -ggdb3
 
 # Libraries
 LIBFT		= $(LIBFT_DIR)/libft.a
-MLX			= -L$(MLX_DIR) -lXext -lX11 -lm
+MLX			= $(MLX_DIR)/libmlx.a -lXext -lX11 -lm
 VEC			= $(VEC_DIR)/trivec.a
 
 # Targets
 all: $(NAME)
 
-$(NAME): $(LIBFT) $(VEC) $(OBJ_DIR) $(OBJS)
+$(NAME): $(LIBFT) $(MLX) $(VEC) $(OBJ_DIR) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLX) $(VEC) -o $(NAME)
 
 $(OBJ_DIR):
@@ -49,12 +50,16 @@ $(OBJ_DIR)/%.o: $(PARS_DIR)/%.c
 $(LIBFT):
 	make -C $(LIBFT_DIR)
 
+$(MLX):
+	make -C $(MLX_DIR)
+
 $(VEC):
 	make -C $(VEC_DIR)
 
 clean:
 	rm -rf $(OBJ_DIR)
 	make -C $(LIBFT_DIR) clean
+	make -C $(MLX_DIR) clean
 	make -C $(VEC_DIR) clean
 
 fclean: clean

@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 19:56:31 by nranna            #+#    #+#             */
-/*   Updated: 2025/05/28 21:51:33 by nranna           ###   ########.fr       */
+/*   Updated: 2025/06/02 15:08:56 by jou              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@
 
 typedef struct s_vec3d
 {
-	double		x;
-	double		y;
-	double		z;
+	float		x;
+	float		y;
+	float		z;
 }				t_vec3d;
 
 //I'm worried about performance, that's why I'm passing it by reference
