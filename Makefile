@@ -21,7 +21,7 @@ OBJS		= \
 			$(addprefix $(OBJ_DIR)/, $(PARS:.c=.o))
 
 # Compiler
-CC			= clang
+CC			= gcc
 CFLAGS		= -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -I$(VEC_DIR) -ggdb3
 # CFLAGS		= -Wall -Wextra -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -I$(VEC_DIR) -ggdb3
 
