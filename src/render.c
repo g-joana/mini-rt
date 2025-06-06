@@ -48,12 +48,8 @@ uint32_t per_pixel(float x, float y, t_scene *scene)
 	const t_vec3d ray_origin = {0, 0, 1.0f}; // (camera)
 	const t_vec3d ray_dir = {x, y, -1.0f};
 	float r = 0.5f;
-
 	float a = dot_vecs(&ray_dir, &ray_dir);
-
-	// ray origin
 	float b = 2.0f * dot_vecs(&ray_origin, &ray_dir);
-	
 	float c = dot_vecs(&ray_origin, &ray_origin) - r * r;
 
 	// discriminant = t = hit distance / point
