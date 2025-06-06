@@ -1,44 +1,5 @@
 #include "../includes/minirt.h"
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
-{
-	char	*dest;
-
-	dest = data->addr + (y * data->line_len + x
-			* (data->bits_per_pixel / 8));
-	*(unsigned int *)dest = color;
-}
-
-/* if the number passes max/min, it returns max/min, else returns the number */
-float clamp(float n, float min, float max){
-
-	if (n < min)
-		return min;
-	if (n > max)
-		return max;
-	return n;
-}
-
-/* same as clamp, but fixed max(1) and fixed min(0) */
-float clamp_color(float n){
-
-	if (n < 0)
-		return 0;
-	if (n > 1)
-		return 1;
-	return n;
-}
-
-uint32_t color_per_pixel(t_vec3d *vec, float alpha)
-{
-	uint8_t r = (uint8_t)(clamp_color(vec->x) * 255.0f);
-	uint8_t g = (uint8_t)(clamp_color(vec->y) * 255.0f);
-	uint8_t b = (uint8_t)(clamp_color(vec->z) * 255.0f);
-	uint8_t a = (uint8_t)(clamp_color(alpha) * 255.0f);
-
-	return (a << 24) | (r << 16) | (g << 8) | b;
-}
-
 /* returns the color of the pixel based on maths */
 uint32_t per_pixel(float x, float y, t_scene *scene)
 {
@@ -56,27 +17,32 @@ uint32_t per_pixel(float x, float y, t_scene *scene)
 	// b^2 - 4ac
 	float delta = b * b - 4.0f * a * c;
 
+    // if no intersections, its the background. no need to continue calculating
 	if (delta < 0.0f)
 		return 0xff000000;
 
 	// float t0 = (-b - sqrtf(discriminant)) / (2.0f * a);
 	// float t1 = (+b - sqrtf(discriminant)) / (2.0f * a);
 
-    // t0 is the closest intersection of ray hitting sphere (its the surface the camera sees)
+    // t0 is the distance of the closest intersection of ray hitting sphere (its the surface the camera sees)
 	float t0 = (-b - sqrtf(delta)) / (2.0f * a);
 	// float t1 = (-b + sqrtf(delta)) / (2.0f * a);
 
+    // hit position -> coord of intersection
 	t_vec3d hitpos;
     hitpos = vec_x_scalar(&ray_dir, t0);
     hitpos = add_vecs(&ray_origin, &hitpos);
 	t_vec3d norm;
-    // in this case the sphere coord is 0, so it makes no difference
+    // get the size of sphere ray vector
     norm = sub_vecs(&hitpos, scene->spheres[0].coord);
+    // in this case the sphere coord is 0, so it makes no difference
+
+    // normalize to get the direction which the surface is pointing
 	norm = norm_vec(&norm);
 
     t_vec3d light_dir = {-1, -1, -1};
     
-
+    // is it necessary?
     light_dir = norm_vec(&light_dir);
 
     // negative light direction because we are gonna shoot a ray at light, not from light?
