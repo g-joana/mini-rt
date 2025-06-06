@@ -63,7 +63,7 @@ void    set_rgb(char *str, uint8_t *rgb)
     free_split(values);
 }
 
-void   set_fov(char *str, uint8_t*fov)
+void   set_fov(char *str, float *fov)
 {
     char **values = ft_split(str, ',');
 

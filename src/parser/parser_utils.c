@@ -32,6 +32,9 @@ float   ft_atof(char *str)
         while (str[i+count] && ft_isdigit(str[i + count]))
             count++;
         if (count)
+		{
+			
+		}
             ret += (float)ft_atoi(&str[i]) / power(10, count);
     }
     // ret = round4(ret);
