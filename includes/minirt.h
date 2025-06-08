@@ -1,18 +1,19 @@
 #ifndef  MINIRT_H
 # define MINIRT_H
 
-#include "../libft/libft.h"
-#include "../mlx/mlx.h"
+# include "../libft/libft.h"
+# include "../mlx/mlx.h"
 // #include "../mlx/mlx_int.h"
-#include <stdint.h> // check if allowed (uint32)
-#include <stdbool.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <math.h>
-#include "../trivec/trivec.h"
+# include <stdint.h> // check if allowed (uint32)
+# include <stdbool.h>
+# include <stdio.h>
+# include <fcntl.h>
+# include <math.h>
+# include "../trivec/trivec.h"
 
-#define WIDTH 400
-#define HEIGHT 400
+# define WIDTH 400
+# define HEIGHT 400
+# define MAX_ELEMENTS 6
 
 enum e_id {
     A,
@@ -130,7 +131,7 @@ float   ft_atof(char *str);
 // set_scene.c
 void    set_camera(char *line, t_scene *scene);
 void    set_ambient(char *line, t_scene *scene);
-void   set_light(char *line, t_scene *scene);
+void	set_light(char *line, t_scene *scene);
 void    set_plane(char *line, t_scene *scene, int i);
 void    set_sphere(char *line, t_scene *scene, int i);
 void    set_cylinder(char *line, t_scene *scene, int i);
