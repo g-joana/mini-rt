@@ -21,7 +21,7 @@ void print_scene(t_scene *scene)
         scene->cam.norm->x, 
         scene->cam.norm->y, 
         scene->cam.norm->z);
-    printf("  FOV: %f\n", scene->cam.fov);
+    printf("  FOV: %d\n", scene->cam.fov);
     printf("\n");
 
     // Print light

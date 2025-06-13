@@ -1,27 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 16:39:55 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/13 19:12:30 by nranna           ###   ########.fr       */
+/*   Created: 2025/06/06 17:01:09 by nranna            #+#    #+#             */
+/*   Updated: 2025/06/06 17:01:15 by nranna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minirt.h"
+#include "../includes/minirt.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	size_t	i;
 
-	i = 0;
-	while (s1[i] || s2[i])
-	{
-		if (s1[i] != s2[i])
-			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-		i++;
-	}
-	return (0);
-}
