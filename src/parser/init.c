@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:52:34 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/13 17:59:38 by nranna           ###   ########.fr       */
+/*   Updated: 2025/06/13 20:12:16 by nranna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ static int	*count_elements(char *file)
 			free_gnl(fd);
 			exit_error(NULL, "invalid id", 1);
 		}
+		free(id);
+		id = get_first_word(get_next_line(fd), 1);
 	}
 	free(id);
 	close(fd);

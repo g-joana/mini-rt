@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 12:48:59 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/13 19:42:48 by nranna           ###   ########.fr       */
+/*   Updated: 2025/06/13 20:01:45 by nranna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ t_scene	*parser(char *file)
 	t_scene	*scene;
 	int		*count;
 	char	*line;
-	printf("entrei no parser");
 
 	scene = validade_init_scene(file);
 	printf("passei do validador e do inicializador");
