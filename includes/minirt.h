@@ -101,6 +101,11 @@ t_scene		*parser(char *file);
 t_scene		*init_scene(char *file);
 char		*get_first_word(char *str, bool free_str);
 
+// parser_utils.c
+float	round4(float value);
+int	power(int base, int expoent);
+float	ft_atof(char *str);
+
 // init_utils_scene.c
 t_camera	init_camera();
 t_alight	init_ambient();

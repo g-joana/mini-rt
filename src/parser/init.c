@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:52:34 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/15 16:08:21 by jou              ###   ########.fr       */
+/*   Updated: 2025/06/15 16:33:54 by jou              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,48 +113,4 @@ static int	increment_elements_count(char *id, int *amount)
 	else if (id[0] != '\n')
 		return (1);
 	return (0);
-}
-
-
-
-
-// these guys should go on libft
-float	round4(float value)
-{
-	return (((int)(value * 10000 + 0.5f)) / 10000.0f);
-}
-
-int	power(int base, int expoent)
-{
-	int	ret;
-
-	ret = 1;
-	while (expoent--)
-		ret *= base;
-	return (ret);
-}
-
-float	ft_atof(char *str)
-{
-	int		i;
-	int		count;
-	float	ret;
-
-	i = 0;
-	count = 0;
-	ret = ft_atoi(str);
-	while (str && str[i] && str[i] != '.')
-		i++;
-	if (str[i] && str[i] == '.')
-	{
-		i++;
-		while (str[i + count] && ft_isdigit(str[i + count]))
-			count++;
-		if (count)
-		{
-		}
-		ret += (float)ft_atoi(&str[i]) / power(10, count);
-	}
-	// ret = round4(ret);
-	return (ret);
 }
