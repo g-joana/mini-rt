@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:55:15 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/13 14:26:11 by nranna           ###   ########.fr       */
+/*   Updated: 2025/06/15 16:00:17 by nranna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_light	init_light(void)
 {
 	t_light	light;
 
-	light.coord = malloc(sizeof(t_vec3d) * 3);
+	light.coord = malloc(sizeof(t_vec3d));
 	light.coord->x = 0;
 	light.coord->y = 0;
 	light.coord->z = 0;
@@ -48,11 +48,11 @@ t_camera	init_camera(void)
 {
 	t_camera	cam;
 
-	cam.coord = malloc(sizeof(t_vec3d) * 3);
+	cam.coord = malloc(sizeof(t_vec3d));
 	cam.coord->x = 0;
 	cam.coord->y = 0;
 	cam.coord->z = 0;
-	cam.norm = malloc(sizeof(t_vec3d) * 3);
+	cam.norm = malloc(sizeof(t_vec3d));
 	cam.norm->x = 0;
 	cam.norm->y = 0;
 	cam.norm->z = 0;

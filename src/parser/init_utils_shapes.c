@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:56:54 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/13 14:24:43 by nranna           ###   ########.fr       */
+/*   Updated: 2025/06/15 15:59:17 by nranna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@ t_plane	*init_planes(int amount)
 	planes = malloc(sizeof(t_plane) * amount);
 	while (i < amount)
 	{
-		planes[i].coord = malloc(sizeof(t_vec3d) * 3);
+		planes[i].coord = malloc(sizeof(t_vec3d));
 		planes[i].coord->x = 0;
 		planes[i].coord->y = 0;
 		planes[i].coord->z = 0;
-		planes[i].norm = malloc(sizeof(t_vec3d) * 3);
+		planes[i].norm = malloc(sizeof(t_vec3d));
 		planes[i].norm->x = 0;
 		planes[i].norm->y = 0;
 		planes[i].norm->z = 0;
@@ -49,7 +49,7 @@ t_sphere	*init_spheres(int amount)
 	spheres = malloc(sizeof(t_sphere) * amount);
 	while (i < amount)
 	{
-		spheres[i].coord = malloc(sizeof(t_vec3d) * 3);
+		spheres[i].coord = malloc(sizeof(t_vec3d));
 		spheres[i].coord->x = 0;
 		spheres[i].coord->y = 0;
 		spheres[i].coord->z = 0;
@@ -72,11 +72,11 @@ t_cylinder	*init_cylinders(int amount)
 	cylinders = malloc(sizeof(t_cylinder) * amount);
 	while (i < amount)
 	{
-		cylinders[i].coord = malloc(sizeof(t_vec3d) * 3);
+		cylinders[i].coord = malloc(sizeof(t_vec3d));
 		cylinders[i].coord->x = 0;
 		cylinders[i].coord->y = 0;
 		cylinders[i].coord->z = 0;
-		cylinders[i].norm = malloc(sizeof(t_vec3d) * 3);
+		cylinders[i].norm = malloc(sizeof(t_vec3d));
 		cylinders[i].norm->x = 0;
 		cylinders[i].norm->y = 0;
 		cylinders[i].norm->z = 0;
