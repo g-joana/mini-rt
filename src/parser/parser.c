@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 12:48:59 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/15 15:09:09 by nranna           ###   ########.fr       */
+/*   Updated: 2025/06/15 16:28:06 by jou              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 
 static t_scene	*validade_init_scene(char *file);
 static void		parse_line(char *line, t_scene *scene, int *count);
-// put this last guy on libft
-static int		ft_strcmp(const char *s1, const char *s2);
 
 t_scene	*parser(char *file)
 {
@@ -44,7 +42,7 @@ static t_scene	*validade_init_scene(char *file)
 	char	*dot;
 
 	dot = ft_strrchr(file, '.');
-	if (!dot || ft_strcmp(dot, ".rt") != 0)
+	if (!dot || ft_strncmp(dot, ".rt", 4) != 0)
 		exit_error(NULL, "ERROR: Invalid extension", 1);
 	if (access(file, R_OK) != 0)
 		exit_error(NULL, "ERROR: Can't access file", 1);
@@ -81,21 +79,4 @@ static void	parse_line(char *line, t_scene *scene, int *count)
 	else if (ft_strncmp("cy", id, 3) == 0)
 		set_cylinder(line, scene, count[CY]++);
 	free(id);
-}
-
-
-
-// TODO: coloque esse cara na libft (não esqueça de tirar o static)
-static int	ft_strcmp(const char *s1, const char *s2)
-{
-	size_t	i;
-
-	i = 0;
-	while (s1[i] || s2[i])
-	{
-		if (s1[i] != s2[i])
-			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-		i++;
-	}
-	return (0);
 }
