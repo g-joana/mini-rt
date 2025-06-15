@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:52:34 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/13 20:12:16 by nranna           ###   ########.fr       */
+/*   Updated: 2025/06/15 16:08:21 by jou              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_scene	*init_scene(char *file)
 	if (scene->amount[C] != 1)
 		exit_error(NULL, "ERROR: scene needs 1 camera placed", 1);
 	if (scene->amount[L] != 1)
-		exit_error(NULL, "ERROR: scene needs 1 camera placed", 1);
+		exit_error(NULL, "ERROR: scene needs 1 light placed", 1);
 	scene->amb_light = init_ambient();
 	scene->cam = init_camera();
 	scene->light = init_light();
