@@ -147,7 +147,7 @@ int		render(t_scene *scene)
 			x = 0;
 		}
 		count++;
-		printf("%i\n", count);
+		// printf("%i\n", count);
 	}
 	mlx_put_image_to_window(scene->mlx, scene->mlx_win, scene->img.img, 0, 0);
 	// mlx_string_put(scene->mlx, scene->mlx_win, 5, 12, 0xFFFFFF, "render");
