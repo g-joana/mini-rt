@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 12:48:59 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/13 20:01:45 by nranna           ###   ########.fr       */
+/*   Updated: 2025/06/15 15:09:09 by nranna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,6 @@ t_scene	*parser(char *file)
 	char	*line;
 
 	scene = validade_init_scene(file);
-	printf("passei do validador e do inicializador");
-	printf("passei do validador e do inicializador");
-	printf("passei do validador e do inicializador");
-	printf("passei do validador e do inicializador");
-	printf("passei do validador e do inicializador");
 	count = (int *)calloc(MAX_ELEMENTS, sizeof(int));
 	line = get_next_line(scene->fd);
 	while (line)

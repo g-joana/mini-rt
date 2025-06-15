@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 16:52:12 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/13 20:13:26 by nranna           ###   ########.fr       */
+/*   Updated: 2025/06/15 15:06:50 by nranna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int main(int argc, char **argv)
     if (argc != 2)
 		exit_error(NULL, "(ERROR) no input file: ./minirt [file.rt]", 1);
 	scene = parser(argv[1]);
-    // print_scene(scene);
+    print_scene(scene);
 	start_mlx(scene);
 	mlx_loop_hook(scene->mlx, render, scene); //change 2nd param to learn render
 	mlx_loop(scene->mlx);
