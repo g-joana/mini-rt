@@ -10,7 +10,7 @@ PARS_DIR	= $(SRC_DIR)/parser
 VEC_DIR		= trivec
 
 # Sources
-SRCS		= main.c free.c error.c print.c render.c
+SRCS		= main.c free.c error.c print.c render.c render_utils.c
 
 # Parser files
 PARS		= init.c init_utils_scene.c init_utils_shapes.c parser.c parser_utils.c \

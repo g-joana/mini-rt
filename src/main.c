@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../includes/minirt.h"
-#include <stdio.h>
 
 void	start_mlx(t_scene *scene);
 

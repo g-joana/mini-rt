@@ -142,6 +142,7 @@ void free_scene(t_scene *scene);
 void free_gnl(int fd);
 void	free_split(char **array);
 int	key_hook(int key, t_scene *scene);
+int	mouse_hook(t_scene *scene);
 
 // error.c
 void exit_error(t_scene* scene, char *msg, int ret);
@@ -157,5 +158,11 @@ void print_scene(t_scene *scene);
 // render.c
 int		render(t_scene *scene);
 void	start_mlx(t_scene *scene);
+
+// render_utils.c
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+float clamp(float n, float min, float max);
+float clamp_color(float n);
+uint32_t color_per_pixel(t_vec3d *vec, float alpha);
 
 #endif
