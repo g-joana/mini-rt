@@ -53,7 +53,7 @@ uint32_t per_pixel(float x, float y, t_scene *scene)
     // dot product = always in -1->1 range
     // this angle is the surface angle - reflects the light
 
-    // calmping only min, so there is no negative (if angle > 90)
+    // clamping only min, so there is no negative (if angle > 90)
     d = clamp(d, 0.0f, d);
 
     // rgb values between 0->1
@@ -63,14 +63,13 @@ uint32_t per_pixel(float x, float y, t_scene *scene)
 	return (color_per_pixel(&sphere_rgb, 1));
 }
 
-int    render(t_scene *scene)
+int		render(t_scene *scene)
 {
 	static int count;
 	uint32_t x = 0;
 	uint32_t y = 0;
 	int i = 0;
 	float coord[2];
-
 	while (y < HEIGHT && i < (WIDTH * HEIGHT))
 	{
         x = 0;

@@ -13,7 +13,8 @@ VEC_DIR		= trivec
 SRCS		= main.c free.c error.c print.c render.c render_utils.c
 
 # Parser files
-PARS		= init_setup.c init_shapes.c parser.c parser_utils.c set_properties.c set_scene.c
+PARS		= init.c init_utils_scene.c init_utils_shapes.c parser.c parser_utils.c \
+			  set_properties.c set_scene.c set_shapes.c \
 
 # Object files
 OBJS		= \
@@ -21,9 +22,9 @@ OBJS		= \
 			$(addprefix $(OBJ_DIR)/, $(PARS:.c=.o))
 
 # Compiler
-CC			= gcc
-CFLAGS		= -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -I$(VEC_DIR) -ggdb3
-# CFLAGS		= -Wall -Wextra -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -I$(VEC_DIR) -ggdb3
+CC			= clang
+# CFLAGS		= -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -I$(VEC_DIR) -ggdb3
+CFLAGS		= -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -I$(VEC_DIR) -ggdb3 -g
 
 # Libraries
 LIBFT		= $(LIBFT_DIR)/libft.a

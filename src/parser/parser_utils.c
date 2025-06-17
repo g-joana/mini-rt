@@ -1,12 +1,8 @@
 #include "../../includes/minirt.h"
 
-// arredonda para 4 casas decimais
-float round4(float value) {
-    // val= 3.141592
-    // * 10000 = 31415.92
-    // + 0.5f (round & cast to int)
-    // / 10000 = 3.1416
-    return ((int)(value * 10000 + 0.5f)) / 10000.0f;
+float	round4(float value)
+{
+	return (((int)(value * 10000 + 0.5f)) / 10000.0f);
 }
 
 int	power(int base, int expoent)
@@ -19,21 +15,27 @@ int	power(int base, int expoent)
 	return (ret);
 }
 
-float   ft_atof(char *str)
+float	ft_atof(char *str)
 {
-    int i = 0;
-    int count = 0;
-    float ret = ft_atoi(str);
-    while (str && str[i] && str[i] != '.')
-        i++;
-    if (str[i] && str[i] == '.')
-    {
-        i++;
-        while (str[i+count] && ft_isdigit(str[i + count]))
-            count++;
-        if (count)
-            ret += (float)ft_atoi(&str[i]) / power(10, count);
-    }
-    // ret = round4(ret);
-    return(ret);
+	int		i;
+	int		count;
+	float	ret;
+
+	i = 0;
+	count = 0;
+	ret = ft_atoi(str);
+	while (str && str[i] && str[i] != '.')
+		i++;
+	if (str[i] && str[i] == '.')
+	{
+		i++;
+		while (str[i + count] && ft_isdigit(str[i + count]))
+			count++;
+		if (count)
+		{
+		}
+		ret += (float)ft_atoi(&str[i]) / power(10, count);
+	}
+	// ret = round4(ret);
+	return (ret);
 }
