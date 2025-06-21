@@ -1,42 +1,39 @@
 #include "../includes/minirt.h"
 
-/* returns the color of the pixel based on maths */
-uint32_t per_pixel(float x, float y, t_scene *scene)
+bool sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_vec3d *hitpos, float r)
 {
-	// (ax^2 + ay^2)t^2 + (2(bxax + byay))t + (bx^2 + by^2 - r^2) = 0;
-    // a = ray direction
-    // b = ray origin
-	const t_vec3d ray_origin = {0, 0, 1.0f}; // (camera)
-	const t_vec3d ray_dir = {x, y, -1.0f};
-	float r = 0.5f;
-	float a = dot_vecs(&ray_dir, &ray_dir);
-	float b = 2.0f * dot_vecs(&ray_origin, &ray_dir);
-	float c = dot_vecs(&ray_origin, &ray_origin) - r * r;
+	float a = dot_vecs(ray_dir, ray_dir);
+	float b = 2.0f * dot_vecs(ray_origin, ray_dir);
+	float c = dot_vecs(ray_origin, ray_origin) - r * r;
 
 	// discriminant = t = hit distance / point
 	// b^2 - 4ac
 	float delta = b * b - 4.0f * a * c;
-
-    // if no intersections, its the background. no need to continue calculating
 	if (delta < 0.0f)
-		return 0xff000000;
-
-	// float t0 = (-b - sqrtf(discriminant)) / (2.0f * a);
-	// float t1 = (+b - sqrtf(discriminant)) / (2.0f * a);
-
-    // t0 is the distance of the closest intersection of ray hitting sphere (its the surface the camera sees)
+		return 0;
 	float t0 = (-b - sqrtf(delta)) / (2.0f * a);
-	// float t1 = (-b + sqrtf(delta)) / (2.0f * a);
+	// hit position -> coord of intersection in range: -1 ~ 1
+	*hitpos = vec_x_scalar(ray_dir, t0);
+	*hitpos = add_vecs(ray_origin, hitpos);
+	return 1;
+}
 
-    // hit position -> coord of intersection
-	t_vec3d hitpos;
-    hitpos = vec_x_scalar(&ray_dir, t0);
-    hitpos = add_vecs(&ray_origin, &hitpos);
+/* returns the color of the pixel based on maths */
+uint32_t per_pixel(float x, float y, t_scene *scene)
+{
+	// (ax^2 + ay^2)t^2 + (2(bxax + byay))t + (bx^2 + by^2 - r^2) = 0;
+	const t_vec3d ray_origin = {0, 0, 1.0f}; // (camera)
+	const t_vec3d ray_dir = {x, y, -1.0f};
+
+	float r = 0.5f;
+	t_vec3d hitpos = {2, 2, 2};
+	bool hit = sphere_hit(&ray_origin, &ray_dir, &hitpos, r); // need to find the closest t0 of all spheres (the one in front of the others
+	if (!hit)
+		return 0xff000000; // background color
+
 	t_vec3d norm;
     // get the size of sphere ray vector
     norm = sub_vecs(&hitpos, scene->spheres[0].coord);
-    // in this case the sphere coord is 0, so it makes no difference
-
     // normalize to get the direction which the surface is pointing
 	norm = norm_vec(&norm);
 
