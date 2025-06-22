@@ -18,31 +18,18 @@ bool sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_vec3d *hit
 	return 1;
 }
 
-/* returns the color of the pixel based on maths */
-uint32_t per_pixel(float x, float y, t_scene *scene)
+uint32_t apply_sp_color(t_vec3d *hitpos, t_scene *scene)
 {
-	// (ax^2 + ay^2)t^2 + (2(bxax + byay))t + (bx^2 + by^2 - r^2) = 0;
-	const t_vec3d ray_origin = {0, 0, 1.0f}; // (camera)
-	const t_vec3d ray_dir = {x, y, -1.0f};
-
-	float r = 0.5f;
-	t_vec3d hitpos = {2, 2, 2};
-	bool hit = sphere_hit(&ray_origin, &ray_dir, &hitpos, r); // need to find the closest t0 of all spheres (the one in front of the others
-	if (!hit)
-		return 0xff000000; // background color
-
 	t_vec3d norm;
     // get the size of sphere ray vector
-    norm = sub_vecs(&hitpos, scene->spheres[0].coord);
+    norm = sub_vecs(hitpos, scene->spheres[0].coord);
     // normalize to get the direction which the surface is pointing
 	norm = norm_vec(&norm);
 
     t_vec3d light_dir = {-1, -1, -1};
     
-    // is it necessary?
     light_dir = norm_vec(&light_dir);
 
-    // negative light direction because we are gonna shoot a ray at light, not from light?
     light_dir = vec_x_scalar(&light_dir, -1);
 
     // dot product of sphere norm and -light direction
@@ -58,6 +45,22 @@ uint32_t per_pixel(float x, float y, t_scene *scene)
     sphere_rgb = vec_x_scalar(&sphere_rgb, d);
     // applying light/shadow to sphere color
 	return (color_per_pixel(&sphere_rgb, 1));
+}
+
+/* returns the color of the pixel based on maths */
+uint32_t per_pixel(float x, float y, t_scene *scene)
+{
+	// (ax^2 + ay^2)t^2 + (2(bxax + byay))t + (bx^2 + by^2 - r^2) = 0;
+	const t_vec3d ray_origin = {0, 0, 1.0f}; // (camera)
+	const t_vec3d ray_dir = {x, y, -1.0f};
+
+	float r = 0.5f;
+	t_vec3d hitpos = {2, 2, 2};
+	bool hit = sphere_hit(&ray_origin, &ray_dir, &hitpos, r); // need to find the closest t0 of all spheres (the one in front of the others
+	if (!hit)
+		return 0xff000000; // background color
+	float color = apply_sp_color(&hitpos, scene);
+	return color;
 }
 
 int		render(t_scene *scene)
