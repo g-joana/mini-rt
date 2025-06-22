@@ -21,36 +21,36 @@ bool sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_vec3d *hit
 uint32_t apply_sp_color(t_vec3d *hitpos, t_scene *scene)
 {
 	t_vec3d norm;
-    // get the size of sphere ray vector
-    norm = sub_vecs(hitpos, scene->spheres[0].coord);
-    // normalize to get the direction which the surface is pointing
+	// get the size of sphere ray vector
+	norm = sub_vecs(hitpos, scene->spheres[0].coord);
+	// normalize to get the direction which the surface is pointing
 	norm = norm_vec(&norm);
 
-    // t_vec3d light_dir = {0, -3, -8};
-    t_vec3d light_dir = *scene->light.coord;
-    // t_vec3d light_dir = vec_x_scalar(scene->light.coord, -1);
-    
-    light_dir = norm_vec(&light_dir);
-    // light_dir = vec_x_scalar(&light_dir, -1);
+	// t_vec3d light_dir = {0, -3, -8};
+	t_vec3d light_dir = *scene->light.coord;
+	// t_vec3d light_dir = vec_x_scalar(scene->light.coord, -1);
 
-    // light_dir = vec_x_scalar(&light_dir, -1);
+	light_dir = norm_vec(&light_dir);
+	// light_dir = vec_x_scalar(&light_dir, -1);
 
-    // dot product of sphere norm and -light direction
-    float d = dot_vecs(&norm, &light_dir); // == cos(angle) | if angle > 90 = negative result | cos(90) == 0
-    // dot product = always in -1->1 range
-    // this angle is the surface angle - reflects the light
+	// light_dir = vec_x_scalar(&light_dir, -1);
 
-    // clamping only min, so there is no negative (if angle > 90)
-    d = clamp(d, 0.0f, d);
+	// dot product of sphere norm and -light direction
+	float d = dot_vecs(&norm, &light_dir); // == cos(angle) | if angle > 90 = negative result | cos(90) == 0
+					       // dot product = always in -1->1 range
+					       // this angle is the surface angle - reflects the light
 
-    // rgb values between 0->1
-    t_vec3d sphere_rgb = {	
-				clamp_color(scene->spheres[0].rgb[0]),
-				clamp_color(scene->spheres[0].rgb[1]),
-				clamp_color(scene->spheres[0].rgb[2])
-			};
-    sphere_rgb = vec_x_scalar(&sphere_rgb, d);
-    // applying light/shadow to sphere color
+					       // clamping only min, so there is no negative (if angle > 90)
+	d = clamp(d, 0.0f, d);
+
+	// rgb values between 0->1
+	t_vec3d sphere_rgb = {	
+		clamp_color(scene->spheres[0].rgb[0]),
+		clamp_color(scene->spheres[0].rgb[1]),
+		clamp_color(scene->spheres[0].rgb[2])
+	};
+	sphere_rgb = vec_x_scalar(&sphere_rgb, d);
+	// applying light/shadow to sphere color
 	return (color_per_pixel(&sphere_rgb, 1));
 }
 
@@ -86,26 +86,26 @@ int		render(t_scene *scene)
 	float coord[2];
 	while (y < HEIGHT && i < (WIDTH * HEIGHT))
 	{
-        x = 0;
-        while (x < WIDTH)
-        {
-            // 0 -> 1 range
-            coord[0] = (x/(float)WIDTH);
-            coord[1] = (y/(float)HEIGHT);
+		x = 0;
+		while (x < WIDTH)
+		{
+			// 0 -> 1 range
+			coord[0] = (x/(float)WIDTH);
+			coord[1] = (y/(float)HEIGHT);
 
-            // remap screen coords, so xy(0,0) is in the middle
-            // coord[1] = coord[1] * 2.0f - 1.0f;
-            // coord[0] = (1.0 - coord[0]) * 2.0f - 1.0f;
-            coord[0] = coord[0] * 2.0f - 1.0f;
-            coord[1] = (1.0 - coord[1]) * 2.0f - 1.0f;
-	    // projection * view * transform * vertex
-            my_mlx_pixel_put(&scene->img, x, y, per_pixel(coord[0], coord[1], scene));
-            x++;
-        }
-        y++;
+			// remap screen coords, so xy(0,0) is in the middle
+			// coord[1] = coord[1] * 2.0f - 1.0f;
+			// coord[0] = (1.0 - coord[0]) * 2.0f - 1.0f;
+			coord[0] = coord[0] * 2.0f - 1.0f;
+			coord[1] = (1.0 - coord[1]) * 2.0f - 1.0f;
+			// projection * view * transform * vertex
+			my_mlx_pixel_put(&scene->img, x, y, per_pixel(coord[0], coord[1], scene));
+			x++;
+		}
+		y++;
 	}
-    count++;
-    // printf("%i\n", count);
+	count++;
+	// printf("%i\n", count);
 	mlx_put_image_to_window(scene->mlx, scene->mlx_win, scene->img.img, 0, 0);
 	// mlx_string_put(scene->mlx, scene->mlx_win, 5, 12, 0xFFFFFF, "render");
 	return 0;
