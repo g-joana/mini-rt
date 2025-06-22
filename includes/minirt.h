@@ -11,8 +11,8 @@
 # include <math.h>
 # include "../trivec/trivec.h"
 
-# define WIDTH 400
-# define HEIGHT 400
+# define WIDTH 600
+# define HEIGHT 600
 # define MAX_ELEMENTS 6
 
 enum e_id {

@@ -26,11 +26,14 @@ uint32_t apply_sp_color(t_vec3d *hitpos, t_scene *scene)
     // normalize to get the direction which the surface is pointing
 	norm = norm_vec(&norm);
 
-    t_vec3d light_dir = {-1, -1, -1};
+    // t_vec3d light_dir = {0, -3, -8};
+    t_vec3d light_dir = *scene->light.coord;
+    // t_vec3d light_dir = vec_x_scalar(scene->light.coord, -1);
     
     light_dir = norm_vec(&light_dir);
+    // light_dir = vec_x_scalar(&light_dir, -1);
 
-    light_dir = vec_x_scalar(&light_dir, -1);
+    // light_dir = vec_x_scalar(&light_dir, -1);
 
     // dot product of sphere norm and -light direction
     float d = dot_vecs(&norm, &light_dir); // == cos(angle) | if angle > 90 = negative result | cos(90) == 0
@@ -41,7 +44,11 @@ uint32_t apply_sp_color(t_vec3d *hitpos, t_scene *scene)
     d = clamp(d, 0.0f, d);
 
     // rgb values between 0->1
-    t_vec3d sphere_rgb = {0, 1, 0};
+    t_vec3d sphere_rgb = {	
+				clamp_color(scene->spheres[0].rgb[0]),
+				clamp_color(scene->spheres[0].rgb[1]),
+				clamp_color(scene->spheres[0].rgb[2])
+			};
     sphere_rgb = vec_x_scalar(&sphere_rgb, d);
     // applying light/shadow to sphere color
 	return (color_per_pixel(&sphere_rgb, 1));
@@ -51,12 +58,19 @@ uint32_t apply_sp_color(t_vec3d *hitpos, t_scene *scene)
 uint32_t per_pixel(float x, float y, t_scene *scene)
 {
 	// (ax^2 + ay^2)t^2 + (2(bxax + byay))t + (bx^2 + by^2 - r^2) = 0;
-	const t_vec3d ray_origin = {0, 0, 1.0f}; // (camera)
-	const t_vec3d ray_dir = {x, y, -1.0f};
+	// const t_vec3d ray_origin = {0, 0, 1.0f}; // (camera)
 
-	float r = 0.5f;
+
+	// ray:
+	const t_vec3d *ray_origin = scene->cam.coord;
+	// integrate this:
+	const t_vec3d ray_dir = {x, y, -1.0f};
+	// normalize?
+
+
+	float r = scene->spheres[0].diam / 2;
 	t_vec3d hitpos = {2, 2, 2};
-	bool hit = sphere_hit(&ray_origin, &ray_dir, &hitpos, r); // need to find the closest t0 of all spheres (the one in front of the others
+	bool hit = sphere_hit(ray_origin, &ray_dir, &hitpos, r); // need to find the closest t0 of all spheres (the one in front of the others
 	if (!hit)
 		return 0xff000000; // background color
 	float color = apply_sp_color(&hitpos, scene);
@@ -66,8 +80,8 @@ uint32_t per_pixel(float x, float y, t_scene *scene)
 int		render(t_scene *scene)
 {
 	static int count;
-	uint32_t x = 0;
-	uint32_t y = 0;
+	float x = 0;
+	float y = 0;
 	int i = 0;
 	float coord[2];
 	while (y < HEIGHT && i < (WIDTH * HEIGHT))
@@ -76,19 +90,22 @@ int		render(t_scene *scene)
         while (x < WIDTH)
         {
             // 0 -> 1 range
-            coord[0] = ((float)x/(float)WIDTH);
-            coord[1] = ((float)y/(float)HEIGHT);
+            coord[0] = (x/(float)WIDTH);
+            coord[1] = (y/(float)HEIGHT);
 
             // remap screen coords, so xy(0,0) is in the middle
+            // coord[1] = coord[1] * 2.0f - 1.0f;
+            // coord[0] = (1.0 - coord[0]) * 2.0f - 1.0f;
             coord[0] = coord[0] * 2.0f - 1.0f;
             coord[1] = (1.0 - coord[1]) * 2.0f - 1.0f;
+	    // projection * view * transform * vertex
             my_mlx_pixel_put(&scene->img, x, y, per_pixel(coord[0], coord[1], scene));
             x++;
         }
         y++;
 	}
     count++;
-    printf("%i\n", count);
+    // printf("%i\n", count);
 	mlx_put_image_to_window(scene->mlx, scene->mlx_win, scene->img.img, 0, 0);
 	// mlx_string_put(scene->mlx, scene->mlx_win, 5, 12, 0xFFFFFF, "render");
 	return 0;
