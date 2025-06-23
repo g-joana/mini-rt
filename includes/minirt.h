@@ -11,7 +11,7 @@
 # include <math.h>
 # include "../trivec/trivec.h"
 
-# define WIDTH 600
+# define WIDTH 900
 # define HEIGHT 600
 # define MAX_ELEMENTS 6
 
