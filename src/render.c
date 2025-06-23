@@ -1,5 +1,4 @@
 #include "../includes/minirt.h"
-#include <stdio.h>
 
 bool sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_vec3d *hitpos, float r)
 {
