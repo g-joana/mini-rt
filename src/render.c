@@ -1,6 +1,4 @@
 #include "../includes/minirt.h"
-#include <math.h>
-#include <stdint.h>
 
 bool sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_vec3d *hitpos, float r)
 {
@@ -89,47 +87,56 @@ t_vec3d cross_vecs(t_vec3d *a, t_vec3d *b) {
 
 int		render(t_scene *scene)
 {
+	// put this into scene struct
+	// aspect_ratio makes image not distort in different screen sizes by saving propotions on ratio
 	float aspect_ratio = (float)WIDTH / (float)HEIGHT;
-	float scale = tanf(scene->cam.fov * 0.5f * M_PI / 180.0f);
+	// scale is how much the camera is able to see (vertically) based on fov angle (zoom out/in)
+	float scale = tanf((scene->cam.fov / 2.0f) * (M_PI / 180.0f));
+	// tangent of fov/2 (the midle) in radians
+	// (fov / 2.0f) -> gets half fov
+	// (M_PI / 180.0f) -> converts to degrees
+	// tanf( degrees of the target ) ->
 
-	t_vec3d up = {0.0f, 1.0f, 0.0f};
+	// put this into cam struct
+	t_vec3d up_side = {0.0f, 1.0f, 0.0f};
 
-	t_vec3d temp = cross_vecs(scene->cam.norm, &up);
+	t_vec3d temp = cross_vecs(scene->cam.norm, &up_side);
 
-	t_vec3d zfoward = norm_vec(scene->cam.norm);
-	t_vec3d xright = norm_vec(&temp);
-	t_vec3d yup = cross_vecs(&zfoward, &xright);
+	t_vec3d foward = norm_vec(scene->cam.norm); // z
+	t_vec3d right = norm_vec(&temp); // x
+	t_vec3d up = cross_vecs(&foward, &right); // y
+	// isnt it up_side??
 
 
 	static int count;
 	float x = 0;
 	float y = 0;
-	int i = 0;
-	float coord[2];
-	while (y < HEIGHT && i < (WIDTH * HEIGHT))
+	float u;
+	float v;
+	while (y < HEIGHT)
 	{
 		x = 0;
 		while (x < WIDTH)
 		{
 			// 0 -> 1 range
-			coord[0] = (x/(float)WIDTH);
-			coord[1] = (y/(float)HEIGHT);
+			u = (x/(float)WIDTH);
+			v = (y/(float)HEIGHT);
 
+			// projection * view * transform * vertex
 			// remap screen coords, so xy(0,0) is in the middle
 			// coord[0] = coord[0] * 2.0f - 1.0f;
 			// coord[1] = (1.0 - coord[1]) * 2.0f - 1.0f;
-			coord[0] = (coord[0] * 2.0f - 1.0f) * aspect_ratio * scale;
-			coord[1] = (coord[1] * 2.0f - 1.0f) * scale;
+			u = (u * 2.0f - 1.0f) * aspect_ratio * scale;
+			v = (v * 2.0f - 1.0f) * scale;
 
-			t_vec3d xx = vec_x_scalar(&xright, coord[0]);
-			t_vec3d yy = vec_x_scalar(&yup, coord[1]);
+			t_vec3d x_dir = vec_x_scalar(&right, u);
+			t_vec3d y_dir = vec_x_scalar(&up, v);
 
-			t_vec3d ray_dir = add_vecs(&xx, &yy);
-			ray_dir = add_vecs(&ray_dir, &zfoward);
+			t_vec3d ray_dir = add_vecs(&x_dir, &y_dir);
+			ray_dir = add_vecs(&ray_dir, &foward);
 			ray_dir = norm_vec(&ray_dir);
 			
 			uint32_t color = trace_ray(&ray_dir, scene);
-			// projection * view * transform * vertex
 			my_mlx_pixel_put(&scene->img, x, y, color);
 			x++;
 		}
