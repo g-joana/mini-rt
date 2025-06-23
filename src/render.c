@@ -1,7 +1,11 @@
 #include "../includes/minirt.h"
+#include <stdio.h>
 
 bool sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_vec3d *hitpos, float r)
 {
+	// circle
+	// (x-a)^2 + (y-b)^2 - r^2 = 0
+	// quadratic eq
 	float a = dot_vecs(ray_dir, ray_dir);
 	float b = 2.0f * dot_vecs(ray_origin, ray_dir);
 	float c = dot_vecs(ray_origin, ray_origin) - r * r;
@@ -11,10 +15,11 @@ bool sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_vec3d *hit
 	float delta = b * b - 4.0f * a * c;
 	if (delta < 0.0f)
 		return 0;
-	float t0 = (-b - sqrtf(delta)) / (2.0f * a);
+	float closest_t = (-b - sqrtf(delta)) / (2.0f * a);
 	// hit position -> coord of intersection in range: -1 ~ 1
-	*hitpos = vec_x_scalar(ray_dir, t0);
+	*hitpos = vec_x_scalar(ray_dir, closest_t);
 	*hitpos = add_vecs(ray_origin, hitpos);
+	*hitpos = norm_vec(hitpos);
 	return 1;
 }
 
@@ -22,26 +27,25 @@ uint32_t apply_sp_color(t_vec3d *hitpos, t_scene *scene)
 {
 	t_vec3d norm;
 	// get the size of sphere ray vector
-	norm = sub_vecs(hitpos, scene->spheres[0].coord);
+	// norm = sub_vecs(hitpos, scene->spheres[0].coord);
 	// normalize to get the direction which the surface is pointing
-	norm = norm_vec(&norm);
+	norm = norm_vec(hitpos);
 
 	// t_vec3d light_dir = {0, -3, -8};
 	t_vec3d light_dir = *scene->light.coord;
 	// t_vec3d light_dir = vec_x_scalar(scene->light.coord, -1);
 
 	light_dir = norm_vec(&light_dir);
-	// light_dir = vec_x_scalar(&light_dir, -1);
 
 	// light_dir = vec_x_scalar(&light_dir, -1);
 
 	// dot product of sphere norm and -light direction
-	float d = dot_vecs(&norm, &light_dir); // == cos(angle) | if angle > 90 = negative result | cos(90) == 0
+	float light_intensity = dot_vecs(&norm, &light_dir); // == cos(angle) | if angle > 90 = negative result | cos(90) == 0
 					       // dot product = always in -1->1 range
 					       // this angle is the surface angle - reflects the light
 
 					       // clamping only min, so there is no negative (if angle > 90)
-	d = clamp(d, 0.0f, d);
+	light_intensity = clamp(light_intensity, 0.0f, light_intensity);
 
 	// rgb values between 0->1
 	t_vec3d sphere_rgb = {	
@@ -49,7 +53,7 @@ uint32_t apply_sp_color(t_vec3d *hitpos, t_scene *scene)
 		clamp_color(scene->spheres[0].rgb[1]),
 		clamp_color(scene->spheres[0].rgb[2])
 	};
-	sphere_rgb = vec_x_scalar(&sphere_rgb, d);
+	sphere_rgb = vec_x_scalar(&sphere_rgb, light_intensity);
 	// applying light/shadow to sphere color
 	return (color_per_pixel(&sphere_rgb, 1));
 }
@@ -62,7 +66,10 @@ uint32_t trace_ray(t_vec3d *ray_dir, t_scene *scene)
 
 
 	// ray:
-	const t_vec3d *ray_origin = scene->cam.coord;
+	// printf("sphere x before: %f\n", scene->spheres[0].coord->x);
+	const t_vec3d ray_origin = sub_vecs(scene->cam.coord, scene->spheres[0].coord);
+	// printf("sphere x: %f\n", ray_origin.x);
+	// const t_vec3d ray_origin = *scene->cam.coord;
 	// integrate this:
 	// const t_vec3d ray_dir = {x, y, -1.0f};
 	// normalize?
@@ -70,7 +77,7 @@ uint32_t trace_ray(t_vec3d *ray_dir, t_scene *scene)
 
 	float r = scene->spheres[0].diam / 2;
 	t_vec3d hitpos = {2, 2, 2};
-	bool hit = sphere_hit(ray_origin, ray_dir, &hitpos, r); // need to find the closest t0 of all spheres (the one in front of the others
+	bool hit = sphere_hit(&ray_origin, ray_dir, &hitpos, r); // need to find the closest t0 of all spheres (the one in front of the others
 	if (!hit)
 		return 0xff000000; // background color
 	float color = apply_sp_color(&hitpos, scene);
