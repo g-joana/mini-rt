@@ -47,13 +47,15 @@ uint32_t apply_sp_color(t_vec3d *hitpos, t_scene *scene)
 	light_intensity = clamp(light_intensity, 0.0f, light_intensity);
 
 	// rgb values between 0->1
+    // change rgb to vec3d
 	t_vec3d sphere_rgb = {	
-		clamp_color(scene->spheres[0].rgb[0]),
-		clamp_color(scene->spheres[0].rgb[1]),
-		clamp_color(scene->spheres[0].rgb[2])
+		(float)scene->spheres[0].rgb[0],
+		(float)scene->spheres[0].rgb[1],
+		(float)scene->spheres[0].rgb[2]
 	};
-	sphere_rgb = vec_x_scalar(&sphere_rgb, light_intensity);
+    sphere_rgb = norm_vec(&sphere_rgb);
 	// applying light/shadow to sphere color
+	sphere_rgb = vec_x_scalar(&sphere_rgb, light_intensity);
 	return (color_per_pixel(&sphere_rgb, 1));
 }
 
