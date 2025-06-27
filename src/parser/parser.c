@@ -6,12 +6,11 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 12:48:59 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/15 16:28:06 by jou              ###   ########.fr       */
+/*   Updated: 2025/06/27 19:00:13 by jou              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minirt.h"
-#include <stdio.h>
 
 static t_scene	*validade_init_scene(char *file);
 static void		parse_line(char *line, t_scene *scene, int *count);
@@ -33,6 +32,8 @@ t_scene	*parser(char *file)
 	}
 	free(count);
 	close(scene->fd);
+	scene->aspect_ratio = (float)WIDTH / (float)HEIGHT;
+	scene->scale = tanf((scene->cam.fov / 2.0f) * (M_PI / 180.0f));
 	return (scene);
 }
 

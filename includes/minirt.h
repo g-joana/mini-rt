@@ -102,7 +102,7 @@ typedef struct s_scene {
 
 typedef struct s_hit {
     float distance;
-    t_vec3d coord;
+    t_vec3d position;
     t_vec3d direction;
     t_vec3d *rgb;
 } t_hit;
