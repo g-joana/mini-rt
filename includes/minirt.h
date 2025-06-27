@@ -104,7 +104,8 @@ typedef struct s_hit {
     float distance;
     t_vec3d position;
     t_vec3d direction;
-    t_vec3d *rgb;
+    t_vec3d *shape_origin;
+    uint8_t *rgb;
 } t_hit;
 
 /* -----[START OF PARSER RELATED FUNCTIONS]----- */
