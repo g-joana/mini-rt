@@ -101,13 +101,13 @@ uint32_t	per_pixel(float x, float y, t_scene *scene){
 	t_hit *closest_hit;
 	// distance, coord, direction, rgb
 
-	// ndc coords to 3d
+	// ndc coords to 3d to build ray
 	ray_direction = get_direction(x, y, scene);
 	// get closest intersection info
-	closest_hit = trace_ray(ray_direction);
+	closest_hit = trace_ray(ray_direction, scene);
 	// if no intersection, return background function
 	if (!closest_hit)
-		return (background());
+		return (background(0xff000000));
 	// add shadows and color
 	pixel_color = apply_shadow(closest_hit, scene->light, scene->amb_light);
 
