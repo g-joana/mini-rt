@@ -53,6 +53,11 @@ typedef struct s_camera {
     t_vec3d *coord;
     t_vec3d *norm;
     uint8_t fov; // (horizontal) field of view
+
+    // camera orientation
+    t_vec3d *foward;
+    t_vec3d *right;
+    t_vec3d *up;
 } t_camera;
 
 typedef struct s_alight {
@@ -94,6 +99,13 @@ typedef struct s_scene {
     float aspect_ratio;
     float   scale;
 } t_scene;
+
+typedef struct s_hit {
+    float distance;
+    t_vec3d coord;
+    t_vec3d direction;
+    t_vec3d *rgb;
+} t_hit;
 
 /* -----[START OF PARSER RELATED FUNCTIONS]----- */
 
@@ -161,6 +173,7 @@ void print_scene(t_scene *scene);
 // render.c
 int		render(t_scene *scene);
 void	start_mlx(t_scene *scene);
+t_vec3d cross_vecs(t_vec3d *a, t_vec3d *b);
 
 // render_utils.c
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color);

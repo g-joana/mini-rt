@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 17:57:27 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/13 17:57:29 by nranna           ###   ########.fr       */
+/*   Updated: 2025/06/27 16:39:48 by jou              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,11 @@ void	set_camera(char *line, t_scene *scene)
 	set_normalization(properties[2], scene->cam.norm);
 	set_fov(properties[3], &scene->cam.fov);
 	free_split(properties);
+	t_vec3d up_direction = {0.0f, 1.0f, 0.0f};
+	t_vec3d temp = cross_vecs(scene->cam.norm, &up_direction);
+	*scene->cam.foward = norm_vec(scene->cam.norm); // z
+	*scene->cam.right = norm_vec(&temp); // x
+	*scene->cam.up = cross_vecs(scene->cam.foward, scene->cam.right); // y
 }
 
 void	set_ambient(char *line, t_scene *scene)

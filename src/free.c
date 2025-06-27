@@ -5,6 +5,9 @@ void free_scene(t_scene *scene)
     int count = 0;
     free(scene->cam.coord);
     free(scene->cam.norm);
+    free(scene->cam.foward);
+    free(scene->cam.up);
+    free(scene->cam.right);
     free(scene->amb_light.rgb);
     free(scene->light.coord);
     free(scene->light.rgb);

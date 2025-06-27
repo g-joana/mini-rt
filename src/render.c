@@ -1,5 +1,4 @@
 #include "../includes/minirt.h"
-#include <stdint.h>
 
 bool sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_vec3d *hitpos, float r)
 {
@@ -94,6 +93,33 @@ t_vec3d cross_vecs(t_vec3d *a, t_vec3d *b) {
     return result;
 }
 
+t_vec3d	get_direction(float x, float y, t_scene *scene) {
+	float u;
+	float v;
+
+	// aspect_ratio makes image not distort in different screen sizes by saving propotions on ratio
+	// scale is how much the camera is able to see (vertically) based on fov angle (zoom out/in)
+	// tangent of fov/2 (the midle) in radians
+	// (fov / 2.0f) -> gets half fov
+	// (M_PI / 180.0f) -> converts degrees into radians
+	// tanf( radians of the target ) ->
+	u = (x/(float)WIDTH);
+	v = (y/(float)HEIGHT);
+	// 2d ndc -> 3d world coords
+	// projection * view * transform * vertex
+	u = (u * 2.0f - 1.0f) * scene->aspect_ratio * scene->scale;
+	v = (v * 2.0f - 1.0f) * scene->scale;
+
+	t_vec3d x_dir = vec_x_scalar(scene->cam.right, u);
+	t_vec3d y_dir = vec_x_scalar(scene->cam.up, v);
+
+	t_vec3d ray_dir = add_vecs(&x_dir, &y_dir);
+	ray_dir = add_vecs(&ray_dir, scene->cam.foward);
+	ray_dir = norm_vec(&ray_dir);
+
+	return ray_dir;
+}
+
 uint32_t	per_pixel(float x, float y, t_scene *scene){
 	uint32_t pixel_color;
 	t_vec3d *ray_origin = scene->cam.coord;
@@ -102,12 +128,12 @@ uint32_t	per_pixel(float x, float y, t_scene *scene){
 	// distance, coord, direction, rgb
 
 	// ndc coords to 3d to build ray
-	ray_direction = get_direction(x, y, scene);
+	*ray_direction = get_direction(x, y, scene);
 	// get closest intersection info
-	closest_hit = trace_ray(ray_direction, scene);
+	*closest_hit = trace_ray(ray_direction, scene);
 	// if no intersection, return background function
 	if (!closest_hit)
-		return (background(0xff000000));
+		return (no_hit(0xff000000));
 	// add shadows and color
 	pixel_color = apply_shadow(closest_hit, scene->light, scene->amb_light);
 
@@ -127,14 +153,13 @@ int		render(t_scene *scene)
 	// tanf( degrees of the target ) ->
 
 	// put this into cam struct
-	t_vec3d up_side = {0.0f, 1.0f, 0.0f};
+	t_vec3d up_direction = {0.0f, 1.0f, 0.0f};
 
-	t_vec3d temp = cross_vecs(scene->cam.norm, &up_side);
+	t_vec3d temp = cross_vecs(scene->cam.norm, &up_direction);
 
 	t_vec3d foward = norm_vec(scene->cam.norm); // z
 	t_vec3d right = norm_vec(&temp); // x
 	t_vec3d up = cross_vecs(&foward, &right); // y
-	// isnt it up_side??
 
 
 	static int count;
