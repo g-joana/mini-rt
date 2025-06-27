@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:52:34 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/15 16:33:54 by jou              ###   ########.fr       */
+/*   Updated: 2025/06/27 15:50:33 by jou              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ t_scene	*init_scene(char *file)
 		scene->spheres = init_spheres(scene->amount[SP]);
 	if (scene->amount[CY])
 		scene->cylinders = init_cylinders(scene->amount[CY]);
+	scene->aspect_ratio = (float)WIDTH / (float)HEIGHT;
+	scene->scale = tanf((scene->cam.fov / 2.0f) * (M_PI / 180.0f));
 	return (scene);
 }
 

@@ -90,6 +90,9 @@ typedef struct s_scene {
     void	*mlx;
     void	*mlx_win;
     t_data	img;
+
+    float aspect_ratio;
+    float   scale;
 } t_scene;
 
 /* -----[START OF PARSER RELATED FUNCTIONS]----- */
