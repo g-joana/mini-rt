@@ -122,28 +122,28 @@ t_vec3d	get_direction(float x, float y, t_scene *scene) {
 	return ray_dir;
 }
 
-uint32_t	per_pixel(float x, float y, t_scene *scene){
-	uint32_t pixel_color;
-	t_vec3d *ray_origin = scene->cam.coord;
-	t_vec3d *ray_direction;
-	t_hit *closest_hit;
-	// distance, coord, direction, rgb
-
-	// ndc coords to 3d to build ray
-	*ray_direction = get_direction(x, y, scene);
-	// get closest intersection info
-	closest_hit = trace_ray(ray_direction, scene);
-	// if no intersection, return background function
-	if (!closest_hit)
-		return 0xff000000;
-		// return (no_hit(0xff000000));
-	// add shadows and color
-	// pixel_color = apply_shadow(closest_hit, scene->light, scene->amb_light);
-	pixel_color = apply_sp_color(&closest_hit->position, scene);
-
-	return pixel_color;
-}
-
+// uint32_t	per_pixel(float x, float y, t_scene *scene){
+// 	uint32_t pixel_color;
+// 	t_vec3d *ray_origin = scene->cam.coord;
+// 	t_vec3d *ray_direction;
+// 	t_hit *closest_hit;
+// 	// distance, coord, direction, rgb
+//
+// 	// ndc coords to 3d to build ray
+// 	*ray_direction = get_direction(x, y, scene);
+// 	// get closest intersection info
+// 	closest_hit = trace_ray(ray_direction, scene);
+// 	// if no intersection, return background function
+// 	if (!closest_hit)
+// 		return 0xff000000;
+// 		// return (no_hit(0xff000000));
+// 	// add shadows and color
+// 	// pixel_color = apply_shadow(closest_hit, scene->light, scene->amb_light);
+// 	pixel_color = apply_sp_color(&closest_hit->position, scene);
+//
+// 	return pixel_color;
+// }
+//
 int		render(t_scene *scene)
 {
 	static int count;
