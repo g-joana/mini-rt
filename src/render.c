@@ -1,4 +1,5 @@
 #include "../includes/minirt.h"
+#include <stdint.h>
 
 bool sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_vec3d *hitpos, float r)
 {
@@ -91,6 +92,26 @@ t_vec3d cross_vecs(t_vec3d *a, t_vec3d *b) {
     result.y = a->z * b->x - a->x * b->z;
     result.z = a->x * b->y - a->y * b->x;
     return result;
+}
+
+uint32_t	per_pixel(float x, float y, t_scene *scene){
+	uint32_t pixel_color;
+	t_vec3d *ray_origin = scene->cam.coord;
+	t_vec3d *ray_direction;
+	t_hit *closest_hit;
+	// distance, coord, direction, rgb
+
+	// ndc coords to 3d
+	ray_direction = get_direction(x, y, scene);
+	// get closest intersection info
+	closest_hit = trace_ray(ray_direction);
+	// if no intersection, return background function
+	if (!closest_hit)
+		return (background());
+	// add shadows and color
+	pixel_color = apply_shadow(closest_hit, scene->light, scene->amb_light);
+
+	return pixel_color;
 }
 
 int		render(t_scene *scene)
