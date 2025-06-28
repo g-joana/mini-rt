@@ -11,7 +11,7 @@ void free_scene(t_scene *scene)
     free(scene->amb_light.rgb);
     free(scene->light.coord);
     free(scene->light.rgb);
-    if (scene->spheres)
+    if (scene->amount[SP])
     {
         count = 0;
         while (count < scene->amount[SP])
@@ -22,7 +22,7 @@ void free_scene(t_scene *scene)
         }
         free(scene->spheres);
     }
-    if (scene->planes)
+    if (scene->amount[PL])
     {
         count = 0;
         while (count < scene->amount[PL])
@@ -34,7 +34,7 @@ void free_scene(t_scene *scene)
         }
         free(scene->planes);
     }
-    if (scene->cylinders)
+    if (scene->amount[CY])
     {
         count = 0;
         while (count < scene->amount[CY])
@@ -83,6 +83,7 @@ int	key_hook(int key, t_scene *scene)
         mlx_destroy_image(scene->mlx, scene->img.img);
         mlx_destroy_window(scene->mlx, scene->mlx_win);
         mlx_destroy_display(scene->mlx);
+        free(scene->mlx);
         free_scene(scene);
         exit(0);
     }
@@ -94,7 +95,8 @@ int	mouse_hook(t_scene *scene)
 	mlx_destroy_image(scene->mlx, scene->img.img);
 	mlx_destroy_window(scene->mlx, scene->mlx_win);
 	mlx_destroy_display(scene->mlx);
-    free_scene(scene);
+        free(scene->mlx);
+        free_scene(scene);
 	exit(0);
 	return (1);
 }
