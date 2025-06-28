@@ -3,7 +3,6 @@
 t_hit *sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_sphere *sp)
 {
 	t_hit	*hit;
-	// move math to trace ray??
 	// circle
 	// (x-a)^2 + (y-b)^2 - r^2 = 0
 	// quadratic eq
@@ -20,12 +19,14 @@ t_hit *sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_sphere *
 		return NULL;
 	hit = malloc(sizeof(t_hit));
 	hit->distance = (-b - sqrtf(delta)) / (2.0f * a);
-	// hit position -> coord of intersection in range: -1 ~ 1
-	hit->position = vec_x_scalar(ray_dir, hit->distance);
-	hit->position = add_vecs(ray_origin, &hit->position);
-	hit->direction = norm_vec(&hit->position);
 	hit->rgb = sp->rgb;
 	hit->shape_origin = sp->coord;
+	// hit position -> coord of intersection in range: -1 ~ 1
+	// move to new function on trace_ray
+	hit->position = vec_x_scalar(ray_dir, hit->distance);
+	hit->position = add_vecs(ray_origin, &hit->position);
+	// hit->position = norm_vec(&hit->position);
+	hit->direction = norm_vec(&hit->position);
 	return hit;
 }
 
@@ -76,9 +77,9 @@ t_hit *trace_ray(t_vec3d *ray_dir, t_scene *scene)
 		hit = sphere_hit(&ray_origin, ray_dir, &scene->spheres[count]);
 		if (hit)
 		{
-			if (!closest_hit)
+			if (!closest_hit && hit->distance > 0.0f)
 				closest_hit = hit;
-			else if (closest_hit && hit->distance < closest_hit->distance)
+			else if (closest_hit && hit->distance > 0.0f && hit->distance < closest_hit->distance)
 			{
 				temp = closest_hit;
 				closest_hit = hit;
@@ -89,8 +90,6 @@ t_hit *trace_ray(t_vec3d *ray_dir, t_scene *scene)
 		}
 		count++;
 	}
-
-	// float color = apply_sp_color(&hit->position, scene);
 	return closest_hit;
 }
 
