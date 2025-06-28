@@ -3,7 +3,6 @@
 t_hit *sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_sphere *sp)
 {
 	t_hit	*hit;
-	hit = malloc(sizeof(t_hit));
 	// circle
 	// (x-a)^2 + (y-b)^2 - r^2 = 0
 	// quadratic eq
@@ -18,6 +17,7 @@ t_hit *sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_sphere *
 	float delta = b * b - 4.0f * a * c;
 	if (delta < 0.0f)
 		return NULL;
+	hit = malloc(sizeof(t_hit));
 	// move from here to outside!!!!!!!!!!!!!!!!!
 	hit->distance = (-b - sqrtf(delta)) / (2.0f * a);
 	// hit position -> coord of intersection in range: -1 ~ 1
