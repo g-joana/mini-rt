@@ -170,6 +170,7 @@ int		render(t_scene *scene)
 				color = 0xff000000;
 			else
 				color = apply_shadow(hit, &scene->light, &scene->amb_light);
+			free(hit);
 			my_mlx_pixel_put(&scene->img, x, y, color);
 			x++;
 		}
