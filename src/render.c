@@ -18,11 +18,11 @@ t_hit *sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_sphere *
 	float delta = b * b - 4.0f * a * c;
 	if (delta < 0.0f)
 		return NULL;
+	// move from here to outside!!!!!!!!!!!!!!!!!
 	hit->distance = (-b - sqrtf(delta)) / (2.0f * a);
 	// hit position -> coord of intersection in range: -1 ~ 1
 	hit->position = vec_x_scalar(ray_dir, hit->distance);
 	hit->position = add_vecs(ray_origin, &hit->position);
-	hit->position = norm_vec(&hit->position);
 	hit->direction = norm_vec(&hit->position);
 	hit->rgb = sp->rgb;
 	hit->shape_origin = sp->coord;
@@ -62,13 +62,36 @@ uint32_t apply_shadow(t_hit *hit, t_light *light, t_alight *ambient)
 /* returns closest hit of scene objs */
 t_hit *trace_ray(t_vec3d *ray_dir, t_scene *scene)
 {
-	// const t_vec3d ray_origin = {0, 0, 1.0f}; // (camera)
-	const t_vec3d ray_origin = sub_vecs(scene->cam.coord, scene->spheres[0].coord);
+	t_vec3d ray_origin;
+	t_hit *hit = NULL;
+	t_hit *temp = NULL;
+	t_hit *closest_hit = NULL;
 
-	float r = scene->spheres[0].diam / 2;
-	t_hit *hit = sphere_hit(&ray_origin, ray_dir, &scene->spheres[0]);
+	if (scene->amount[SP] == 0)
+		return NULL;
+	int count = 0;
+	while (count < scene->amount[SP])
+	{
+		ray_origin = sub_vecs(scene->cam.coord, scene->spheres[count].coord);
+		hit = sphere_hit(&ray_origin, ray_dir, &scene->spheres[count]);
+		if (hit)
+		{
+			if (!closest_hit)
+				closest_hit = hit;
+			else if (closest_hit && hit->distance < closest_hit->distance)
+			{
+				temp = closest_hit;
+				closest_hit = hit;
+				free(temp);
+			}
+			else
+				free(hit);
+		}
+		count++;
+	}
+
 	// float color = apply_sp_color(&hit->position, scene);
-	return hit;
+	return closest_hit;
 }
 
 // add to trivec lib
