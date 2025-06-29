@@ -10,6 +10,7 @@
 # include <fcntl.h>
 # include <math.h>
 # include "../trivec/trivec.h"
+#include <float.h>
 
 # define WIDTH 900
 # define HEIGHT 600
@@ -101,6 +102,7 @@ typedef struct s_scene {
 } t_scene;
 
 typedef struct s_hit {
+    int id;
     float distance;
     t_vec3d position;
     t_vec3d direction;
