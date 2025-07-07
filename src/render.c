@@ -1,7 +1,13 @@
 #include "../includes/minirt.h"
 
-bool sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_vec3d *hitpos, float r)
+t_hit *sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_sphere *sp)
 {
+	t_hit	*hit;
+	// circle
+	// (x-a)^2 + (y-b)^2 - r^2 = 0
+	// quadratic eq
+	// (ax^2 + ay^2)t^2 + (2(bxax + byay))t + (bx^2 + by^2 - r^2) = 0;
+	float r = sp->diam/2;
 	float a = dot_vecs(ray_dir, ray_dir);
 	float b = 2.0f * dot_vecs(ray_origin, ray_dir);
 	float c = dot_vecs(ray_origin, ray_origin) - r * r;
@@ -10,85 +16,147 @@ bool sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_vec3d *hit
 	// b^2 - 4ac
 	float delta = b * b - 4.0f * a * c;
 	if (delta < 0.0f)
-		return 0;
-	float t0 = (-b - sqrtf(delta)) / (2.0f * a);
-	// hit position -> coord of intersection in range: -1 ~ 1
-	*hitpos = vec_x_scalar(ray_dir, t0);
-	*hitpos = add_vecs(ray_origin, hitpos);
-	return 1;
+		return NULL;
+	hit = malloc(sizeof(t_hit));
+	hit->distance = (-b - sqrtf(delta)) / (2.0f * a);
+	return hit;
 }
 
-uint32_t apply_sp_color(t_vec3d *hitpos, t_scene *scene)
+uint32_t apply_shadow(t_hit *hit, t_light *light, t_alight *ambient)
 {
 	t_vec3d norm;
-    // get the size of sphere ray vector
-    norm = sub_vecs(hitpos, scene->spheres[0].coord);
-    // normalize to get the direction which the surface is pointing
-	norm = norm_vec(&norm);
+	norm = sub_vecs(&hit->position, hit->shape_origin); // necessary?
+	norm = hit->direction;
 
-    t_vec3d light_dir = {-1, -1, -1};
-    
-    light_dir = norm_vec(&light_dir);
+	t_vec3d light_dir = *light->coord;
+	// t_vec3d light_dir = vec_x_scalar(scene->light.coord, -1);
+	light_dir = norm_vec(&light_dir);
 
-    light_dir = vec_x_scalar(&light_dir, -1);
+	// dot product of sphere norm and -light direction
+	float light_intensity = dot_vecs(&norm, &light_dir); 
+	// == cos(angle) | if angle > 90 = negative result | cos(90) == 0
+	// dot product = always in -1->1 range
+	// this angle is the surface angle - reflects the light
 
-    // dot product of sphere norm and -light direction
-    float d = dot_vecs(&norm, &light_dir); // == cos(angle) | if angle > 90 = negative result | cos(90) == 0
-    // dot product = always in -1->1 range
-    // this angle is the surface angle - reflects the light
-
-    // clamping only min, so there is no negative (if angle > 90)
-    d = clamp(d, 0.0f, d);
-
-    // rgb values between 0->1
-    t_vec3d sphere_rgb = {0, 1, 0};
-    sphere_rgb = vec_x_scalar(&sphere_rgb, d);
-    // applying light/shadow to sphere color
+	// clamping only min, so there is no negative (if angle > 90)
+	light_intensity = clamp(light_intensity, 0.0f, light_intensity);
+	// change rgb to vec3d
+	t_vec3d sphere_rgb = {	
+		(float)hit->rgb[0],
+		(float)hit->rgb[1],
+		(float)hit->rgb[2]
+	};
+	// sphere_rgb = norm_vec(&sphere_rgb); -> appears to be not necessary
+	// applying light/shadow to sphere color
+	sphere_rgb = vec_x_scalar(&sphere_rgb, light_intensity);
 	return (color_per_pixel(&sphere_rgb, 1));
 }
 
-/* returns the color of the pixel based on maths */
-uint32_t per_pixel(float x, float y, t_scene *scene)
+t_hit *set_sphere_hit(t_vec3d *ray_dir, t_scene *scene, int id)
 {
-	// (ax^2 + ay^2)t^2 + (2(bxax + byay))t + (bx^2 + by^2 - r^2) = 0;
-	const t_vec3d ray_origin = {0, 0, 1.0f}; // (camera)
-	const t_vec3d ray_dir = {x, y, -1.0f};
+	t_vec3d ray_origin;
+    t_hit *hit;
 
-	float r = 0.5f;
-	t_vec3d hitpos = {2, 2, 2};
-	bool hit = sphere_hit(&ray_origin, &ray_dir, &hitpos, r); // need to find the closest t0 of all spheres (the one in front of the others
-	if (!hit)
-		return 0xff000000; // background color
-	float color = apply_sp_color(&hitpos, scene);
-	return color;
+    ray_origin = sub_vecs(scene->cam.coord, scene->spheres[id].coord);
+    hit = sphere_hit(&ray_origin, ray_dir, &scene->spheres[id]);
+	hit->rgb = scene->spheres[id].rgb;
+	hit->shape_origin = scene->spheres[id].coord;
+	hit->position = vec_x_scalar(ray_dir, hit->distance);
+	hit->position = add_vecs(&ray_origin, &hit->position);
+	// closest->position = norm_vec(&hit->position);
+	hit->direction = norm_vec(&hit->position);
+    return (hit);
+}
+
+/* returns closest hit of scene objs */
+t_hit *trace_ray(t_vec3d *ray_dir, t_scene *scene)
+{
+	t_vec3d ray_origin;
+	t_hit *hit;
+    int id = -1;
+    float distance = FLT_MAX;
+
+	int count = 0;
+	while (count < scene->amount[SP])
+	{
+		ray_origin = sub_vecs(scene->cam.coord, scene->spheres[count].coord);
+		hit = sphere_hit(&ray_origin, ray_dir, &scene->spheres[count]);
+        if (hit && hit->distance > 0.0f && hit->distance < distance)
+        {
+            distance = hit->distance;
+            id = count;
+            free(hit);
+        }
+		count++;
+	}
+    if (id == -1)
+        return NULL;
+    hit = set_sphere_hit(ray_dir, scene, id);
+	return hit;
+}
+
+// add to trivec lib
+t_vec3d cross_vecs(t_vec3d *a, t_vec3d *b) {
+    t_vec3d result;
+    result.x = a->y * b->z - a->z * b->y;
+    result.y = a->z * b->x - a->x * b->z;
+    result.z = a->x * b->y - a->y * b->x;
+    return result;
+}
+
+t_vec3d	get_direction(float x, float y, t_scene *scene) {
+	float u;
+	float v;
+
+	// aspect_ratio makes image not distort in different screen sizes by saving propotions on ratio
+	// scale is how much the camera is able to see (vertically) based on fov angle (zoom out/in)
+	// tangent of fov/2 (the midle) in radians
+	// (fov / 2.0f) -> gets half fov
+	// (M_PI / 180.0f) -> converts degrees into radians
+	// tanf( radians of the target ) ->
+	u = (x/(float)WIDTH);
+	v = (y/(float)HEIGHT);
+	// 2d ndc -> 3d world coords
+	// projection * view * transform * vertex
+	u = (u * 2.0f - 1.0f) * scene->aspect_ratio * scene->scale;
+	v = (v * 2.0f - 1.0f) * scene->scale;
+
+	t_vec3d x_dir = vec_x_scalar(scene->cam.right, u);
+	t_vec3d y_dir = vec_x_scalar(scene->cam.up, v);
+
+	t_vec3d ray_dir = add_vecs(&x_dir, &y_dir);
+	ray_dir = add_vecs(&ray_dir, scene->cam.foward);
+	ray_dir = norm_vec(&ray_dir);
+
+	return ray_dir;
 }
 
 int		render(t_scene *scene)
 {
 	static int count;
-	uint32_t x = 0;
-	uint32_t y = 0;
-	int i = 0;
-	float coord[2];
-	while (y < HEIGHT && i < (WIDTH * HEIGHT))
+	float x = 0;
+	float y = 0;
+	t_hit *hit;
+	u_int32_t color;
+	while (y < HEIGHT)
 	{
-        x = 0;
-        while (x < WIDTH)
-        {
-            // 0 -> 1 range
-            coord[0] = ((float)x/(float)WIDTH);
-            coord[1] = ((float)y/(float)HEIGHT);
-
-            // remap screen coords, so xy(0,0) is in the middle
-            coord[0] = coord[0] * 2.0f - 1.0f;
-            coord[1] = (1.0 - coord[1]) * 2.0f - 1.0f;
-            my_mlx_pixel_put(&scene->img, x, y, per_pixel(coord[0], coord[1], scene));
-            x++;
-        }
-        y++;
+		x = 0;
+		while (x < WIDTH)
+		{
+			t_vec3d ray_dir = get_direction(x, y, scene);
+			hit = trace_ray(&ray_dir, scene);
+			if (!hit)
+				color = 0xff000000;
+			else
+				color = apply_shadow(hit, &scene->light, &scene->amb_light);
+			free(hit);
+			my_mlx_pixel_put(&scene->img, x, y, color);
+			x++;
+		}
+		y++;
 	}
-    count++;
-    printf("%i\n", count);
+	count++;
+	// printf("%i\n", count);
 	mlx_put_image_to_window(scene->mlx, scene->mlx_win, scene->img.img, 0, 0);
 	// mlx_string_put(scene->mlx, scene->mlx_win, 5, 12, 0xFFFFFF, "render");
 	return 0;

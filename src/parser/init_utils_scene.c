@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:55:15 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/15 16:00:17 by nranna           ###   ########.fr       */
+/*   Updated: 2025/06/27 16:26:42 by jou              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,5 +57,17 @@ t_camera	init_camera(void)
 	cam.norm->y = 0;
 	cam.norm->z = 0;
 	cam.fov = 0;
+	cam.foward = malloc(sizeof(t_vec3d));
+	cam.foward->x = 0;
+	cam.foward->y = 0;
+	cam.foward->z = 0;
+	cam.right = malloc(sizeof(t_vec3d));
+	cam.right->x = 0;
+	cam.right->y = 0;
+	cam.right->z = 0;
+	cam.up = malloc(sizeof(t_vec3d));
+	cam.up->x = 0;
+	cam.up->y = 0;
+	cam.up->z = 0;
 	return (cam);
 }
