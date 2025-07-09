@@ -22,6 +22,89 @@ t_hit *sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_sphere *
 	return hit;
 }
 
+t_hit *cylinder_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_cylinder *cylin)
+{
+	t_hit	*hit;
+
+	// all norm should be normalized on parser
+	t_vec3d half_height_ratio = vec_x_scalar(cylin->norm, cylin->height / 2.0f);
+	t_vec3d base = sub_vecs(cylin->coord, &half_height_ratio);
+	t_vec3d top = add_vecs(cylin->coord, &half_height_ratio);
+	t_vec3d oc = sub_vecs(ray_origin, &base);
+
+	float da = dot_vecs(ray_dir, cylin->norm);
+	float oca = dot_vecs(&oc, cylin->norm);
+
+
+	t_vec3d d_perp = vec_x_scalar(cylin->norm, da);
+	d_perp = sub_vecs(ray_dir, &d_perp);
+	t_vec3d oc_perp = vec_x_scalar(cylin->norm, oca);
+	oc_perp = sub_vecs(&oc, &oc_perp);
+
+	t_vec3d o = oc_perp;
+	t_vec3d d = d_perp;
+
+	float r = cylin->diam/2;
+	float a = dot_vecs(&d, &d);
+	float b = 2.0f * dot_vecs(&o, &d);
+	float c = dot_vecs(&o, &o) - (r * r);
+	// float c = dot_vecs(ray_origin, ray_origin) - r * r;
+
+	// discriminant = t = hit distance / point
+	// b^2 - 4ac
+	float delta = b * b - 4.0f * a * c;
+	if (delta < 0.0f)
+		return NULL;
+	hit = malloc(sizeof(t_hit));
+	hit->distance = (-b - sqrtf(delta)) / (2.0f * a);
+
+
+	t_vec3d hit_point = {
+		ray_origin->x + ray_dir->x * hit->distance,
+		ray_origin->y + ray_dir->y * hit->distance,
+		ray_origin->z + ray_dir->z * hit->distance
+	};
+
+	// Vector from base to hit point
+	t_vec3d base_to_hit = sub_vecs(&hit_point, &base);
+
+	// Project onto cylinder axis to get height along axis
+	float axis_dist = dot_vecs(&base_to_hit, cylin->norm);
+
+	if (axis_dist < 0.0f || axis_dist > cylin->height)
+	{
+		free(hit);
+		return NULL;
+	}
+
+
+	// calculate y position of the hit point
+	// y = ray_origin.y + ray_dir.y * t
+	//float half_h = cylin->height / 2.0f;
+	//float y = ray_origin->y + ray_dir->y * hit->distance;
+	//if (y < -half_h || y > half_h)
+	//	return NULL;
+
+
+	return hit;
+}
+
+t_hit *set_cylinder_hit(t_vec3d *ray_dir, t_scene *scene, int id)
+{
+	t_vec3d ray_origin;
+	t_hit *hit;
+
+	ray_origin = sub_vecs(scene->cam.coord, scene->cylinders[id].coord);
+	hit = cylinder_hit(&ray_origin, ray_dir, &scene->cylinders[id]);
+	hit->rgb = scene->cylinders[id].rgb;
+	hit->shape_origin = scene->cylinders[id].coord;
+	hit->position = vec_x_scalar(ray_dir, hit->distance);
+	hit->position = add_vecs(&ray_origin, &hit->position);
+	// closest->position = norm_vec(&hit->position);
+	hit->direction = norm_vec(&hit->position);
+	return (hit);
+}
+
 uint32_t apply_shadow(t_hit *hit, t_light *light, t_alight *ambient)
 {
 	t_vec3d norm;
@@ -59,12 +142,12 @@ t_hit *set_sphere_hit(t_vec3d *ray_dir, t_scene *scene, int id)
 
     ray_origin = sub_vecs(scene->cam.coord, scene->spheres[id].coord);
     hit = sphere_hit(&ray_origin, ray_dir, &scene->spheres[id]);
-	hit->rgb = scene->spheres[id].rgb;
-	hit->shape_origin = scene->spheres[id].coord;
-	hit->position = vec_x_scalar(ray_dir, hit->distance);
-	hit->position = add_vecs(&ray_origin, &hit->position);
-	// closest->position = norm_vec(&hit->position);
-	hit->direction = norm_vec(&hit->position);
+    hit->rgb = scene->spheres[id].rgb;
+    hit->shape_origin = scene->spheres[id].coord;
+    hit->position = vec_x_scalar(ray_dir, hit->distance);
+    hit->position = add_vecs(&ray_origin, &hit->position);
+    // closest->position = norm_vec(&hit->position);
+    hit->direction = norm_vec(&hit->position);
     return (hit);
 }
 
@@ -73,25 +156,44 @@ t_hit *trace_ray(t_vec3d *ray_dir, t_scene *scene)
 {
 	t_vec3d ray_origin;
 	t_hit *hit;
-    int id = -1;
-    float distance = FLT_MAX;
+	int id = -1;
+	int shape = -1;
+	float distance = FLT_MAX;
 
 	int count = 0;
 	while (count < scene->amount[SP])
 	{
 		ray_origin = sub_vecs(scene->cam.coord, scene->spheres[count].coord);
 		hit = sphere_hit(&ray_origin, ray_dir, &scene->spheres[count]);
-        if (hit && hit->distance > 0.0f && hit->distance < distance)
-        {
-            distance = hit->distance;
-            id = count;
-            free(hit);
-        }
+		if (hit && hit->distance > 0.0f && hit->distance < distance)
+		{
+			distance = hit->distance;
+			id = count;
+			shape = SP;
+			free(hit);
+		}
 		count++;
 	}
-    if (id == -1)
-        return NULL;
-    hit = set_sphere_hit(ray_dir, scene, id);
+	count = 0;
+	while (count < scene->amount[CY])
+	{
+		ray_origin = sub_vecs(scene->cam.coord, scene->cylinders[count].coord);
+		hit = cylinder_hit(&ray_origin, ray_dir, &scene->cylinders[count]);
+		if (hit && hit->distance > 0.0f && hit->distance < distance)
+		{
+			distance = hit->distance;
+			id = count;
+			shape = CY;
+			free(hit);
+		}
+		count++;
+	}
+	if (id == -1)
+		return NULL;
+	if (shape == SP)
+		hit = set_sphere_hit(ray_dir, scene, id);
+	else if (shape == CY)
+		hit = set_cylinder_hit(ray_dir, scene, id);
 	return hit;
 }
 
