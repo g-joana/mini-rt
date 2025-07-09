@@ -30,24 +30,22 @@ t_hit *cylinder_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_cylind
 	t_vec3d half_height_ratio = vec_x_scalar(cylin->norm, cylin->height / 2.0f);
 	t_vec3d base = sub_vecs(cylin->coord, &half_height_ratio);
 	t_vec3d top = add_vecs(cylin->coord, &half_height_ratio);
-	t_vec3d oc = sub_vecs(ray_origin, &base);
+	t_vec3d cy_ori = sub_vecs(ray_origin, &base);
 
-	float da = dot_vecs(ray_dir, cylin->norm);
-	float oca = dot_vecs(&oc, cylin->norm);
+	float dir_axis = dot_vecs(ray_dir, cylin->norm);
+	float cy_ori_axis = dot_vecs(&cy_ori, cylin->norm);
 
 
-	t_vec3d d_perp = vec_x_scalar(cylin->norm, da);
-	d_perp = sub_vecs(ray_dir, &d_perp);
-	t_vec3d oc_perp = vec_x_scalar(cylin->norm, oca);
-	oc_perp = sub_vecs(&oc, &oc_perp);
+	t_vec3d dir = vec_x_scalar(cylin->norm, dir_axis);
+	dir = sub_vecs(ray_dir, &dir);
+	t_vec3d origin = vec_x_scalar(cylin->norm, cy_ori_axis);
+	origin = sub_vecs(&cy_ori, &origin);
 
-	t_vec3d o = oc_perp;
-	t_vec3d d = d_perp;
 
 	float r = cylin->diam/2;
-	float a = dot_vecs(&d, &d);
-	float b = 2.0f * dot_vecs(&o, &d);
-	float c = dot_vecs(&o, &o) - (r * r);
+	float a = dot_vecs(&dir, &dir);
+	float b = 2.0f * dot_vecs(&origin, &dir);
+	float c = dot_vecs(&origin, &origin) - (r * r);
 	// float c = dot_vecs(ray_origin, ray_origin) - r * r;
 
 	// discriminant = t = hit distance / point
@@ -58,17 +56,14 @@ t_hit *cylinder_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_cylind
 	hit = malloc(sizeof(t_hit));
 	hit->distance = (-b - sqrtf(delta)) / (2.0f * a);
 
-
 	t_vec3d hit_point = {
 		ray_origin->x + ray_dir->x * hit->distance,
 		ray_origin->y + ray_dir->y * hit->distance,
 		ray_origin->z + ray_dir->z * hit->distance
 	};
-
-	// Vector from base to hit point
+	// size from base to hit point
 	t_vec3d base_to_hit = sub_vecs(&hit_point, &base);
-
-	// Project onto cylinder axis to get height along axis
+	// get height along axis
 	float axis_dist = dot_vecs(&base_to_hit, cylin->norm);
 
 	if (axis_dist < 0.0f || axis_dist > cylin->height)
@@ -76,16 +71,6 @@ t_hit *cylinder_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_cylind
 		free(hit);
 		return NULL;
 	}
-
-
-	// calculate y position of the hit point
-	// y = ray_origin.y + ray_dir.y * t
-	//float half_h = cylin->height / 2.0f;
-	//float y = ray_origin->y + ray_dir->y * hit->distance;
-	//if (y < -half_h || y > half_h)
-	//	return NULL;
-
-
 	return hit;
 }
 
