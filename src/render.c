@@ -1,4 +1,5 @@
 #include "../includes/minirt.h"
+#include <sys/types.h>
 
 t_hit *sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_sphere *sp)
 {
@@ -141,6 +142,7 @@ t_hit *trace_ray(t_vec3d *ray_dir, t_scene *scene)
 {
 	t_vec3d ray_origin;
 	t_hit *hit;
+	t_hit *closest;
 	int id = -1;
 	int shape = -1;
 	float distance = FLT_MAX;
@@ -155,8 +157,8 @@ t_hit *trace_ray(t_vec3d *ray_dir, t_scene *scene)
 			distance = hit->distance;
 			id = count;
 			shape = SP;
-			free(hit);
 		}
+		free(hit);
 		count++;
 	}
 	count = 0;
@@ -169,8 +171,8 @@ t_hit *trace_ray(t_vec3d *ray_dir, t_scene *scene)
 			distance = hit->distance;
 			id = count;
 			shape = CY;
-			free(hit);
 		}
+		free(hit);
 		count++;
 	}
 	if (id == -1)
@@ -218,6 +220,21 @@ t_vec3d	get_direction(float x, float y, t_scene *scene) {
 	return ray_dir;
 }
 
+u_int32_t	perpixel(float x, float y, t_scene* scene) // raygen -> ray trace pipeline / shaders
+{
+	u_int32_t color;
+	t_hit *closest_hit;
+	t_vec3d ray_dir = get_direction(x, y, scene);
+
+	closest_hit = trace_ray(&ray_dir, scene);
+	if (!closest_hit)
+		color = 0xff000000; // background / miss shader
+	else
+		color = apply_shadow(closest_hit, &scene->light, &scene->amb_light);
+	free(closest_hit);
+	return color;
+}
+
 int		render(t_scene *scene)
 {
 	static int count;
@@ -230,13 +247,7 @@ int		render(t_scene *scene)
 		x = 0;
 		while (x < WIDTH)
 		{
-			t_vec3d ray_dir = get_direction(x, y, scene);
-			hit = trace_ray(&ray_dir, scene);
-			if (!hit)
-				color = 0xff000000;
-			else
-				color = apply_shadow(hit, &scene->light, &scene->amb_light);
-			free(hit);
+			color = perpixel(x, y, scene);
 			my_mlx_pixel_put(&scene->img, x, y, color);
 			x++;
 		}
