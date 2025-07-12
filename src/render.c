@@ -75,20 +75,18 @@ t_hit *cylinder_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_cylind
 	return hit;
 }
 
-t_hit *set_cylinder_hit(t_vec3d *ray_dir, t_scene *scene, int id)
+void set_cylinder_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit)
 {
 	t_vec3d ray_origin;
-	t_hit *hit;
 
-	ray_origin = sub_vecs(scene->cam.coord, scene->cylinders[id].coord);
-	hit = cylinder_hit(&ray_origin, ray_dir, &scene->cylinders[id]);
-	hit->rgb = scene->cylinders[id].rgb;
-	hit->shape_origin = scene->cylinders[id].coord;
+	ray_origin = sub_vecs(scene->cam.coord, scene->cylinders[hit->id].coord);
+	// hit = cylinder_hit(&ray_origin, ray_dir, &scene->cylinders[id]);
+	hit->rgb = scene->cylinders[hit->id].rgb;
+	hit->shape_origin = scene->cylinders[hit->id].coord;
 	hit->position = vec_x_scalar(ray_dir, hit->distance);
 	hit->position = add_vecs(&ray_origin, &hit->position);
 	// closest->position = norm_vec(&hit->position);
 	hit->direction = norm_vec(&hit->position);
-	return (hit);
 }
 
 uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient)
@@ -121,20 +119,18 @@ uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient)
 	return (color_per_pixel(&sphere_rgb, 1));
 }
 
-t_hit *set_sphere_hit(t_vec3d *ray_dir, t_scene *scene, int id)
+void set_sphere_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit)
 {
 	t_vec3d ray_origin;
-    t_hit *hit;
 
-    ray_origin = sub_vecs(scene->cam.coord, scene->spheres[id].coord);
-    hit = sphere_hit(&ray_origin, ray_dir, &scene->spheres[id]);
-    hit->rgb = scene->spheres[id].rgb;
-    hit->shape_origin = scene->spheres[id].coord;
+    ray_origin = sub_vecs(scene->cam.coord, scene->spheres[hit->id].coord);
+    // hit = sphere_hit(&ray_origin, ray_dir, &scene->spheres[id]);
+    hit->rgb = scene->spheres[hit->id].rgb;
+    hit->shape_origin = scene->spheres[hit->id].coord;
     hit->position = vec_x_scalar(ray_dir, hit->distance);
     hit->position = add_vecs(&ray_origin, &hit->position);
     // closest->position = norm_vec(&hit->position);
     hit->direction = norm_vec(&hit->position);
-    return (hit);
 }
 
 /* returns closest hit of scene objs */
@@ -142,46 +138,54 @@ t_hit *trace_ray(t_vec3d *ray_dir, t_scene *scene)
 {
 	t_vec3d ray_origin;
 	t_hit *hit;
-	t_hit *closest;
-	int id = -1;
-	int shape = -1;
+	t_hit *closest = NULL;
+	// int id = -1;
+	// int shape = -1;
 	float distance = FLT_MAX;
 
 	int count = 0;
 	while (count < scene->amount[SP])
 	{
-		ray_origin = sub_vecs(scene->cam.coord, scene->spheres[count].coord);
-		hit = sphere_hit(&ray_origin, ray_dir, &scene->spheres[count]);
-		if (hit && hit->distance > 0.0f && hit->distance < distance)
-		{
-			distance = hit->distance;
-			id = count;
-			shape = SP;
-		}
-		free(hit);
-		count++;
-	}
+        ray_origin = sub_vecs(scene->cam.coord, scene->spheres[count].coord);
+        hit = sphere_hit(&ray_origin, ray_dir, &scene->spheres[count]);
+        if (hit && hit->distance > 0.0f && hit->distance < distance)
+        {
+            if (closest)
+                free(closest);
+            distance = hit->distance;
+            closest = hit;
+            closest->id = count;
+            closest->shape = SP;
+        }
+        else
+            free(hit);
+        count++;
+    }
 	count = 0;
 	while (count < scene->amount[CY])
-	{
-		ray_origin = sub_vecs(scene->cam.coord, scene->cylinders[count].coord);
-		hit = cylinder_hit(&ray_origin, ray_dir, &scene->cylinders[count]);
-		if (hit && hit->distance > 0.0f && hit->distance < distance)
-		{
-			distance = hit->distance;
-			id = count;
-			shape = CY;
-		}
-		free(hit);
+    {
+        ray_origin = sub_vecs(scene->cam.coord, scene->cylinders[count].coord);
+        hit = cylinder_hit(&ray_origin, ray_dir, &scene->cylinders[count]);
+        if (hit && hit->distance > 0.0f && hit->distance < distance)
+        {
+            if (closest)
+                free(closest);
+            distance = hit->distance;
+            closest = hit;
+            closest->id = count;
+            closest->shape = CY;
+        }
+        else
+            free(hit);
 		count++;
 	}
-	if (id == -1)
+	if (closest == NULL)
 		return NULL;
-	if (shape == SP)
-		hit = set_sphere_hit(ray_dir, scene, id);
-	else if (shape == CY)
-		hit = set_cylinder_hit(ray_dir, scene, id);
-	return hit;
+	if (closest->shape == SP)
+		set_sphere_hit(ray_dir, scene, closest);
+	else if (closest->shape == CY)
+		set_cylinder_hit(ray_dir, scene, closest);
+	return closest;
 }
 
 // add to trivec lib
@@ -228,7 +232,7 @@ u_int32_t	perpixel(float x, float y, t_scene* scene) // raygen -> ray trace pipe
 
 	closest_hit = trace_ray(&ray_dir, scene);
 	if (!closest_hit)
-		color = 0xff007fff; // background / miss shader
+		color = 0xff000000; // background / miss shader
 	else
 		color = apply_light(closest_hit, &scene->light, &scene->amb_light);
 	free(closest_hit);
