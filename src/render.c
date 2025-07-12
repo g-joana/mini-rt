@@ -91,7 +91,7 @@ t_hit *set_cylinder_hit(t_vec3d *ray_dir, t_scene *scene, int id)
 	return (hit);
 }
 
-uint32_t apply_shadow(t_hit *hit, t_light *light, t_alight *ambient)
+uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient)
 {
 	t_vec3d norm;
 	norm = sub_vecs(&hit->position, hit->shape_origin); // necessary?
@@ -228,9 +228,9 @@ u_int32_t	perpixel(float x, float y, t_scene* scene) // raygen -> ray trace pipe
 
 	closest_hit = trace_ray(&ray_dir, scene);
 	if (!closest_hit)
-		color = 0xff000000; // background / miss shader
+		color = 0xff007fff; // background / miss shader
 	else
-		color = apply_shadow(closest_hit, &scene->light, &scene->amb_light);
+		color = apply_light(closest_hit, &scene->light, &scene->amb_light);
 	free(closest_hit);
 	return color;
 }
