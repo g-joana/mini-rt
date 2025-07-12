@@ -20,6 +20,7 @@ t_hit *sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_sphere *
 		return NULL;
 	hit = malloc(sizeof(t_hit));
 	hit->distance = (-b - sqrtf(delta)) / (2.0f * a);
+    hit->shape = SP;
 	return hit;
 }
 
@@ -56,6 +57,7 @@ t_hit *cylinder_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_cylind
 		return NULL;
 	hit = malloc(sizeof(t_hit));
 	hit->distance = (-b - sqrtf(delta)) / (2.0f * a);
+    hit->shape = CY;
 
 	t_vec3d hit_point = {
 		ray_origin->x + ray_dir->x * hit->distance,
@@ -133,58 +135,78 @@ void set_sphere_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit)
     hit->direction = norm_vec(&hit->position);
 }
 
-/* returns closest hit of scene objs */
-t_hit *trace_ray(t_vec3d *ray_dir, t_scene *scene)
+t_hit *get_shape_hit(t_vec3d *ray_dir, t_scene *scene, int shape, int id)
 {
 	t_vec3d ray_origin;
 	t_hit *hit;
+
+    if (shape == PL)
+    {
+        return NULL;
+    }
+    else if (shape == SP)
+    {
+        ray_origin = sub_vecs(scene->cam.coord, scene->spheres[id].coord);
+        hit = sphere_hit(&ray_origin, ray_dir, &scene->spheres[id]);
+    }
+    else if (shape == CY)
+    {
+        ray_origin = sub_vecs(scene->cam.coord, scene->cylinders[id].coord);
+        hit = cylinder_hit(&ray_origin, ray_dir, &scene->cylinders[id]);
+    }
+    return hit;
+}
+
+void set_shape_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit)
+{
+	t_vec3d ray_origin;
+
+    if (!hit)
+        return;
+    if (hit->shape == PL)
+    {
+        return;
+    }
+    else if (hit->shape == SP)
+    {
+		set_sphere_hit(ray_dir, scene, hit);
+    }
+    else if (hit->shape == CY)
+    {
+		set_sphere_hit(ray_dir, scene, hit);
+    }
+}
+
+/* returns closest hit of scene objs */
+t_hit *trace_ray(t_vec3d *ray_dir, t_scene *scene)
+{
+	t_hit *hit;
 	t_hit *closest = NULL;
-	// int id = -1;
-	// int shape = -1;
+	int shape = PL;
 	float distance = FLT_MAX;
 
 	int count = 0;
-	while (count < scene->amount[SP])
+	while (shape <= CY)
 	{
-        ray_origin = sub_vecs(scene->cam.coord, scene->spheres[count].coord);
-        hit = sphere_hit(&ray_origin, ray_dir, &scene->spheres[count]);
-        if (hit && hit->distance > 0.0f && hit->distance < distance)
+        count = 0;
+        while (count < scene->amount[shape])
         {
-            if (closest)
-                free(closest);
-            distance = hit->distance;
-            closest = hit;
-            closest->id = count;
-            closest->shape = SP;
+            hit = get_shape_hit(ray_dir, scene, shape, count);
+            if (hit && hit->distance > 0.0f && hit->distance < distance)
+            {
+                if (closest)
+                    free(closest);
+                distance = hit->distance;
+                closest = hit;
+                closest->id = count;
+            }
+            else
+                free(hit);
+            count++;
         }
-        else
-            free(hit);
-        count++;
+        shape++;
     }
-	count = 0;
-	while (count < scene->amount[CY])
-    {
-        ray_origin = sub_vecs(scene->cam.coord, scene->cylinders[count].coord);
-        hit = cylinder_hit(&ray_origin, ray_dir, &scene->cylinders[count]);
-        if (hit && hit->distance > 0.0f && hit->distance < distance)
-        {
-            if (closest)
-                free(closest);
-            distance = hit->distance;
-            closest = hit;
-            closest->id = count;
-            closest->shape = CY;
-        }
-        else
-            free(hit);
-		count++;
-	}
-	if (closest == NULL)
-		return NULL;
-	if (closest->shape == SP)
-		set_sphere_hit(ray_dir, scene, closest);
-	else if (closest->shape == CY)
-		set_cylinder_hit(ray_dir, scene, closest);
+	set_shape_hit(ray_dir, scene, closest);
 	return closest;
 }
 
