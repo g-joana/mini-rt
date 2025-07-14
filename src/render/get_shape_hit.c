@@ -41,18 +41,20 @@ t_hit *cylinder_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_cylind
 	if (delta < 0.0f)
 		return NULL;
 	hit = malloc(sizeof(t_hit));
-	float distance = (-b - sqrtf(delta)) / (2.0f * a);
+	float t0 = (-b - sqrtf(delta)) / (2.0f * a);
+	// float t1 = (-b + sqrtf(delta)) / (2.0f * a);
+
 
 	// define limits
-	float z = ray_origin->z + distance * ray_dir->z;
-	if (z < 0)
-		z *= -1;
-	if (!(z <= (cy->height / 2)))
+	float z1 = ray_origin->z + t0 * ray_dir->z;
+	if (z1 < 0)
+		z1 *= -1;
+	if (!(z1 <= (cy->height / 2)))
 		return NULL;
 
 	hit = malloc(sizeof(t_hit));
 	hit->shape = CY;
-	hit->distance = distance;
+	hit->distance = t0;
 
 	return hit;
 }
