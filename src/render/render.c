@@ -3,7 +3,7 @@
 uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient)
 {
 	t_vec3d norm;
-	norm = sub_vecs(&hit->position, hit->shape_origin); // necessary?
+	norm = sub_vecs(&hit->position, hit->shape_origin);
 	norm = hit->direction;
 
 	t_vec3d light_dir = *light->coord;
@@ -19,15 +19,15 @@ uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient)
 	// clamping only min, so there is no negative (if angle > 90)
 	light_intensity = clamp(light_intensity, 0.0f, light_intensity);
 	// change rgb to vec3d
-	t_vec3d sphere_rgb = {	
+	t_vec3d rgb = {	
 		(float)hit->rgb[0],
 		(float)hit->rgb[1],
 		(float)hit->rgb[2]
 	};
 	// sphere_rgb = norm_vec(&sphere_rgb); -> appears to be not necessary
 	// applying light/shadow to sphere color
-	sphere_rgb = vec_x_scalar(&sphere_rgb, light_intensity);
-	return (color_per_pixel(&sphere_rgb, 1));
+	rgb = vec_x_scalar(&rgb, light_intensity);
+	return (color_per_pixel(&rgb, 1));
 }
 
 /* returns closest hit of scene objs */
@@ -98,7 +98,7 @@ u_int32_t	perpixel(float x, float y, t_scene* scene) // raygen -> ray trace pipe
 
 	closest_hit = trace_ray(&ray_dir, scene);
 	if (!closest_hit)
-		color = 0xff000000; // background / miss shader
+		color = 0xff007fff; // background / miss shader
 	else
 		color = apply_light(closest_hit, &scene->light, &scene->amb_light);
 	free(closest_hit);

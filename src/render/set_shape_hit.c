@@ -1,10 +1,16 @@
 #include "../../includes/minirt.h"
+#include <stdio.h>
 
 void set_cylinder_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit)
 {
 	t_vec3d ray_origin;
 
 	ray_origin = sub_vecs(scene->cam.coord, scene->cylinders[hit->id].coord);
+	hit->rgb = scene->cylinders[hit->id].rgb;
+	hit->shape_origin = scene->cylinders[hit->id].coord;
+	hit->position = vec_x_scalar(ray_dir, hit->distance);
+	hit->position = add_vecs(&ray_origin, &hit->position);
+	hit->direction = norm_vec(&hit->position);
 }
 
 void set_sphere_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit)
@@ -12,12 +18,10 @@ void set_sphere_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit)
 	t_vec3d ray_origin;
 
     ray_origin = sub_vecs(scene->cam.coord, scene->spheres[hit->id].coord);
-    // hit = sphere_hit(&ray_origin, ray_dir, &scene->spheres[id]);
     hit->rgb = scene->spheres[hit->id].rgb;
     hit->shape_origin = scene->spheres[hit->id].coord;
     hit->position = vec_x_scalar(ray_dir, hit->distance);
     hit->position = add_vecs(&ray_origin, &hit->position);
-    // closest->position = norm_vec(&hit->position);
     hit->direction = norm_vec(&hit->position);
 }
 
@@ -37,6 +41,6 @@ void set_shape_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit)
     }
     else if (hit->shape == CY)
     {
-		set_sphere_hit(ray_dir, scene, hit);
+		set_cylinder_hit(ray_dir, scene, hit);
     }
 }
