@@ -71,6 +71,8 @@ t_vec3d	get_direction(float x, float y, t_scene *scene) {
 	float u;
 	float v;
 
+	scene->aspect_ratio = (float)WIDTH / (float)HEIGHT;
+	scene->scale = tanf((scene->cam.fov / 2.0f) * (M_PI / 180.0f));
 	// aspect_ratio makes image not distort in different screen sizes by saving propotions on ratio
 	// scale is how much the camera is able to see (vertically) based on fov angle (zoom out/in)
 	// tangent of fov/2 (the midle) in radians
