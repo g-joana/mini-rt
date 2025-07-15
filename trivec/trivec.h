@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 19:56:31 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/02 15:08:56 by jou              ###   ########.fr       */
+/*   Updated: 2025/07/12 15:55:39 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,6 @@ t_vec3d	norm_vec(const t_vec3d *vec);
 t_vec3d vec_x_scalar(const t_vec3d *vec, double scalar);
 double	magni_vec(const t_vec3d *vec);
 double	dot_vecs(const t_vec3d *xyz_a, const t_vec3d *xyz_b);
+t_vec3d cross_vecs(t_vec3d *a, t_vec3d *b);
 
 #endif

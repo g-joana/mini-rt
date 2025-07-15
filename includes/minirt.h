@@ -103,6 +103,7 @@ typedef struct s_scene {
 
 typedef struct s_hit {
     int id;
+    int shape;
     float distance;
     t_vec3d position;
     t_vec3d direction;
@@ -183,5 +184,15 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 float clamp(float n, float min, float max);
 float clamp_color(float n);
 uint32_t color_per_pixel(t_vec3d *vec, float alpha);
+
+// get_shape_hit.c
+t_hit *sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_sphere *sp);
+t_hit *cylinder_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_cylinder *cylin);
+t_hit *get_shape_hit(t_vec3d *ray_dir, t_scene *scene, int shape, int id);
+
+// set_shape_hit.c
+void set_cylinder_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit);
+void set_sphere_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit);
+void set_shape_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit);
 
 #endif

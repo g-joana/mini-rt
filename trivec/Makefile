@@ -1,6 +1,6 @@
 FLAGS = -Wall -Wextra -Werror -c
 NAME = trivec.a
-FILES_C	= add_vecs.c dot_vecs.c magni_vec.c norm_vec.c sub_vecs.c vec_x_scalar.c
+FILES_C	= add_vecs.c dot_vecs.c magni_vec.c norm_vec.c sub_vecs.c vec_x_scalar.c cross_vecs.c
 FILES_O = $(FILES_C:.c=.o)
 
 all: $(NAME)

@@ -7,19 +7,24 @@ OBJ_DIR		= obj
 LIBFT_DIR	= libft
 MLX_DIR		= mlx
 PARS_DIR	= $(SRC_DIR)/parser
+REND_DIR	= $(SRC_DIR)/render
 VEC_DIR		= trivec
 
 # Sources
-SRCS		= main.c free.c error.c print.c render.c render_utils.c
+SRCS		= main.c free.c error.c print.c
 
 # Parser files
 PARS		= init.c init_utils_scene.c init_utils_shapes.c parser.c parser_utils.c \
 			  set_properties.c set_scene.c set_shapes.c \
 
+# Render files
+REND		= render.c render_utils.c get_shape_hit.c set_shape_hit.c
+
 # Object files
 OBJS		= \
 			$(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o)) \
-			$(addprefix $(OBJ_DIR)/, $(PARS:.c=.o))
+			$(addprefix $(OBJ_DIR)/, $(PARS:.c=.o)) \
+			$(addprefix $(OBJ_DIR)/, $(REND:.c=.o))
 
 # Compiler
 CC			= clang
@@ -46,6 +51,10 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 # parser files
 $(OBJ_DIR)/%.o: $(PARS_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# render files
+$(OBJ_DIR)/%.o: $(REND_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT):

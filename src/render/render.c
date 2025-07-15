@@ -1,28 +1,6 @@
-#include "../includes/minirt.h"
+#include "../../includes/minirt.h"
 
-t_hit *sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_sphere *sp)
-{
-	t_hit	*hit;
-	// circle
-	// (x-a)^2 + (y-b)^2 - r^2 = 0
-	// quadratic eq
-	// (ax^2 + ay^2)t^2 + (2(bxax + byay))t + (bx^2 + by^2 - r^2) = 0;
-	float r = sp->diam/2;
-	float a = dot_vecs(ray_dir, ray_dir);
-	float b = 2.0f * dot_vecs(ray_origin, ray_dir);
-	float c = dot_vecs(ray_origin, ray_origin) - r * r;
-
-	// discriminant = t = hit distance / point
-	// b^2 - 4ac
-	float delta = b * b - 4.0f * a * c;
-	if (delta < 0.0f)
-		return NULL;
-	hit = malloc(sizeof(t_hit));
-	hit->distance = (-b - sqrtf(delta)) / (2.0f * a);
-	return hit;
-}
-
-uint32_t apply_shadow(t_hit *hit, t_light *light, t_alight *ambient)
+uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient)
 {
 	t_vec3d norm;
 	norm = sub_vecs(&hit->position, hit->shape_origin); // necessary?
@@ -52,56 +30,37 @@ uint32_t apply_shadow(t_hit *hit, t_light *light, t_alight *ambient)
 	return (color_per_pixel(&sphere_rgb, 1));
 }
 
-t_hit *set_sphere_hit(t_vec3d *ray_dir, t_scene *scene, int id)
-{
-	t_vec3d ray_origin;
-    t_hit *hit;
-
-    ray_origin = sub_vecs(scene->cam.coord, scene->spheres[id].coord);
-    hit = sphere_hit(&ray_origin, ray_dir, &scene->spheres[id]);
-	hit->rgb = scene->spheres[id].rgb;
-	hit->shape_origin = scene->spheres[id].coord;
-	hit->position = vec_x_scalar(ray_dir, hit->distance);
-	hit->position = add_vecs(&ray_origin, &hit->position);
-	// closest->position = norm_vec(&hit->position);
-	hit->direction = norm_vec(&hit->position);
-    return (hit);
-}
-
 /* returns closest hit of scene objs */
 t_hit *trace_ray(t_vec3d *ray_dir, t_scene *scene)
 {
-	t_vec3d ray_origin;
 	t_hit *hit;
-    int id = -1;
-    float distance = FLT_MAX;
+	t_hit *closest = NULL;
+	int shape = PL;
+	float distance = FLT_MAX;
 
 	int count = 0;
-	while (count < scene->amount[SP])
+	while (shape <= CY)
 	{
-		ray_origin = sub_vecs(scene->cam.coord, scene->spheres[count].coord);
-		hit = sphere_hit(&ray_origin, ray_dir, &scene->spheres[count]);
-        if (hit && hit->distance > 0.0f && hit->distance < distance)
+        count = 0;
+        while (count < scene->amount[shape])
         {
-            distance = hit->distance;
-            id = count;
-            free(hit);
+            hit = get_shape_hit(ray_dir, scene, shape, count);
+            if (hit && hit->distance > 0.0f && hit->distance < distance)
+            {
+                if (closest)
+                    free(closest);
+                distance = hit->distance;
+                closest = hit;
+                closest->id = count;
+            }
+            else
+                free(hit);
+            count++;
         }
-		count++;
-	}
-    if (id == -1)
-        return NULL;
-    hit = set_sphere_hit(ray_dir, scene, id);
-	return hit;
-}
-
-// add to trivec lib
-t_vec3d cross_vecs(t_vec3d *a, t_vec3d *b) {
-    t_vec3d result;
-    result.x = a->y * b->z - a->z * b->y;
-    result.y = a->z * b->x - a->x * b->z;
-    result.z = a->x * b->y - a->y * b->x;
-    return result;
+        shape++;
+    }
+	set_shape_hit(ray_dir, scene, closest);
+	return closest;
 }
 
 t_vec3d	get_direction(float x, float y, t_scene *scene) {
@@ -131,6 +90,21 @@ t_vec3d	get_direction(float x, float y, t_scene *scene) {
 	return ray_dir;
 }
 
+u_int32_t	perpixel(float x, float y, t_scene* scene) // raygen -> ray trace pipeline / shaders
+{
+	u_int32_t color;
+	t_hit *closest_hit;
+	t_vec3d ray_dir = get_direction(x, y, scene);
+
+	closest_hit = trace_ray(&ray_dir, scene);
+	if (!closest_hit)
+		color = 0xff000000; // background / miss shader
+	else
+		color = apply_light(closest_hit, &scene->light, &scene->amb_light);
+	free(closest_hit);
+	return color;
+}
+
 int		render(t_scene *scene)
 {
 	static int count;
@@ -143,13 +117,7 @@ int		render(t_scene *scene)
 		x = 0;
 		while (x < WIDTH)
 		{
-			t_vec3d ray_dir = get_direction(x, y, scene);
-			hit = trace_ray(&ray_dir, scene);
-			if (!hit)
-				color = 0xff000000;
-			else
-				color = apply_shadow(hit, &scene->light, &scene->amb_light);
-			free(hit);
+			color = perpixel(x, y, scene);
 			my_mlx_pixel_put(&scene->img, x, y, color);
 			x++;
 		}
