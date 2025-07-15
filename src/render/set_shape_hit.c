@@ -7,7 +7,6 @@ void set_cylinder_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit)
 	ray_origin = sub_vecs(scene->cam.coord, scene->cylinders[hit->id].coord);
 	hit->rgb = scene->cylinders[hit->id].rgb;
 	hit->shape_origin = scene->cylinders[hit->id].coord;
-	hit->direction = norm_vec(&hit->position);
 }
 
 void set_sphere_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit)

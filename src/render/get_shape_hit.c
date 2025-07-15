@@ -79,15 +79,18 @@ t_hit *cylinder_hit(t_vec3d *ray_origin, t_vec3d *ray_dir, t_cylinder *cy)
 	// define limits
 	t_vec3d half_height_ratio = vec_x_scalar(cy->norm, cy->height / 2.0f);
 	t_vec3d base = sub_vecs(cy->coord, &half_height_ratio);
-	t_vec3d size = sub_vecs(&hit->position, cy->coord);
-	float z1 = dot_vecs(&size, cy->norm);
-	if (z1 < -cy->height/2.0f || z1 > cy->height /2.0f)
+	t_vec3d center = sub_vecs(&hit->position, cy->coord);
+	float len = dot_vecs(&center, cy->norm);
+	if (len < -cy->height/2.0f || len > cy->height /2.0f)
 	{
 		free(hit);
 		return NULL;
 	}
 	hit->shape = CY;
 	hit->distance = t;
+	t_vec3d axis = vec_x_scalar(cy->norm, len);
+	hit->direction = sub_vecs(&center, &axis);
+	hit->direction = norm_vec(&hit->direction);
 	return hit;
 }
 
