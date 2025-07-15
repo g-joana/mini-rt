@@ -23,13 +23,40 @@ t_hit *sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_sphere *
 	return hit;
 }
 
-t_hit *cylinder_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_cylinder *cy)
+t_vec3d rotate_to_z_axis(t_vec3d *v, t_vec3d *norm) {
+
+    t_vec3d z_axis = {0, 0, 1};
+    *norm = norm_vec(norm);
+    float cos_theta = dot_vecs(norm, &z_axis);
+    if (cos_theta > 0.9999f) // already aligned
+        return *v;
+    if (cos_theta < -0.9999f) // opposite direction
+        return (t_vec3d){-v->x, -v->y, -v->z};
+
+    float theta = acosf(cos_theta);
+    t_vec3d axis = cross_vecs(norm, &z_axis);
+    axis = norm_vec(&axis);
+
+    float c = cosf(theta);
+    float s = sinf(theta);
+
+    t_vec3d v_rot;
+    v_rot.x = v->x * c + axis.x * dot_vecs(&axis, v) * (1 - c) + (-axis.z * v->y + axis.y * v->z) * s;
+    v_rot.y = v->y * c + axis.y * dot_vecs(&axis, v) * (1 - c) + ( axis.z * v->x - axis.x * v->z) * s;
+    v_rot.z = v->z * c + axis.z * dot_vecs(&axis, v) * (1 - c) + (-axis.y * v->x + axis.x * v->y) * s;
+    return v_rot;
+}
+
+t_hit *cylinder_hit(t_vec3d *ray_origin, t_vec3d *ray_dir, t_cylinder *cy)
 {
 	t_hit	*hit;
 
-	t_vec3d dir = *ray_dir;
+	t_vec3d dir;
+	t_vec3d ori; 
+
+	dir = rotate_to_z_axis(ray_dir, cy->norm);
 	dir.z = 0;
-	t_vec3d ori = *ray_origin;
+	ori = rotate_to_z_axis(ray_origin, cy->norm);
 	ori.z = 0;
 
 	float r = cy->diam/2;
@@ -40,21 +67,26 @@ t_hit *cylinder_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_cylind
 	float delta = b * b - 4.0f * a * c;
 	if (delta < 0.0f)
 		return NULL;
-	hit = malloc(sizeof(t_hit));
-	float t0 = (-b - sqrtf(delta)) / (2.0f * a);
-	// float t1 = (-b + sqrtf(delta)) / (2.0f * a);
+	float t = (-b - sqrtf(delta)) / (2.0f * a);
 
+	if (t < 0.0f)
+		return NULL;
 
 	// define limits
-	float z1 = ray_origin->z + t0 * ray_dir->z;
-	if (z1 < 0)
-		z1 *= -1;
-	if (!(z1 <= (cy->height / 2)))
-		return NULL;
+	float z1 = ori.z + t * dir.z;
+	if (z1 < 0.0f || z1 > cy->height)
+        return NULL;
+
+
+	// float z1 = ray_origin->z + t0 * ray_dir->z;
+	// if (z1 < 0)
+	// 	z1 *= -1;
+	// if (!(z1 <= (cy->height / 2)))
+	// 	return NULL;
 
 	hit = malloc(sizeof(t_hit));
 	hit->shape = CY;
-	hit->distance = t0;
+	hit->distance = t;
 
 	return hit;
 }
