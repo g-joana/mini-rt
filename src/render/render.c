@@ -23,15 +23,12 @@ uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient)
 		(float)hit->rgb[2]
 	};
 
-	t_vec3d ambient_rgb = {
-		rgb.x * ambient->bright,
-		rgb.y * ambient->bright,
-		rgb.z * ambient->bright
-	};
+	t_vec3d argb;
+	argb = vec_x_scalar(&rgb, ambient->bright); // spot
 	// sphere_rgb = norm_vec(&sphere_rgb); -> appears to be not necessary
 	// applying light/shadow to sphere color
 	rgb = vec_x_scalar(&rgb, light_intensity * light->bright); // spot
-	// rgb = add_vecs(&rgb , &ambient_rgb);
+	rgb = add_vecs(&rgb , &argb);
 	return (color_per_pixel(&rgb, 1));
 }
 

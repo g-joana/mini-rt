@@ -21,6 +21,9 @@ float clamp(float n, float min, float max){
 
 uint32_t color_per_pixel(t_vec3d *vec, float alpha)
 {
+	vec->x = clamp(vec->x, vec->x, 255.0f);
+	vec->y = clamp(vec->y, vec->y, 255.0f);
+	vec->z = clamp(vec->z, vec->z, 255.0f);
 	uint8_t r = (uint8_t)(vec->x);
 	uint8_t g = (uint8_t)(vec->y);
 	uint8_t b = (uint8_t)(vec->z);
