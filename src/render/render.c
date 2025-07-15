@@ -3,11 +3,9 @@
 uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient)
 {
 	t_vec3d norm;
-	norm = sub_vecs(&hit->position, hit->shape_origin);
 	norm = hit->direction;
 
-	t_vec3d light_dir = *light->coord;
-	// t_vec3d light_dir = vec_x_scalar(scene->light.coord, -1);
+	t_vec3d light_dir = sub_vecs(light->coord, &hit->position);
 	light_dir = norm_vec(&light_dir);
 
 	// dot product of sphere norm and -light direction
@@ -24,9 +22,16 @@ uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient)
 		(float)hit->rgb[1],
 		(float)hit->rgb[2]
 	};
+
+	t_vec3d ambient_rgb = {
+		rgb.x * ambient->bright,
+		rgb.y * ambient->bright,
+		rgb.z * ambient->bright
+	};
 	// sphere_rgb = norm_vec(&sphere_rgb); -> appears to be not necessary
 	// applying light/shadow to sphere color
-	rgb = vec_x_scalar(&rgb, light_intensity);
+	rgb = vec_x_scalar(&rgb, light_intensity * light->bright); // spot
+	// rgb = add_vecs(&rgb , &ambient_rgb);
 	return (color_per_pixel(&rgb, 1));
 }
 
