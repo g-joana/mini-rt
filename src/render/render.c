@@ -8,8 +8,10 @@ uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient)
 	t_vec3d light_dir = sub_vecs(light->coord, &hit->position);
 	light_dir = norm_vec(&light_dir);
 
+	light_dir = vec_x_scalar(&light_dir, -1);
 	// dot product of sphere norm and -light direction
 	float light_intensity = dot_vecs(&norm, &light_dir); 
+	light_intensity = light_intensity  * -1.0f;
 	// == cos(angle) | if angle > 90 = negative result | cos(90) == 0
 	// dot product = always in -1->1 range
 	// this angle is the surface angle - reflects the light
