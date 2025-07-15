@@ -1,5 +1,4 @@
 #include "../../includes/minirt.h"
-#include <stdio.h>
 
 void set_cylinder_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit)
 {
@@ -8,8 +7,6 @@ void set_cylinder_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit)
 	ray_origin = sub_vecs(scene->cam.coord, scene->cylinders[hit->id].coord);
 	hit->rgb = scene->cylinders[hit->id].rgb;
 	hit->shape_origin = scene->cylinders[hit->id].coord;
-	hit->position = vec_x_scalar(ray_dir, hit->distance);
-	hit->position = add_vecs(&ray_origin, &hit->position);
 	hit->direction = norm_vec(&hit->position);
 }
 

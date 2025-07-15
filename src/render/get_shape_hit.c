@@ -68,26 +68,26 @@ t_hit *cylinder_hit(t_vec3d *ray_origin, t_vec3d *ray_dir, t_cylinder *cy)
 	if (delta < 0.0f)
 		return NULL;
 	float t = (-b - sqrtf(delta)) / (2.0f * a);
-
 	if (t < 0.0f)
 		return NULL;
 
-	// define limits
-	float z1 = ori.z + t * dir.z;
-	if (z1 < 0.0f || z1 > cy->height)
-        return NULL;
-
-
-	// float z1 = ray_origin->z + t0 * ray_dir->z;
-	// if (z1 < 0)
-	// 	z1 *= -1;
-	// if (!(z1 <= (cy->height / 2)))
-	// 	return NULL;
-
 	hit = malloc(sizeof(t_hit));
+	hit->distance = t;
+	hit->position = vec_x_scalar(ray_dir, hit->distance);
+	hit->position = add_vecs(ray_origin, &hit->position);
+
+	// define limits
+	t_vec3d half_height_ratio = vec_x_scalar(cy->norm, cy->height / 2.0f);
+	t_vec3d base = sub_vecs(cy->coord, &half_height_ratio);
+	t_vec3d size = sub_vecs(&hit->position, cy->coord);
+	float z1 = dot_vecs(&size, cy->norm);
+	if (z1 < -cy->height/2.0f || z1 > cy->height /2.0f)
+	{
+		free(hit);
+		return NULL;
+	}
 	hit->shape = CY;
 	hit->distance = t;
-
 	return hit;
 }
 
