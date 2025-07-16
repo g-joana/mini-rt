@@ -9,16 +9,9 @@ uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient)
 	light_dir = norm_vec(&light_dir);
 
 	light_dir = vec_x_scalar(&light_dir, -1);
-	// dot product of sphere norm and -light direction
 	float light_intensity = dot_vecs(&norm, &light_dir); 
 	light_intensity = light_intensity  * -1.0f;
-	// == cos(angle) | if angle > 90 = negative result | cos(90) == 0
-	// dot product = always in -1->1 range
-	// this angle is the surface angle - reflects the light
-
-	// clamping only min, so there is no negative (if angle > 90)
 	light_intensity = clamp(light_intensity, 0.0f, light_intensity);
-	// change rgb to vec3d
 	t_vec3d rgb = {	
 		(float)hit->rgb[0],
 		(float)hit->rgb[1],
@@ -26,16 +19,14 @@ uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient)
 	};
 
 	t_vec3d argb;
-	argb = vec_x_scalar(&rgb, ambient->bright); // spot
-	// sphere_rgb = norm_vec(&sphere_rgb); -> appears to be not necessary
-	// applying light/shadow to sphere color
-	rgb = vec_x_scalar(&rgb, light_intensity * light->bright); // spot
+	argb = vec_x_scalar(&rgb, ambient->bright);
+	rgb = vec_x_scalar(&rgb, light_intensity * light->bright);
 	rgb = add_vecs(&rgb , &argb);
 	return (color_per_pixel(&rgb, 1));
 }
 
 /* returns closest hit of scene objs */
-t_hit *trace_ray(t_vec3d *ray_dir, t_scene *scene)
+t_hit *trace_ray(t_ray *ray, t_scene *scene)
 {
 	t_hit *hit;
 	t_hit *closest = NULL;
@@ -45,25 +36,25 @@ t_hit *trace_ray(t_vec3d *ray_dir, t_scene *scene)
 	int count = 0;
 	while (shape <= CY)
 	{
-        count = 0;
-        while (count < scene->amount[shape])
-        {
-            hit = get_shape_hit(ray_dir, scene, shape, count);
-            if (hit && hit->distance > 0.0f && hit->distance < distance)
-            {
-                if (closest)
-                    free(closest);
-                distance = hit->distance;
-                closest = hit;
-                closest->id = count;
-            }
-            else
-                free(hit);
-            count++;
-        }
-        shape++;
-    }
-	set_shape_hit(ray_dir, scene, closest);
+		count = 0;
+		while (count < scene->amount[shape])
+		{
+			hit = get_shape_hit(ray, scene, shape, count);
+			if (hit && hit->distance > 0.0f && hit->distance < distance)
+			{
+				if (closest)
+					free(closest);
+				distance = hit->distance;
+				closest = hit;
+				closest->id = count;
+			}
+			else
+				free(hit);
+			count++;
+		}
+		shape++;
+	}
+	set_shape_hit(ray, scene, closest);
 	return closest;
 }
 
@@ -100,14 +91,16 @@ u_int32_t	perpixel(float x, float y, t_scene* scene) // raygen -> ray trace pipe
 {
 	u_int32_t color;
 	t_hit *closest_hit;
-	t_vec3d ray_dir = get_direction(x, y, scene);
+	t_ray ray;
 
-	closest_hit = trace_ray(&ray_dir, scene);
+	ray.dir = get_direction(x, y, scene);
+	closest_hit = trace_ray(&ray, scene);
 	if (!closest_hit)
 		color = 0xff007fff; // background / miss shader
 	else
 		color = apply_light(closest_hit, &scene->light, &scene->amb_light);
 	free(closest_hit);
+	// free(ray);
 	return color;
 }
 

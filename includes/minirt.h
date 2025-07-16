@@ -111,6 +111,11 @@ typedef struct s_hit {
     uint8_t *rgb;
 } t_hit;
 
+typedef struct s_ray {
+    t_vec3d ori;
+    t_vec3d dir;
+} t_ray;
+
 /* -----[START OF PARSER RELATED FUNCTIONS]----- */
 
 // parser.c
@@ -186,13 +191,11 @@ float clamp_color(float n);
 uint32_t color_per_pixel(t_vec3d *vec, float alpha);
 
 // get_shape_hit.c
-t_hit *sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_sphere *sp);
-t_hit *cylinder_hit( t_vec3d *ray_origin, t_vec3d *ray_dir, t_cylinder *cylin);
-t_hit *get_shape_hit(t_vec3d *ray_dir, t_scene *scene, int shape, int id);
+t_hit *sphere_hit( t_ray *ray, t_sphere *sp);
+t_hit *cylinder_hit( t_ray *ray, t_cylinder *cylin);
+t_hit *get_shape_hit(t_ray *ray, t_scene *scene, int shape, int id);
 
 // set_shape_hit.c
-void set_cylinder_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit);
-void set_sphere_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit);
-void set_shape_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit);
+void set_shape_hit(t_ray *ray, t_scene *scene, t_hit *hit);
 
 #endif

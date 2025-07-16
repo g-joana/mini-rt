@@ -1,6 +1,6 @@
 #include "../../includes/minirt.h"
 
-t_hit *sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_sphere *sp)
+t_hit *sphere_hit(t_ray *ray, t_sphere *sp)
 {
 	t_hit	*hit;
 	// circle
@@ -8,9 +8,9 @@ t_hit *sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_sphere *
 	// quadratic eq
 	// (ax^2 + ay^2)t^2 + (2(bxax + byay))t + (bx^2 + by^2 - r^2) = 0;
 	float r = sp->diam/2;
-	float a = dot_vecs(ray_dir, ray_dir);
-	float b = 2.0f * dot_vecs(ray_origin, ray_dir);
-	float c = dot_vecs(ray_origin, ray_origin) - r * r;
+	float a = dot_vecs(&ray->dir, &ray->dir);
+	float b = 2.0f * dot_vecs(&ray->ori, &ray->dir);
+	float c = dot_vecs(&ray->ori, &ray->ori) - r * r;
 
 	// discriminant = t = hit distance / point
 	// b^2 - 4ac
@@ -47,16 +47,16 @@ t_vec3d rotate_to_z_axis(t_vec3d *v, t_vec3d *norm) {
     return v_rot;
 }
 
-t_hit *cylinder_hit(t_vec3d *ray_origin, t_vec3d *ray_dir, t_cylinder *cy)
+t_hit *cylinder_hit(t_ray *ray, t_cylinder *cy)
 {
 	t_hit	*hit;
 
 	t_vec3d dir;
 	t_vec3d ori; 
 
-	dir = rotate_to_z_axis(ray_dir, cy->norm);
+	dir = rotate_to_z_axis(&ray->dir, cy->norm);
 	dir.z = 0;
-	ori = rotate_to_z_axis(ray_origin, cy->norm);
+	ori = rotate_to_z_axis(&ray->ori, cy->norm);
 	ori.z = 0;
 
 	float r = cy->diam/2;
@@ -73,8 +73,8 @@ t_hit *cylinder_hit(t_vec3d *ray_origin, t_vec3d *ray_dir, t_cylinder *cy)
 
 	hit = malloc(sizeof(t_hit));
 	hit->distance = t;
-	hit->position = vec_x_scalar(ray_dir, hit->distance);
-	hit->position = add_vecs(ray_origin, &hit->position);
+	hit->position = vec_x_scalar(&ray->dir, hit->distance);
+	hit->position = add_vecs(&ray->ori, &hit->position);
 
 	// define limits
 	t_vec3d half_height_ratio = vec_x_scalar(cy->norm, cy->height / 2.0f);
@@ -87,31 +87,29 @@ t_hit *cylinder_hit(t_vec3d *ray_origin, t_vec3d *ray_dir, t_cylinder *cy)
 		return NULL;
 	}
 	hit->shape = CY;
-	hit->distance = t;
 	t_vec3d axis = vec_x_scalar(cy->norm, len);
 	hit->direction = sub_vecs(&center, &axis);
 	hit->direction = norm_vec(&hit->direction);
 	return hit;
 }
 
-t_hit *get_shape_hit(t_vec3d *ray_dir, t_scene *scene, int shape, int id)
+t_hit *get_shape_hit(t_ray *ray, t_scene *scene, int shape, int id)
 {
-	t_vec3d ray_origin;
 	t_hit *hit;
 
-    if (shape == PL)
-    {
-        return NULL;
-    }
-    else if (shape == SP)
-    {
-        ray_origin = sub_vecs(scene->cam.coord, scene->spheres[id].coord);
-        hit = sphere_hit(&ray_origin, ray_dir, &scene->spheres[id]);
-    }
-    else if (shape == CY)
-    {
-        ray_origin = sub_vecs(scene->cam.coord, scene->cylinders[id].coord);
-        hit = cylinder_hit(&ray_origin, ray_dir, &scene->cylinders[id]);
-    }
-    return hit;
+	if (shape == PL)
+	{
+		return NULL;
+	}
+	else if (shape == SP)
+	{
+		ray->ori = sub_vecs(scene->cam.coord, scene->spheres[id].coord);
+		hit = sphere_hit(ray, &scene->spheres[id]);
+	}
+	else if (shape == CY)
+	{
+		ray->ori = sub_vecs(scene->cam.coord, scene->cylinders[id].coord);
+		hit = cylinder_hit(ray, &scene->cylinders[id]);
+	}
+	return hit;
 }
