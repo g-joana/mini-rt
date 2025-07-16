@@ -2,25 +2,18 @@
 
 uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient)
 {
-	t_vec3d norm;
-	norm = hit->direction;
-
+	hit->direction = norm_vec(&hit->direction); // do this on parser
 	t_vec3d light_dir = sub_vecs(light->coord, &hit->position);
 	light_dir = norm_vec(&light_dir);
 
 	light_dir = vec_x_scalar(&light_dir, -1);
-	float light_intensity = dot_vecs(&norm, &light_dir); 
+	float light_intensity = dot_vecs(&hit->direction, &light_dir); 
 	light_intensity = light_intensity  * -1.0f;
 	light_intensity = clamp(light_intensity, 0.0f, light_intensity);
-	t_vec3d rgb = {	
-		(float)hit->rgb[0],
-		(float)hit->rgb[1],
-		(float)hit->rgb[2]
-	};
-
+	t_vec3d rgb;
 	t_vec3d argb;
-	argb = vec_x_scalar(&rgb, ambient->bright);
-	rgb = vec_x_scalar(&rgb, light_intensity * light->bright);
+	argb = vec_x_scalar(hit->rgb, ambient->bright);
+	rgb = vec_x_scalar(hit->rgb, light_intensity * light->bright);
 	rgb = add_vecs(&rgb , &argb);
 	return (color_per_pixel(&rgb, 1));
 }

@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 17:50:24 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/13 17:58:12 by nranna           ###   ########.fr       */
+/*   Updated: 2025/07/16 16:57:47 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,14 @@ void	set_brightness(char *str, float *bright)
 }
 
 // range: 0 ~ 255
-void	set_rgb(char *str, uint8_t *rgb)
+void	set_rgb(char *str, t_vec3d *rgb)
 {
 	char	**values;
 
 	values = ft_split(str, ',');
-	rgb[0] = ft_atoi(values[0]);
-	rgb[1] = ft_atoi(values[1]);
-	rgb[2] = ft_atoi(values[2]);
+	rgb->x = ft_atoi(values[0]);
+	rgb->y = ft_atoi(values[1]);
+	rgb->z = ft_atoi(values[2]);
 	free_split(values);
 }
 
