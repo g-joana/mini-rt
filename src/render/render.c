@@ -32,8 +32,8 @@ t_hit *trace_ray(t_ray *ray, t_scene *scene)
 	t_hit *closest = NULL;
 	int shape = PL;
 	float distance = FLT_MAX;
+	int count;
 
-	int count = 0;
 	while (shape <= CY)
 	{
 		count = 0;
@@ -64,16 +64,9 @@ t_vec3d	get_direction(float x, float y, t_scene *scene) {
 
 	scene->aspect_ratio = (float)WIDTH / (float)HEIGHT;
 	scene->scale = tanf((scene->cam.fov / 2.0f) * (M_PI / 180.0f));
-	// aspect_ratio makes image not distort in different screen sizes by saving propotions on ratio
-	// scale is how much the camera is able to see (vertically) based on fov angle (zoom out/in)
-	// tangent of fov/2 (the midle) in radians
-	// (fov / 2.0f) -> gets half fov
-	// (M_PI / 180.0f) -> converts degrees into radians
-	// tanf( radians of the target ) ->
+
 	u = (x/(float)WIDTH);
 	v = (y/(float)HEIGHT);
-	// 2d ndc -> 3d world coords
-	// projection * view * transform * vertex
 	u = (u * 2.0f - 1.0f) * scene->aspect_ratio * scene->scale;
 	v = (v * 2.0f - 1.0f) * scene->scale;
 
@@ -100,7 +93,6 @@ u_int32_t	perpixel(float x, float y, t_scene* scene) // raygen -> ray trace pipe
 	else
 		color = apply_light(closest_hit, &scene->light, &scene->amb_light);
 	free(closest_hit);
-	// free(ray);
 	return color;
 }
 
