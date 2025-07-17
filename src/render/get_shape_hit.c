@@ -24,10 +24,9 @@ t_hit *sphere_hit(t_ray *ray, t_sphere *sp)
 	return hit;
 }
 
-t_vec3d transform_to_z_axis(t_vec3d *v, t_vec3d *norm, int clock) {
+t_vec3d rodrigues_to_z(t_vec3d *v, t_vec3d *norm, int clock) {
 
     t_vec3d z_axis = {0, 0, 1};
-    *norm = norm_vec(norm);
     float cos_theta = dot_vecs(norm, &z_axis);
     if (cos_theta > 0.0001f) // already aligned
         return *v;
@@ -58,10 +57,10 @@ t_hit *cylinder_hit(t_ray *ray, t_cylinder *cy)
 	t_vec3d dir;
 	t_vec3d ori; 
 
-	// *cy->norm = norm_vec(cy->norm);
-	dir = transform_to_z_axis(&ray->dir, cy->norm, 1);
+	*cy->norm = norm_vec(cy->norm);
+	dir = rodrigues_to_z(&ray->dir, cy->norm, 1);
 	dir.z = 0;
-	ori = transform_to_z_axis(&ray->ori, cy->norm, 1);
+	ori = rodrigues_to_z(&ray->ori, cy->norm, 1);
 	ori.z = 0;
 
 	float r = cy->diam/2;
@@ -84,22 +83,21 @@ t_hit *cylinder_hit(t_ray *ray, t_cylinder *cy)
 
 	t_vec3d center = sub_vecs(&hit->position, cy->coord);
 	float len = dot_vecs(&center, cy->norm);
-	if (len < -cy->height/2.0f || len > cy->height /2.0f)
+	if (len < (-cy->height/2.0f) || len > (cy->height /2.0f))
 	{
 		free(hit);
 		return NULL;
 	}
-	t_vec3d axis = vec_x_scalar(cy->norm, len);
     // local normal
-	hit->direction = sub_vecs(&center, &axis);
+	// t_vec3d axis = vec_x_scalar(cy->norm, len);
+	// hit->direction = sub_vecs(&center, &axis);
     hit->direction = cross_vecs(&hit->position, cy->norm);
-	hit->direction = norm_vec(&hit->direction);
     // world normal
-    hit->position = transform_to_z_axis(&hit->position, cy->norm, -1);
-    hit->direction = transform_to_z_axis(&hit->direction, cy->norm, -1);
+    hit->position = rodrigues_to_z(&hit->position, cy->norm, -1);
+    hit->direction = rodrigues_to_z(&hit->direction, cy->norm, -1);
 	hit->direction = norm_vec(&hit->direction);
 	hit->shape = CY;
-	return hit;
+    return hit;
 }
 
 t_hit *get_shape_hit(t_ray *ray, t_scene *scene, int shape, int id)
