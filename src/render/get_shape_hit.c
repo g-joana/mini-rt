@@ -1,5 +1,4 @@
 #include "../../includes/minirt.h"
-#include <stdio.h>
 
 t_hit *sphere_hit(t_ray *ray, t_sphere *sp)
 {
@@ -24,30 +23,51 @@ t_hit *sphere_hit(t_ray *ray, t_sphere *sp)
 	return hit;
 }
 
-t_vec3d rodrigues_to_z(t_vec3d *v, t_vec3d *norm, int clock) {
-
-    t_vec3d z_axis = {0, 0, 1};
-    float cos_theta = dot_vecs(norm, &z_axis);
-    if (cos_theta > 0.0001f) // already aligned
-        return *v;
-    if (cos_theta < -0.0001f) // opposite direction
-        return (t_vec3d){-v->x, -v->y, -v->z};
-
-    float theta = acosf(cos_theta);
-    t_vec3d axis;
-    axis = cross_vecs(norm, &z_axis);
-    axis = norm_vec(&axis);
-
-    if (clock == -1)
-        theta = -theta;
+t_vec3d rodrigues(t_vec3d *v, t_vec3d *norm, float theta) {
     float c = cosf(theta);
     float s = sinf(theta);
+    float dot = dot_vecs(norm, v);
+    t_vec3d cross = cross_vecs(norm, v);
 
-    t_vec3d transform;
-    transform.x = v->x * c + axis.x * dot_vecs(&axis, v) * (1 - c) + (-axis.z * v->y + axis.y * v->z) * s;
-    transform.y = v->y * c + axis.y * dot_vecs(&axis, v) * (1 - c) + ( axis.z * v->x - axis.x * v->z) * s;
-    transform.z = v->z * c + axis.z * dot_vecs(&axis, v) * (1 - c) + (-axis.y * v->x + axis.x * v->y) * s;
-    return transform;
+    t_vec3d rot;
+    rot.x = v->x * c + cross.x * s + norm->x * dot * (1 - c);
+    rot.y = v->y * c + cross.y * s + norm->y * dot * (1 - c);
+    rot.z = v->z * c + cross.z * s + norm->z * dot * (1 - c);
+    return rot;
+}
+
+t_vec3d to_local_space(t_vec3d *v, t_vec3d *norm) {
+    t_vec3d z_axis = {0, 0, 1};
+    // *norm = norm_vec(norm);
+
+    float cos_theta = dot_vecs(norm, &z_axis);
+    if (cos_theta > 0.0001f)
+        return *v;
+    if (cos_theta < -0.0001f) 
+        return (t_vec3d){v->x, v->y, -v->z};
+
+    float theta = acosf(cos_theta);
+    t_vec3d axis = cross_vecs(norm, &z_axis);
+    axis = norm_vec(&axis);
+
+    return rodrigues(v, &axis, theta);
+}
+
+t_vec3d to_world_space(t_vec3d *v, t_vec3d *norm) {
+    t_vec3d z_axis = {0, 0, 1};
+    // *norm = norm_vec(norm);
+
+    float cos_theta = dot_vecs(&z_axis, norm);
+    if (cos_theta > 0.0001f)
+        return *v;
+    if (cos_theta < -0.0001f) 
+        return (t_vec3d){v->x, v->y, -v->z};
+
+    float theta = acosf(cos_theta);
+    t_vec3d axis = cross_vecs(&z_axis, norm);
+    axis = norm_vec(&axis);
+
+    return rodrigues(v, &axis, theta);
 }
 
 t_hit *cylinder_hit(t_ray *ray, t_cylinder *cy)
@@ -57,10 +77,10 @@ t_hit *cylinder_hit(t_ray *ray, t_cylinder *cy)
 	t_vec3d dir;
 	t_vec3d ori; 
 
-	*cy->norm = norm_vec(cy->norm);
-	dir = rodrigues_to_z(&ray->dir, cy->norm, 1);
+	// *cy->norm = norm_vec(cy->norm);
+	dir = to_local_space(&ray->dir, cy->norm);
 	dir.z = 0;
-	ori = rodrigues_to_z(&ray->ori, cy->norm, 1);
+	ori = to_local_space(&ray->ori, cy->norm);
 	ori.z = 0;
 
 	float r = cy->diam/2;
@@ -77,7 +97,6 @@ t_hit *cylinder_hit(t_ray *ray, t_cylinder *cy)
 
 	hit = malloc(sizeof(t_hit));
 	hit->distance = t;
-    // local position
 	hit->position = vec_x_scalar(&ray->dir, hit->distance);
 	hit->position = add_vecs(&ray->ori, &hit->position);
 
@@ -88,15 +107,26 @@ t_hit *cylinder_hit(t_ray *ray, t_cylinder *cy)
 		free(hit);
 		return NULL;
 	}
+
+    t_vec3d hit_local = vec_x_scalar(&dir, t);
+    hit_local = add_vecs(&ori, &hit_local);
+
     // local normal
-	// t_vec3d axis = vec_x_scalar(cy->norm, len);
-	// hit->direction = sub_vecs(&center, &axis);
-    hit->direction = cross_vecs(&hit->position, cy->norm);
+    t_vec3d normal_local = { hit_local.x, hit_local.y, 0 };
+    normal_local = norm_vec(&normal_local);
+
+    // world position
+    t_vec3d world_hit = to_world_space(&hit_local, cy->norm);
+    world_hit = add_vecs(&world_hit, cy->coord);
+
     // world normal
-    hit->position = rodrigues_to_z(&hit->position, cy->norm, -1);
-    hit->direction = rodrigues_to_z(&hit->direction, cy->norm, -1);
-	hit->direction = norm_vec(&hit->direction);
-	hit->shape = CY;
+    t_vec3d world_normal = to_world_space(&normal_local, cy->norm);
+    world_normal = norm_vec(&world_normal);
+
+    hit->distance = t;
+    hit->position = world_hit;
+    hit->direction = world_normal;
+    hit->shape = CY;
     return hit;
 }
 

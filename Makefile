@@ -29,7 +29,7 @@ OBJS		= \
 # Compiler
 CC			= clang
 # CFLAGS		= -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -I$(VEC_DIR) -ggdb3
-CFLAGS		= -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -I$(VEC_DIR) -ggdb3 -g
+CFLAGS		= -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -I$(VEC_DIR) -ggdb3 -g -gdwarf-4
 
 # Libraries
 LIBFT		= $(LIBFT_DIR)/libft.a
