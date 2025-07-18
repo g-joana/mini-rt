@@ -13,9 +13,12 @@ void set_sphere_hit(t_ray *ray, t_scene *scene, t_hit *hit)
     ray_origin = sub_vecs(scene->cam.coord, scene->spheres[hit->id].coord);
     hit->rgb = scene->spheres[hit->id].rgb;
     hit->shape_origin = scene->spheres[hit->id].coord;
+    // world position
     hit->position = vec_x_scalar(&ray->dir, hit->distance);
-    hit->position = add_vecs(&ray_origin, &hit->position);
-    hit->direction = norm_vec(&hit->position);
+    hit->position = add_vecs(scene->cam.coord, &hit->position);
+    // world direction
+    hit->direction = sub_vecs(&hit->position, hit->shape_origin);
+    hit->direction = norm_vec(&hit->direction);
 }
 
 void set_shape_hit(t_ray *ray, t_scene *scene, t_hit *hit)
