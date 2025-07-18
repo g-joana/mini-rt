@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:56:54 by nranna            #+#    #+#             */
-/*   Updated: 2025/07/16 16:59:52 by jgils            ###   ########.fr       */
+/*   Updated: 2025/07/18 08:24:32 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_plane	*init_planes(int amount)
 		planes[i].norm->x = 0;
 		planes[i].norm->y = 0;
 		planes[i].norm->z = 0;
-		planes[i].rgb = malloc(sizeof(uint8_t) * 3);
+		planes[i].rgb = malloc(sizeof(t_vec3d));
 		planes[i].rgb->x = 0;
 		planes[i].rgb->y = 0;
 		planes[i].rgb->z = 0;
@@ -53,7 +53,7 @@ t_sphere	*init_spheres(int amount)
 		spheres[i].coord->x = 0;
 		spheres[i].coord->y = 0;
 		spheres[i].coord->z = 0;
-		spheres[i].rgb = malloc(sizeof(uint8_t) * 3);
+		spheres[i].rgb = malloc(sizeof(t_vec3d));
 		spheres[i].rgb->x = 0;
 		spheres[i].rgb->y = 0;
 		spheres[i].rgb->z = 0;
@@ -80,7 +80,7 @@ t_cylinder	*init_cylinders(int amount)
 		cylinders[i].norm->x = 0;
 		cylinders[i].norm->y = 0;
 		cylinders[i].norm->z = 0;
-		cylinders[i].rgb = malloc(sizeof(uint8_t) * 3);
+		cylinders[i].rgb = malloc(sizeof(t_vec3d));
 		cylinders[i].rgb->x = 0;
 		cylinders[i].rgb->y = 0;
 		cylinders[i].rgb->z = 0;
