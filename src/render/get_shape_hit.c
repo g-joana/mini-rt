@@ -89,10 +89,10 @@ t_hit *cylinder_hit(t_ray *ray, t_cylinder *cy)
 	float c = dot_vecs(&ori, &ori) - r * r;
 
 	float delta = b * b - 4.0f * a * c;
-	if (delta < 0.0f)
+	if (delta < 0.0001f)
 		return NULL;
 	float t = (-b - sqrtf(delta)) / (2.0f * a);
-	if (t < 0.0f)
+	if (t < 0.0001f)
 		return NULL;
 
 	hit = malloc(sizeof(t_hit));
