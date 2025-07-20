@@ -133,6 +133,7 @@ t_hit *cylinder_hit(t_ray *ray, t_cylinder *cy)
 t_hit *get_shape_hit(t_ray *ray, t_scene *scene, int shape, int id)
 {
 	t_hit *hit;
+    t_ray local_ray = *ray;
 
 	if (shape == PL)
 	{
@@ -141,14 +142,23 @@ t_hit *get_shape_hit(t_ray *ray, t_scene *scene, int shape, int id)
 	else if (shape == SP)
 	{
         if (ray->shadow == false)
-            ray->ori = sub_vecs(scene->cam.coord, scene->spheres[id].coord);
-		hit = sphere_hit(ray, &scene->spheres[id]);
+            local_ray.ori = sub_vecs(scene->cam.coord, scene->spheres[id].coord);
+        else
+            local_ray.ori = sub_vecs(&ray->ori, scene->spheres[id].coord);
+		hit = sphere_hit(&local_ray, &scene->spheres[id]);
 	}
 	else if (shape == CY)
 	{
         if (ray->shadow == false)
             ray->ori = sub_vecs(scene->cam.coord, scene->cylinders[id].coord);
-		hit = cylinder_hit(ray, &scene->cylinders[id]);
+        else
+            local_ray.ori = sub_vecs(&ray->ori, scene->cylinders[id].coord);
+		hit = cylinder_hit(&local_ray, &scene->cylinders[id]);
 	}
+    if (hit)
+    {
+        hit->shape = shape;
+        hit->id = id;
+    }
 	return hit;
 }

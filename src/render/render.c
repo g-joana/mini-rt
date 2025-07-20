@@ -1,5 +1,4 @@
 #include "../../includes/minirt.h"
-#include <stdio.h>
 
 uint32_t apply_ambient(t_hit *hit, t_alight *ambient)
 {
@@ -61,60 +60,57 @@ t_hit *trace_ray(t_ray *ray, t_scene *scene)
 
 t_hit *trace_shadow(t_ray *ray, t_scene *scene)
 {
-	t_hit *hit;
-	int shape = PL;
-	int count;
-
-	while (shape <= CY)
-	{
-		count = 0;
-		while (count < scene->amount[shape])
-		{
-			hit = get_shape_hit(ray, scene, shape, count);
-			if (hit)
-			{
-                hit->id = count;
-                return (hit);
-			}
-            free(hit);
-			count++;
-		}
-		shape++;
-	}
-	return NULL;
+    t_hit *hit;
+    t_hit *closest = NULL;
+    int shape = PL;
+    int count;
+    float closest_distance = FLT_MAX;
+    
+    while (shape <= CY)
+    {
+        count = 0;
+        while (count < scene->amount[shape])
+        {
+            hit = get_shape_hit(ray, scene, shape, count);
+            if (hit && hit->distance > 0.001f && hit->distance < closest_distance)
+            {
+                if (closest)
+                    free(closest);
+                closest_distance = hit->distance;
+                closest = hit;
+                closest->id = count;
+                closest->shape = shape;
+            }
+            else if (hit)
+                free(hit);
+            count++;
+        }
+        shape++;
+    }
+    return closest;
 }
 
 bool in_shadow(t_hit *surface, t_scene *scene)
 {
-	t_hit *hit;
-    t_ray ray;
-	float light_distance;
-
-	t_vec3d diff = sub_vecs(scene->light.coord, &surface->position);
-	light_distance = magni_vec(&diff);
-    // ray.ori = surface->position;
-    ray.ori = vec_x_scalar(&surface->direction, 1e4);
-    ray.ori = add_vecs(&surface->position, &ray.ori);
-    ray.dir = sub_vecs(scene->light.coord, &ray.ori);
-    ray.dir = norm_vec(&ray.dir);
-    ray.shadow = true;
-    // printf("\n\n");
-    // printf("surface position:  %f  %f  %f\n", surface->position.x, surface->position.y, surface->position.z);
-    // printf("light position:  %f  %f  %f\n", scene->light.coord->x, scene->light.coord->y, scene->light.coord->z);
-    // printf("\n");
-    // printf("light distance:  %f\n", light_distance);
-    // printf("ray origin:  %f  %f  %f\n", ray.ori.x, ray.ori.y, ray.ori.z);
-    // printf("ray dir:  %f  %f  %f\n", ray.dir.x, ray.dir.y, ray.dir.z);
-    hit = trace_shadow(&ray, scene);
+    t_hit *hit;
+    t_ray shadow_ray;
+    float light_distance;
+    
+    t_vec3d to_light = sub_vecs(scene->light.coord, &surface->position);
+    light_distance = magni_vec(&to_light);
+    
+    shadow_ray.ori = vec_x_scalar(&surface->direction, 0.001f); // Small epsilon
+    shadow_ray.ori = add_vecs(&surface->position, &shadow_ray.ori);
+    shadow_ray.dir = norm_vec(&to_light);
+    shadow_ray.shadow = true;
+    
+    hit = trace_shadow(&shadow_ray, scene);
     if (hit)
     {
-		if (hit->id != surface->id && hit->shape != surface->shape)
+        if (hit->distance > 0.001f && hit->distance < light_distance)
         {
-            if (hit->distance < light_distance)
-            {
-                free(hit);
-                return true;
-            }
+            free(hit);
+            return true;
         }
         free(hit);
     }
