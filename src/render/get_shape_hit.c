@@ -140,12 +140,14 @@ t_hit *get_shape_hit(t_ray *ray, t_scene *scene, int shape, int id)
 	}
 	else if (shape == SP)
 	{
-		ray->ori = sub_vecs(scene->cam.coord, scene->spheres[id].coord);
+        if (ray->shadow == false)
+            ray->ori = sub_vecs(scene->cam.coord, scene->spheres[id].coord);
 		hit = sphere_hit(ray, &scene->spheres[id]);
 	}
 	else if (shape == CY)
 	{
-		ray->ori = sub_vecs(scene->cam.coord, scene->cylinders[id].coord);
+        if (ray->shadow == false)
+            ray->ori = sub_vecs(scene->cam.coord, scene->cylinders[id].coord);
 		hit = cylinder_hit(ray, &scene->cylinders[id]);
 	}
 	return hit;

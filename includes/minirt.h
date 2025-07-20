@@ -112,6 +112,7 @@ typedef struct s_hit {
 } t_hit;
 
 typedef struct s_ray {
+    int shadow;
     t_vec3d ori;
     t_vec3d dir;
 } t_ray;

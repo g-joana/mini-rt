@@ -1,4 +1,12 @@
 #include "../../includes/minirt.h"
+#include <stdio.h>
+
+uint32_t apply_ambient(t_hit *hit, t_alight *ambient)
+{
+	t_vec3d argb;
+	argb = vec_x_scalar(hit->rgb, ambient->bright);
+	return (color_per_pixel(&argb, 1));
+}
 
 uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient)
 {
@@ -51,6 +59,68 @@ t_hit *trace_ray(t_ray *ray, t_scene *scene)
 	return closest;
 }
 
+t_hit *trace_shadow(t_ray *ray, t_scene *scene)
+{
+	t_hit *hit;
+	int shape = PL;
+	int count;
+
+	while (shape <= CY)
+	{
+		count = 0;
+		while (count < scene->amount[shape])
+		{
+			hit = get_shape_hit(ray, scene, shape, count);
+			if (hit)
+			{
+                hit->id = count;
+                return (hit);
+			}
+            free(hit);
+			count++;
+		}
+		shape++;
+	}
+	return NULL;
+}
+
+bool in_shadow(t_hit *surface, t_scene *scene)
+{
+	t_hit *hit;
+    t_ray ray;
+	float light_distance;
+
+	t_vec3d diff = sub_vecs(scene->light.coord, &surface->position);
+	light_distance = magni_vec(&diff);
+    // ray.ori = surface->position;
+    ray.ori = vec_x_scalar(&surface->direction, 1e4);
+    ray.ori = add_vecs(&surface->position, &ray.ori);
+    ray.dir = sub_vecs(scene->light.coord, &ray.ori);
+    ray.dir = norm_vec(&ray.dir);
+    ray.shadow = true;
+    // printf("\n\n");
+    // printf("surface position:  %f  %f  %f\n", surface->position.x, surface->position.y, surface->position.z);
+    // printf("light position:  %f  %f  %f\n", scene->light.coord->x, scene->light.coord->y, scene->light.coord->z);
+    // printf("\n");
+    // printf("light distance:  %f\n", light_distance);
+    // printf("ray origin:  %f  %f  %f\n", ray.ori.x, ray.ori.y, ray.ori.z);
+    // printf("ray dir:  %f  %f  %f\n", ray.dir.x, ray.dir.y, ray.dir.z);
+    hit = trace_shadow(&ray, scene);
+    if (hit)
+    {
+		if (hit->id != surface->id && hit->shape != surface->shape)
+        {
+            if (hit->distance < light_distance)
+            {
+                free(hit);
+                return true;
+            }
+        }
+        free(hit);
+    }
+    return false;
+}
+
 t_vec3d	get_direction(float x, float y, t_scene *scene) {
 	float u;
 	float v;
@@ -80,11 +150,18 @@ u_int32_t	perpixel(float x, float y, t_scene* scene) // raygen -> ray trace pipe
 	t_ray ray;
 
 	ray.dir = get_direction(x, y, scene);
+    ray.shadow = false;
 	closest_hit = trace_ray(&ray, scene);
 	if (!closest_hit)
 		color = 0xff007fff; // background / miss shader
 	else
-		color = apply_light(closest_hit, &scene->light, &scene->amb_light);
+    {
+        // color = apply_light(closest_hit, &scene->light, &scene->amb_light);
+        if (!in_shadow(closest_hit, scene))
+            color = apply_light(closest_hit, &scene->light, &scene->amb_light);
+        else
+            color = apply_ambient(closest_hit, &scene->amb_light);
+    }
 	free(closest_hit);
 	return color;
 }
