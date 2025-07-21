@@ -68,7 +68,6 @@ u_int32_t	perpixel(float x, float y, t_scene* scene) // raygen -> ray trace pipe
 	color = 0xff007fff; // background / miss shader
     else
     {
-	// color = apply_light(closest_hit, &scene->light, &scene->amb_light);
 	if (!in_shadow(closest_hit, scene))
 	    color = apply_light(closest_hit, &scene->light, &scene->amb_light);
 	else

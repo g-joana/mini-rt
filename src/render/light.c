@@ -15,6 +15,7 @@ uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient)
 
 	light_dir = vec_x_scalar(&light_dir, -1);
 	float light_intensity = dot_vecs(&hit->direction, &light_dir); 
+	light_intensity = light_intensity  * light->bright;
 	light_intensity = light_intensity  * -1.0f;
 	light_intensity = clamp(light_intensity, 0.0f, light_intensity);
 	t_vec3d rgb;

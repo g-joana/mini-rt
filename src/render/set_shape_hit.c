@@ -38,20 +38,20 @@ void set_shape_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 	t_vec3d ray_origin;
 	t_ray local_ray = *ray;
 
-    if (!hit)
-        return;
-    if (hit->shape == PL)
-    {
-        return;
-    }
-    else if (hit->shape == SP)
-    {
-	    local_ray.ori = sub_vecs(scene->cam.coord, scene->spheres[hit->id].coord);
-	    set_sphere_hit(&local_ray, scene, hit);
-    }
-    else if (hit->shape == CY)
-    {
+	if (!hit)
+		return;
+	if (hit->shape == PL)
+	{
+		return;
+	}
+	else if (hit->shape == SP)
+	{
+		local_ray.ori = sub_vecs(scene->cam.coord, scene->spheres[hit->id].coord);
+		set_sphere_hit(&local_ray, scene, hit);
+	}
+	else if (hit->shape == CY)
+	{
 		local_ray.ori = sub_vecs(scene->cam.coord, scene->cylinders[hit->id].coord);
 		set_cylinder_hit(&local_ray, scene, hit);
-    }
+	}
 }
