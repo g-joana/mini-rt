@@ -1,17 +1,14 @@
 #include "../includes/minirt.h"
 
-#include "../includes/minirt.h"
-#include <stdio.h> // Adicionado para printf
-
 void print_scene(t_scene *scene)
 {
     // Print ambient light
     printf("Ambient Light:\n");
     printf("  Brightness: %f\n", scene->amb_light.bright);
-    printf("  RGB: [%u, %u, %u]\n",
-        scene->amb_light.rgb[0],
-        scene->amb_light.rgb[1],
-        scene->amb_light.rgb[2]);
+    printf("  RGB: [%f, %f, %f]\n",
+        scene->amb_light.rgb->x,
+        scene->amb_light.rgb->y,
+        scene->amb_light.rgb->z);
     printf("\n");
 
     // Print camera
@@ -35,10 +32,10 @@ void print_scene(t_scene *scene)
         scene->light.coord->z);
     printf("  Brightness: %f\n",
         scene->light.bright);
-    printf("  RGB: [%u, %u, %u]\n",
-        scene->light.rgb[0],
-        scene->light.rgb[1],
-        scene->light.rgb[2]);
+    printf("  RGB: [%f, %f, %f]\n",
+        scene->light.rgb->x,
+        scene->light.rgb->y,
+        scene->light.rgb->z);
     printf("\n");
 
     // Print spheres
@@ -50,10 +47,10 @@ void print_scene(t_scene *scene)
                 scene->spheres[i].coord->x,
                 scene->spheres[i].coord->y,
                 scene->spheres[i].coord->z);
-            printf("    RGB: [%u, %u, %u]\n",
-                scene->spheres[i].rgb[0],
-                scene->spheres[i].rgb[1],
-                scene->spheres[i].rgb[2]);
+            printf("    RGB: [%f, %f, %f]\n",
+                scene->spheres[i].rgb->x,
+                scene->spheres[i].rgb->y,
+                scene->spheres[i].rgb->z);
             printf("    Diameter: %f\n", scene->spheres[i].diam);
         }
     } else {
@@ -74,10 +71,10 @@ void print_scene(t_scene *scene)
                 scene->planes[i].norm->x,
                 scene->planes[i].norm->y,
                 scene->planes[i].norm->z);
-            printf("    RGB: [%u, %u, %u]\n", // Usar %u para uint8_t
-                scene->planes[i].rgb[0],
-                scene->planes[i].rgb[1],
-                scene->planes[i].rgb[2]);
+            printf("    RGB: [%f, %f, %f]\n", // Usar %u para uint8_t
+                scene->planes[i].rgb->x,
+                scene->planes[i].rgb->y,
+                scene->planes[i].rgb->z);
         }
     } else {
         printf("Planes:\n  No planes found.\n"); // Removido \n inicial
@@ -97,10 +94,10 @@ void print_scene(t_scene *scene)
                 scene->cylinders[i].norm->x,
                 scene->cylinders[i].norm->y,
                 scene->cylinders[i].norm->z);
-            printf("    RGB: [%u, %u, %u]\n",
-                scene->cylinders[i].rgb[0],
-                scene->cylinders[i].rgb[1],
-                scene->cylinders[i].rgb[2]);
+            printf("    RGB: [%f, %f, %f]\n",
+                scene->cylinders[i].rgb->x,
+                scene->cylinders[i].rgb->y,
+                scene->cylinders[i].rgb->z);
             printf("    Diameter: %f\n", scene->cylinders[i].diam);
             printf("    Height: %f\n", scene->cylinders[i].height);
         }

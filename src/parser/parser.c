@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 12:48:59 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/27 19:00:13 by jou              ###   ########.fr       */
+/*   Updated: 2025/07/15 17:22:33 by jou              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ t_scene	*parser(char *file)
 	}
 	free(count);
 	close(scene->fd);
-	scene->aspect_ratio = (float)WIDTH / (float)HEIGHT;
-	scene->scale = tanf((scene->cam.fov / 2.0f) * (M_PI / 180.0f));
 	return (scene);
 }
 

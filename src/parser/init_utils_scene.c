@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:55:15 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/27 16:26:42 by jou              ###   ########.fr       */
+/*   Updated: 2025/07/18 08:34:05 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ t_alight	init_ambient(void)
 	t_alight	ambient;
 
 	ambient.bright = 0;
-	ambient.rgb = malloc(sizeof(uint8_t) * 3);
-	ambient.rgb[0] = 0;
-	ambient.rgb[1] = 0;
-	ambient.rgb[2] = 0;
+	ambient.rgb = malloc(sizeof(t_vec3d));
+	ambient.rgb->x = 0;
+	ambient.rgb->y = 0;
+	ambient.rgb->z = 0;
 	return (ambient);
 }
 
@@ -36,10 +36,10 @@ t_light	init_light(void)
 	light.coord->x = 0;
 	light.coord->y = 0;
 	light.coord->z = 0;
-	light.rgb = malloc(sizeof(uint8_t) * 3);
-	light.rgb[0] = 0;
-	light.rgb[1] = 0;
-	light.rgb[2] = 0;
+	light.rgb = malloc(sizeof(t_vec3d));
+	light.rgb->x = 0;
+	light.rgb->y = 0;
+	light.rgb->z = 0;
 	light.bright = 0;
 	return (light);
 }

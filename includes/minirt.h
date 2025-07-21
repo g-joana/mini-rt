@@ -32,14 +32,14 @@ enum e_id {
 
 typedef struct s_sphere {
     t_vec3d *coord;
-    uint8_t *rgb;
+    t_vec3d *rgb;
     float diam;
 } t_sphere;
 
 typedef struct s_cylinder {
     t_vec3d *coord;
     t_vec3d *norm;
-    uint8_t *rgb;
+    t_vec3d *rgb;
     float diam;
     float height;
 } t_cylinder;
@@ -47,7 +47,7 @@ typedef struct s_cylinder {
 typedef struct s_plane {
     t_vec3d *coord;
     t_vec3d *norm;
-    uint8_t *rgb;
+    t_vec3d *rgb;
 } t_plane;
 
 typedef struct s_camera {
@@ -63,13 +63,13 @@ typedef struct s_camera {
 
 typedef struct s_alight {
     float   bright;
-    uint8_t *rgb;
+    t_vec3d *rgb;
 } t_alight;
 
 typedef struct s_light {
     t_vec3d *coord;
     float bright;
-    uint8_t *rgb;
+    t_vec3d *rgb;
 } t_light;
 
 typedef struct s_data
@@ -108,8 +108,14 @@ typedef struct s_hit {
     t_vec3d position;
     t_vec3d direction;
     t_vec3d *shape_origin;
-    uint8_t *rgb;
+    t_vec3d *rgb;
 } t_hit;
+
+typedef struct s_ray {
+    int shadow;
+    t_vec3d ori;
+    t_vec3d dir;
+} t_ray;
 
 /* -----[START OF PARSER RELATED FUNCTIONS]----- */
 
@@ -139,7 +145,7 @@ t_sphere	*init_spheres(int amount);
 void    set_coordinates(char *str, t_vec3d *coord);
 void    set_normalization(char *str, t_vec3d *norm);
 void    set_brightness(char *str, float *bright);
-void    set_rgb(char *str, uint8_t* rgb);
+void    set_rgb(char *str, t_vec3d* rgb);
 void    set_fov(char *str, uint8_t *fov);
 
 // set_scene.c
@@ -186,13 +192,11 @@ float clamp_color(float n);
 uint32_t color_per_pixel(t_vec3d *vec, float alpha);
 
 // get_shape_hit.c
-t_hit *sphere_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_sphere *sp);
-t_hit *cylinder_hit( const t_vec3d *ray_origin, const t_vec3d *ray_dir, t_cylinder *cylin);
-t_hit *get_shape_hit(t_vec3d *ray_dir, t_scene *scene, int shape, int id);
+t_hit *sphere_hit( t_ray *ray, t_sphere *sp);
+t_hit *cylinder_hit( t_ray *ray, t_cylinder *cylin);
+t_hit *get_shape_hit(t_ray *ray, t_scene *scene, int shape, int id);
 
 // set_shape_hit.c
-void set_cylinder_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit);
-void set_sphere_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit);
-void set_shape_hit(t_vec3d *ray_dir, t_scene *scene, t_hit *hit);
+void set_shape_hit(t_ray *ray, t_scene *scene, t_hit *hit);
 
 #endif

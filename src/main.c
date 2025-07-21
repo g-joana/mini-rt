@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 16:52:12 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/15 16:50:37 by jou              ###   ########.fr       */
+/*   Updated: 2025/07/15 17:16:55 by jou              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	start_mlx(t_scene *scene);
 
-//check leaks
 int main(int argc, char **argv)
 {
     t_scene	*scene;
@@ -24,7 +23,7 @@ int main(int argc, char **argv)
 	scene = parser(argv[1]);
 	print_scene(scene);
 	start_mlx(scene);
-	mlx_loop_hook(scene->mlx, render, scene); //change 2nd param to learn render
+	mlx_loop_hook(scene->mlx, render, scene);
 	mlx_loop(scene->mlx);
 	free_scene(scene);
 	return (0);
