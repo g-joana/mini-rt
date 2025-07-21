@@ -19,121 +19,68 @@ t_hit *sphere_hit(t_ray *ray, t_sphere *sp)
 		return NULL;
 	hit = malloc(sizeof(t_hit));
 	hit->distance = (-b - sqrtf(delta)) / (2.0f * a);
-	hit->shape = SP;
 	return hit;
-}
-
-t_vec3d rodrigues(t_vec3d *v, t_vec3d *norm, float theta) {
-    float c = cosf(theta);
-    float s = sinf(theta);
-    float dot = dot_vecs(norm, v);
-    t_vec3d cross = cross_vecs(norm, v);
-
-    t_vec3d rot;
-    rot.x = v->x * c + cross.x * s + norm->x * dot * (1 - c);
-    rot.y = v->y * c + cross.y * s + norm->y * dot * (1 - c);
-    rot.z = v->z * c + cross.z * s + norm->z * dot * (1 - c);
-    return rot;
-}
-
-t_vec3d to_local_space(t_vec3d *v, t_vec3d *norm) {
-    t_vec3d z_axis = {0, 0, 1};
-    // *norm = norm_vec(norm);
-
-    float cos_theta = dot_vecs(norm, &z_axis);
-    if (cos_theta > 0.0001f)
-        return *v;
-    if (cos_theta < -0.0001f) 
-        return (t_vec3d){v->x, v->y, -v->z};
-
-    float theta = acosf(cos_theta);
-    t_vec3d axis = cross_vecs(norm, &z_axis);
-    axis = norm_vec(&axis);
-
-    return rodrigues(v, &axis, theta);
-}
-
-t_vec3d to_world_space(t_vec3d *v, t_vec3d *norm) {
-    t_vec3d z_axis = {0, 0, 1};
-    // *norm = norm_vec(norm);
-
-    float cos_theta = dot_vecs(&z_axis, norm);
-    if (cos_theta > 0.0001f)
-        return *v;
-    if (cos_theta < -0.0001f) 
-        return (t_vec3d){v->x, v->y, -v->z};
-
-    float theta = acosf(cos_theta);
-    t_vec3d axis = cross_vecs(&z_axis, norm);
-    axis = norm_vec(&axis);
-
-    return rodrigues(v, &axis, theta);
 }
 
 t_hit *cylinder_hit(t_ray *ray, t_cylinder *cy)
 {
-	t_hit	*hit;
-
-	t_vec3d dir;
-	t_vec3d ori; 
-
-	// *cy->norm = norm_vec(cy->norm);
-	dir = to_local_space(&ray->dir, cy->norm);
-	dir.z = 0;
-	ori = to_local_space(&ray->ori, cy->norm);
-	ori.z = 0;
-
-	float r = cy->diam/2;
-	float a = dot_vecs(&dir, &dir);
-	float b = 2.0f * dot_vecs(&ori, &dir);
-	float c = dot_vecs(&ori, &ori) - r * r;
-
-	float delta = b * b - 4.0f * a * c;
-	if (delta < 0.0001f)
-		return NULL;
-	float t = (-b - sqrtf(delta)) / (2.0f * a);
-	if (t < 0.0001f)
-		return NULL;
-
-	hit = malloc(sizeof(t_hit));
-	hit->distance = t;
-	hit->position = vec_x_scalar(&ray->dir, hit->distance);
-	hit->position = add_vecs(&ray->ori, &hit->position);
-
-	t_vec3d center = sub_vecs(&hit->position, cy->coord);
-	float len = dot_vecs(&center, cy->norm);
-	if (len < (-cy->height/2.0f) || len > (cy->height /2.0f))
-	{
-		free(hit);
-		return NULL;
-	}
-
-    t_vec3d hit_local = vec_x_scalar(&dir, t);
-    hit_local = add_vecs(&ori, &hit_local);
-
-    // local normal
-    t_vec3d normal_local = { hit_local.x, hit_local.y, 0 };
-    normal_local = norm_vec(&normal_local);
-
-    // world position
-    t_vec3d world_hit = to_world_space(&hit_local, cy->norm);
-    world_hit = add_vecs(&world_hit, cy->coord);
+    t_hit *hit;
+    
+    t_vec3d local_origin = ray->ori;
+    t_vec3d local_dir = ray->dir;
+    
+    float proj_origin = dot_vecs(&local_origin, cy->norm);
+    float proj_dir = dot_vecs(&local_dir, cy->norm);
+    
+    t_vec3d axis_ori = vec_x_scalar(cy->norm, proj_origin);
+    t_vec3d axis_dir = vec_x_scalar(cy->norm, proj_dir);
+    
+    t_vec3d ori = sub_vecs(&local_origin, &axis_ori);
+    t_vec3d dir = sub_vecs(&local_dir, &axis_dir);
+    
+    float r = cy->diam / 2.0f;
+    float a = dot_vecs(&dir, &dir);
+    float b = 2.0f * dot_vecs(&ori, &dir);
+    float c = dot_vecs(&ori, &ori) - r * r;
+    
+    float delta = b * b - 4.0f * a * c;
+    if (delta < 0.0f)
+        return NULL;
+        
+    float t = (-b - sqrtf(delta)) / (2.0f * a);
+    // float t2 = (-b + sqrtf(delta)) / (2.0f * a);
+    
+    if (t < 0.001f)
+        return NULL;
+    
+    float hit_axis_pos = proj_origin + t * proj_dir;
+    if (hit_axis_pos < -cy->height/2.0f || hit_axis_pos > cy->height/2.0f)
+            return NULL;
+    
+    hit = malloc(sizeof(t_hit));
+    if (!hit)
+        return NULL;
+        
+    // hit position in local space
+    t_vec3d local_hit_pos = vec_x_scalar(&ray->dir, t);
+    local_hit_pos = add_vecs(&ray->ori, &local_hit_pos);
 
     // world normal
-    t_vec3d world_normal = to_world_space(&normal_local, cy->norm);
-    world_normal = norm_vec(&world_normal);
+    float axis_projection = dot_vecs(&local_hit_pos, cy->norm);
+    t_vec3d axis_component = vec_x_scalar(cy->norm, axis_projection);
+    t_vec3d normal = sub_vecs(&local_hit_pos, &axis_component);
+    normal = norm_vec(&normal);
 
+    hit->direction = normal;
+    hit->position = add_vecs(&local_hit_pos, cy->coord);
     hit->distance = t;
-    hit->position = world_hit;
-    hit->direction = world_normal;
-    hit->shape = CY;
     return hit;
 }
 
 t_hit *get_shape_hit(t_ray *ray, t_scene *scene, int shape, int id)
 {
 	t_hit *hit;
-    t_ray local_ray = *ray;
+	t_ray local_ray = *ray;
 
 	if (shape == PL)
 	{
@@ -155,10 +102,10 @@ t_hit *get_shape_hit(t_ray *ray, t_scene *scene, int shape, int id)
 		local_ray.ori = sub_vecs(&ray->ori, scene->cylinders[id].coord);
 	    hit = cylinder_hit(&local_ray, &scene->cylinders[id]);
 	}
-    if (hit)
-    {
-        hit->shape = shape;
-        hit->id = id;
-    }
+	if (hit)
+	{
+	    hit->shape = shape;
+	    hit->id = id;
+	}
 	return hit;
 }

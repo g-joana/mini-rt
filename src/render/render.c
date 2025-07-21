@@ -93,21 +93,21 @@ t_hit *trace_shadow(t_ray *ray, t_scene *scene)
 bool in_shadow(t_hit *surface, t_scene *scene)
 {
     t_hit *hit;
-    t_ray shadow_ray;
+    t_ray ray;
     float light_distance;
     
     t_vec3d to_light = sub_vecs(scene->light.coord, &surface->position);
     light_distance = magni_vec(&to_light);
     
-    shadow_ray.ori = vec_x_scalar(&surface->direction, 0.001f); // Small epsilon
-    shadow_ray.ori = add_vecs(&surface->position, &shadow_ray.ori);
-    shadow_ray.dir = norm_vec(&to_light);
-    shadow_ray.shadow = true;
+    ray.ori = vec_x_scalar(&surface->direction, 0.01f);
+    ray.ori = add_vecs(&surface->position, &ray.ori);
+    ray.dir = norm_vec(&to_light);
+    ray.shadow = true;
     
-    hit = trace_shadow(&shadow_ray, scene);
+    hit = trace_shadow(&ray, scene);
     if (hit)
     {
-        if (hit->distance > 0.001f && hit->distance < light_distance)
+        if (hit->distance > 0.001f && hit->distance < (light_distance - 0.001f))
         {
             free(hit);
             return true;
@@ -141,25 +141,25 @@ t_vec3d	get_direction(float x, float y, t_scene *scene) {
 
 u_int32_t	perpixel(float x, float y, t_scene* scene) // raygen -> ray trace pipeline / shaders
 {
-	u_int32_t color;
-	t_hit *closest_hit;
-	t_ray ray;
+    u_int32_t color;
+    t_hit *closest_hit;
+    t_ray ray;
 
-	ray.dir = get_direction(x, y, scene);
+    ray.dir = get_direction(x, y, scene);
     ray.shadow = false;
-	closest_hit = trace_ray(&ray, scene);
-	if (!closest_hit)
-		color = 0xff007fff; // background / miss shader
-	else
+    closest_hit = trace_ray(&ray, scene);
+    if (!closest_hit)
+	color = 0xff007fff; // background / miss shader
+    else
     {
-        // color = apply_light(closest_hit, &scene->light, &scene->amb_light);
-        if (!in_shadow(closest_hit, scene))
-            color = apply_light(closest_hit, &scene->light, &scene->amb_light);
-        else
-            color = apply_ambient(closest_hit, &scene->amb_light);
+	// color = apply_light(closest_hit, &scene->light, &scene->amb_light);
+	if (!in_shadow(closest_hit, scene))
+	    color = apply_light(closest_hit, &scene->light, &scene->amb_light);
+	else
+	    color = apply_ambient(closest_hit, &scene->amb_light);
     }
-	free(closest_hit);
-	return color;
+    free(closest_hit);
+    return color;
 }
 
 int		render(t_scene *scene)
