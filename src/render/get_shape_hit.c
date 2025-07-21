@@ -60,19 +60,6 @@ t_hit *cylinder_hit(t_ray *ray, t_cylinder *cy)
     hit = malloc(sizeof(t_hit));
     if (!hit)
         return NULL;
-        
-    // hit position in local space
-    t_vec3d local_hit_pos = vec_x_scalar(&ray->dir, t);
-    local_hit_pos = add_vecs(&ray->ori, &local_hit_pos);
-
-    // world normal
-    float axis_projection = dot_vecs(&local_hit_pos, cy->norm);
-    t_vec3d axis_component = vec_x_scalar(cy->norm, axis_projection);
-    t_vec3d normal = sub_vecs(&local_hit_pos, &axis_component);
-    normal = norm_vec(&normal);
-
-    hit->direction = normal;
-    hit->position = add_vecs(&local_hit_pos, cy->coord);
     hit->distance = t;
     return hit;
 }

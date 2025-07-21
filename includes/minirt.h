@@ -199,4 +199,10 @@ t_hit *get_shape_hit(t_ray *ray, t_scene *scene, int shape, int id);
 // set_shape_hit.c
 void set_shape_hit(t_ray *ray, t_scene *scene, t_hit *hit);
 
+// light.c
+bool in_shadow(t_hit *surface, t_scene *scene);
+t_hit *trace_shadow(t_ray *ray, t_scene *scene);
+uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient);
+uint32_t apply_ambient(t_hit *hit, t_alight *ambient);
+
 #endif

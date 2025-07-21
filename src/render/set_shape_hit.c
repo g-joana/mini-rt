@@ -1,7 +1,19 @@
 #include "../../includes/minirt.h"
 
-void set_cylinder_hit(t_scene *scene, t_hit *hit)
+void set_cylinder_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 {
+	// hit position in local space
+	t_vec3d local_hit_pos = vec_x_scalar(&ray->dir, hit->distance);
+	local_hit_pos = add_vecs(&ray->ori, &local_hit_pos);
+
+	// world normal
+	float axis_projection = dot_vecs(&local_hit_pos, scene->cylinders[hit->id].norm);
+	t_vec3d axis_component = vec_x_scalar(scene->cylinders[hit->id].norm, axis_projection);
+	t_vec3d normal = sub_vecs(&local_hit_pos, &axis_component);
+	normal = norm_vec(&normal);
+
+	hit->direction = normal;
+	hit->position = add_vecs(&local_hit_pos, scene->cylinders[hit->id].coord);
 	hit->rgb = scene->cylinders[hit->id].rgb;
 	hit->shape_origin = scene->cylinders[hit->id].coord;
 }
@@ -24,19 +36,22 @@ void set_sphere_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 void set_shape_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 {
 	t_vec3d ray_origin;
+	t_ray local_ray = *ray;
 
-    if (!hit)
-        return;
-    if (hit->shape == PL)
-    {
-        return;
-    }
-    else if (hit->shape == SP)
-    {
-		set_sphere_hit(ray, scene, hit);
-    }
-    else if (hit->shape == CY)
-    {
-		set_cylinder_hit(scene, hit);
-    }
+	if (!hit)
+		return;
+	if (hit->shape == PL)
+	{
+		return;
+	}
+	else if (hit->shape == SP)
+	{
+		local_ray.ori = sub_vecs(scene->cam.coord, scene->spheres[hit->id].coord);
+		set_sphere_hit(&local_ray, scene, hit);
+	}
+	else if (hit->shape == CY)
+	{
+		local_ray.ori = sub_vecs(scene->cam.coord, scene->cylinders[hit->id].coord);
+		set_cylinder_hit(&local_ray, scene, hit);
+	}
 }
