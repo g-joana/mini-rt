@@ -104,6 +104,7 @@ typedef struct s_scene {
 typedef struct s_hit {
     int id;
     int shape;
+    int inside;
     float distance;
     t_vec3d position;
     t_vec3d direction;

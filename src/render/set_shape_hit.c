@@ -16,6 +16,8 @@ void set_cylinder_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 	hit->position = add_vecs(&local_hit_pos, scene->cylinders[hit->id].coord);
 	hit->rgb = scene->cylinders[hit->id].rgb;
 	hit->shape_origin = scene->cylinders[hit->id].coord;
+	if (hit->inside)
+		hit->direction = vec_x_scalar(&hit->direction, -1);
 }
 
 void set_sphere_hit(t_ray *ray, t_scene *scene, t_hit *hit)

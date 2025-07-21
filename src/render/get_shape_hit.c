@@ -48,19 +48,32 @@ t_hit *cylinder_hit(t_ray *ray, t_cylinder *cy)
         return NULL;
         
     float t = (-b - sqrtf(delta)) / (2.0f * a);
-    // float t2 = (-b + sqrtf(delta)) / (2.0f * a);
-    
+    float t2 = (-b + sqrtf(delta)) / (2.0f * a);
     if (t < 0.001f)
         return NULL;
-    
+
+
     float hit_axis_pos = proj_origin + t * proj_dir;
     if (hit_axis_pos < -cy->height/2.0f || hit_axis_pos > cy->height/2.0f)
-            return NULL;
+    {
+	if (t2 > 0.001f && t2 != t)
+	    t = t2;
+	if (t < 0.001f)
+	    return NULL;
+
+	hit_axis_pos = proj_origin + t * proj_dir;
+	if (hit_axis_pos < -cy->height/2.0f || hit_axis_pos > cy->height/2.0f)
+	    return NULL;
+    }
     
     hit = malloc(sizeof(t_hit));
     if (!hit)
         return NULL;
     hit->distance = t;
+    if (t == t2)
+	hit->inside = 1;
+    else
+	hit->inside = 0;
     return hit;
 }
 
