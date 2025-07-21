@@ -14,18 +14,16 @@ t_hit *trace_ray(t_ray *ray, t_scene *scene)
 		count = 0;
 		while (count < scene->amount[shape])
 		{
-			hit = get_shape_hit(ray, scene, shape, count);
+			hit = get_shape_hit(ray, scene, shape, count++);
 			if (hit && hit->distance > 0.0f && hit->distance < distance)
 			{
 				if (closest)
 					free(closest);
 				distance = hit->distance;
 				closest = hit;
-				closest->id = count;
 			}
 			else
 				free(hit);
-			count++;
 		}
 		shape++;
 	}

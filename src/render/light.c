@@ -12,17 +12,16 @@ uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient)
 	hit->direction = norm_vec(&hit->direction); // do this on parser
 	t_vec3d light_dir = sub_vecs(light->coord, &hit->position);
 	light_dir = norm_vec(&light_dir);
-
 	light_dir = vec_x_scalar(&light_dir, -1);
-	float light_intensity = dot_vecs(&hit->direction, &light_dir); 
-	light_intensity = light_intensity  * light->bright;
-	light_intensity = light_intensity  * -1.0f;
-	light_intensity = clamp(light_intensity, 0.0f, light_intensity);
+	float intensity = dot_vecs(&hit->direction, &light_dir); 
+	intensity *= light->bright;
+	intensity *= -1.0f;
+	intensity = clamp(intensity, 0.0f, intensity);
 	t_vec3d rgb;
-	t_vec3d argb;
-	argb = vec_x_scalar(hit->rgb, ambient->bright);
-	rgb = vec_x_scalar(hit->rgb, light_intensity * light->bright);
-	rgb = add_vecs(&rgb , &argb);
+	t_vec3d ambient_rgb;
+	ambient_rgb = vec_x_scalar(hit->rgb, ambient->bright);
+	rgb = vec_x_scalar(hit->rgb, intensity * light->bright);
+	rgb = add_vecs(&rgb , &ambient_rgb);
 	return (color_per_pixel(&rgb, 1));
 }
 
@@ -39,19 +38,16 @@ t_hit *trace_shadow(t_ray *ray, t_scene *scene)
         count = 0;
         while (count < scene->amount[shape])
         {
-            hit = get_shape_hit(ray, scene, shape, count);
+            hit = get_shape_hit(ray, scene, shape, count++);
             if (hit && hit->distance > 0.001f && hit->distance < closest_distance)
             {
                 if (closest)
                     free(closest);
                 closest_distance = hit->distance;
                 closest = hit;
-                closest->id = count;
-                closest->shape = shape;
             }
             else if (hit)
                 free(hit);
-            count++;
         }
         shape++;
     }
