@@ -18,7 +18,7 @@ PARS		= init.c init_utils_scene.c init_utils_shapes.c parser.c parser_utils.c \
 			  set_properties.c set_scene.c set_shapes.c \
 
 # Render files
-REND		= render.c render_utils.c get_shape_hit.c set_shape_hit.c
+REND		= render.c render_utils.c get_shape_hit.c set_shape_hit.c light.c
 
 # Object files
 OBJS		= \
