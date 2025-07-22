@@ -2,12 +2,4 @@
 
 Work in progress 🚧
 
-docs:
-- use docstring? https://www.doxygen.nl/manual/docblocks.html
-
-to-do:
-1. window render and manegement: ESC and x close
-2. mlx renderization (loop and pixelput)
-3. raycasting
-4. vector operations
-5. calculate shapes in space
+<img width="897" height="598" alt="image" src="https://github.com/user-attachments/assets/d80a8b26-46f4-4284-8f83-dd0ec29855e6" />
