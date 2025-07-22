@@ -61,17 +61,14 @@ t_hit *cylinder_hit(t_ray *ray, t_cylinder *cy)
 {
     t_hit *hit;
     
-    t_vec3d local_origin = ray->ori;
-    t_vec3d local_dir = ray->dir;
-    
-    float proj_origin = dot_vecs(&local_origin, cy->norm);
-    float proj_dir = dot_vecs(&local_dir, cy->norm);
+    float proj_origin = dot_vecs(&ray->ori, cy->norm);
+    float proj_dir = dot_vecs(&ray->dir, cy->norm);
     
     t_vec3d axis_ori = vec_x_scalar(cy->norm, proj_origin);
     t_vec3d axis_dir = vec_x_scalar(cy->norm, proj_dir);
     
-    t_vec3d ori = sub_vecs(&local_origin, &axis_ori);
-    t_vec3d dir = sub_vecs(&local_dir, &axis_dir);
+    t_vec3d ori = sub_vecs(&ray->ori, &axis_ori);
+    t_vec3d dir = sub_vecs(&ray->dir, &axis_dir);
     
     float r = cy->diam / 2.0f;
     float a = dot_vecs(&dir, &dir);
