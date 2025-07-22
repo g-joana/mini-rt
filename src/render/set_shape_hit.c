@@ -1,5 +1,22 @@
 #include "../../includes/minirt.h"
 
+void set_plane_hit(t_ray *ray, t_scene *scene, t_hit *hit)
+{
+	t_vec3d ray_origin;
+
+	hit->rgb = scene->planes[hit->id].rgb;
+	hit->shape_origin = scene->planes[hit->id].coord;
+
+	// world position
+	hit->position = vec_x_scalar(&ray->dir, hit->distance);
+	hit->position = add_vecs(scene->cam.coord, &hit->position);
+
+	// world direction
+	hit->direction = *scene->planes[hit->id].norm;
+	if (dot_vecs(&ray->dir, &hit->direction) > 0)
+		hit->direction = vec_x_scalar(&hit->direction, -1);
+}
+
 void set_cylinder_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 {
 	// hit position in local space
@@ -44,7 +61,8 @@ void set_shape_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 		return;
 	if (hit->shape == PL)
 	{
-		return;
+		local_ray.ori = sub_vecs(scene->cam.coord, scene->planes[hit->id].coord);
+		set_plane_hit(&local_ray, scene, hit);
 	}
 	else if (hit->shape == SP)
 	{

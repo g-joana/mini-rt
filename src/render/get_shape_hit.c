@@ -1,5 +1,27 @@
 #include "../../includes/minirt.h"
 
+t_hit *plane_hit(t_ray *ray, t_plane *pl)
+{
+	t_hit	*hit;
+	float cos_angle = dot_vecs(&ray->dir, pl->norm);
+
+	// if parallel, no hit
+	if (cos_angle < 0.0001f && cos_angle > -0.0001f)
+	    return NULL;
+
+	float t = -dot_vecs(&ray->ori, pl->norm) / cos_angle;
+
+	if (t < 0.0001f)
+	    return NULL;
+
+	hit = malloc(sizeof(t_hit));
+	if (!hit)
+	    return NULL;
+	hit->distance = t;
+	
+	return hit;
+}
+
 t_hit *sphere_hit(t_ray *ray, t_sphere *sp)
 {
 	t_hit	*hit;
@@ -16,9 +38,22 @@ t_hit *sphere_hit(t_ray *ray, t_sphere *sp)
 	// b^2 - 4ac
 	float delta = b * b - 4.0f * a * c;
 	if (delta < 0.0f)
-		return NULL;
+	    return NULL;
+
+	float t1 = (-b - sqrtf(delta)) / (2.0f * a);
+	float t2 = (-b + sqrtf(delta)) / (2.0f * a);
+
+	float t = t1;
+	if (t1 < 0.001f)
+	    t = t2;
+
+	if (t < 0.001f)
+	    return NULL;
+
 	hit = malloc(sizeof(t_hit));
-	hit->distance = (-b - sqrtf(delta)) / (2.0f * a);
+	if (!hit)
+	    return NULL;
+	hit->distance = t;
 	return hit;
 }
 
@@ -46,17 +81,20 @@ t_hit *cylinder_hit(t_ray *ray, t_cylinder *cy)
     float delta = b * b - 4.0f * a * c;
     if (delta < 0.0f)
         return NULL;
-        
-    float t = (-b - sqrtf(delta)) / (2.0f * a);
+    float t1 = (-b - sqrtf(delta)) / (2.0f * a);
     float t2 = (-b + sqrtf(delta)) / (2.0f * a);
+
+    float t = t1;
     if (t < 0.001f)
-        return NULL;
+	t = t2;
+    if (t < 0.001f)
+	return NULL;
 
 
     float hit_axis_pos = proj_origin + t * proj_dir;
     if (hit_axis_pos < -cy->height/2.0f || hit_axis_pos > cy->height/2.0f)
     {
-	if (t2 > 0.001f && t2 != t)
+	if (t == t1)
 	    t = t2;
 	if (t < 0.001f)
 	    return NULL;
@@ -84,7 +122,11 @@ t_hit *get_shape_hit(t_ray *ray, t_scene *scene, int shape, int id)
 
 	if (shape == PL)
 	{
-		return NULL;
+	    if (ray->shadow == false)
+		local_ray.ori = sub_vecs(scene->cam.coord, scene->planes[id].coord);
+	    else
+		local_ray.ori = sub_vecs(&ray->ori, scene->planes[id].coord);
+	    hit = plane_hit(&local_ray, &scene->planes[id]);
 	}
 	else if (shape == SP)
 	{
