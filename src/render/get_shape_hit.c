@@ -22,34 +22,29 @@ t_hit *plane_hit(t_ray *ray, t_plane *pl)
 	return hit;
 }
 
+float quadratic(t_ray *ray, float radius)
+{
+	float a = dot_vecs(&ray->dir, &ray->dir);
+	float b = 2.0f * dot_vecs(&ray->ori, &ray->dir);
+	float c = dot_vecs(&ray->ori, &ray->ori) - radius * radius;
+
+    float delta = b * b - 4.0f * a * c;
+	if (delta < 0.0f)
+	    return 0;
+	float t = (-b - sqrtf(delta)) / (2.0f * a);
+	if (t < 0.001f)
+	    t = (-b + sqrtf(delta)) / (2.0f * a);
+	return t;
+}
+
 t_hit *sphere_hit(t_ray *ray, t_sphere *sp)
 {
 	t_hit	*hit;
-	// circle
-	// (x-a)^2 + (y-b)^2 - r^2 = 0
-	// quadratic eq
-	// (ax^2 + ay^2)t^2 + (2(bxax + byay))t + (bx^2 + by^2 - r^2) = 0;
-	float r = sp->diam/2;
-	float a = dot_vecs(&ray->dir, &ray->dir);
-	float b = 2.0f * dot_vecs(&ray->ori, &ray->dir);
-	float c = dot_vecs(&ray->ori, &ray->ori) - r * r;
+    float t;
 
-	// discriminant = t = hit distance / point
-	// b^2 - 4ac
-	float delta = b * b - 4.0f * a * c;
-	if (delta < 0.0f)
-	    return NULL;
-
-	float t1 = (-b - sqrtf(delta)) / (2.0f * a);
-	float t2 = (-b + sqrtf(delta)) / (2.0f * a);
-
-	float t = t1;
-	if (t1 < 0.001f)
-	    t = t2;
-
+    t = quadratic(ray, sp->diam/2);
 	if (t < 0.001f)
 	    return NULL;
-
 	hit = malloc(sizeof(t_hit));
 	if (!hit)
 	    return NULL;
