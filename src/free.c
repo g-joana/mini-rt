@@ -92,11 +92,11 @@ int	key_hook(int key, t_scene *scene)
 
 int	mouse_hook(t_scene *scene)
 {
-	mlx_destroy_image(scene->mlx, scene->img.img);
-	mlx_destroy_window(scene->mlx, scene->mlx_win);
-	mlx_destroy_display(scene->mlx);
-        free(scene->mlx);
-        free_scene(scene);
-	exit(0);
-	return (1);
+    mlx_destroy_image(scene->mlx, scene->img.img);
+    mlx_destroy_window(scene->mlx, scene->mlx_win);
+    mlx_destroy_display(scene->mlx);
+    free(scene->mlx);
+    free_scene(scene);
+    exit(0);
+    return (1);
 }
