@@ -131,6 +131,7 @@ char		*get_first_word(char *str, bool free_str);
 float	round4(float value);
 int	power(int base, int expoent);
 float	ft_atof(char *str);
+void print_split(char **splited, char *tag);
 
 // init_utils_scene.c
 t_vec3d *new_vec3d();

@@ -106,3 +106,16 @@ void print_scene(t_scene *scene)
     }
     printf("\n");
 }
+
+void print_split(char **splited, char *tag){
+    int i = 0;
+
+    printf("[%s] ", tag);
+    if (!splited)
+        printf("null splited");
+    while(splited[i])
+        printf("%s|", splited[i++]);
+    printf("\n");
+
+}
+

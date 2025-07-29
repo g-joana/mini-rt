@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 17:50:24 by nranna            #+#    #+#             */
-/*   Updated: 2025/07/29 18:34:25 by jgils            ###   ########.fr       */
+/*   Updated: 2025/07/29 19:17:58 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ void	set_coordinates(char *str, t_vec3d *coord)
 	char	**values;
 
 	values = ft_split(str, ',');
-	coord->x = ft_atof(values[0]);
-	coord->y = ft_atof(values[1]);
-	coord->z = ft_atof(values[2]);
+    coord->x = ft_atof(values[0]);
+    coord->y = ft_atof(values[1]);
+    coord->z = ft_atof(values[2]);
 	free_split(values);
 }
 

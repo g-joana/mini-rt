@@ -24,21 +24,21 @@ float	ft_atof(char *str)
 	float	fract = 0.0f;
 
 	i = 0;
-	while (str[i] == ' ' || str[i] == '\t')
+	while (str[i] && str[i] == ' ' || str[i] == '\t')
 		i++;
-	if (str[i] == '-')
+	if (str[i] && str[i] == '-')
 	{
 		sign = -1.0f;
 		i++;
 	}
-	else if (str[i] == '+' && str[i + 1])
+	else if (str[i] && str[i] == '+' && str[i + 1])
 		i++;
-	while (str[i] >= '0' && str[i] <= '9') 
+	while (str[i] && str[i] >= '0' && str[i] <= '9') 
 	{
 		ret = ret * 10.0 + (str[i] - '0');
 		i++;
 	}
-	if (str[i] == '.')
+	if (str[i] && str[i] == '.')
 	{
 		i++;
 		while (str[i] && ft_isdigit(str[i]))

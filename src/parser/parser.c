@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 12:48:59 by nranna            #+#    #+#             */
-/*   Updated: 2025/07/15 17:22:33 by jou              ###   ########.fr       */
+/*   Updated: 2025/07/29 19:19:08 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,15 @@ static t_scene	*validade_init_scene(char *file)
 
 	dot = ft_strrchr(file, '.');
 	if (!dot || ft_strncmp(dot, ".rt", 4) != 0)
-		exit_error(NULL, "ERROR: Invalid extension", 1);
+		exit_error(NULL, "invalid extension", 1);
 	if (access(file, R_OK) != 0)
-		exit_error(NULL, "ERROR: Can't access file", 1);
+		exit_error(NULL, "invalid file or can't access", 1);
 	scene = init_scene(file);
 	scene->fd = open(file, O_RDONLY);
 	if (scene->fd < 0)
 	{
 		free(scene);
-		exit_error(NULL, "ERROR: Couldn't open file", 1);
+		exit_error(NULL, "couldn't open file", 1);
 	}
 	return (scene);
 }
