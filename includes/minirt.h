@@ -179,6 +179,7 @@ void exit_error(t_scene* scene, char *msg, int ret);
 float round4(float value);
 int	power(int base, int expoent);
 float   ft_atof(char *str);
+float ref_atof(char *str);
 
 // print.c
 void print_scene(t_scene *scene);

@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 17:50:24 by nranna            #+#    #+#             */
-/*   Updated: 2025/07/29 19:17:58 by jgils            ###   ########.fr       */
+/*   Updated: 2025/07/29 19:25:28 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,11 @@
 
 void    set_vec3d(char *str, t_vec3d *vec)
 {
-	char	**values;
+    char *ref;
 
-	values = ft_split(str, ',');
-	vec->x = ft_atof(values[0]);
-	vec->y = ft_atof(values[1]);
-	vec->z = ft_atof(values[2]);
-	free_split(values);
+	vec->x = ref_atof(ref);
+	vec->y = ref_atof(ref);
+	vec->z = ref_atof(ref);
 }
 
 // range: fe

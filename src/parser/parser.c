@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 12:48:59 by nranna            #+#    #+#             */
-/*   Updated: 2025/07/29 19:19:08 by jgils            ###   ########.fr       */
+/*   Updated: 2025/07/29 19:50:36 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,31 @@ static t_scene	*validade_init_scene(char *file)
 		exit_error(NULL, "couldn't open file", 1);
 	}
 	return (scene);
+}
+
+char	*extract_shape(char *str)
+{
+	int		i;
+	int		count;
+	char	*word;
+
+	i = 0;
+	count = 0;
+	if (str == NULL)
+		return (NULL);
+	while (str && str[i] == ' ')
+		i++;
+	while (str && str[i + count] != '\0' && str[i + count] != ' ')
+		count++;
+	word = malloc((count + 1) * sizeof(char));
+	count = 0;
+	while (str && str[i + count] != '\0' && str[i + count] != ' ')
+	{
+		word[count] = str[i + count];
+		count++;
+	}
+	word[count] = '\0';
+	return (word);
 }
 
 static void	parse_line(char *line, t_scene *scene, int *count)
