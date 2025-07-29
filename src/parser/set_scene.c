@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 17:57:27 by nranna            #+#    #+#             */
-/*   Updated: 2025/07/22 18:04:25 by jou              ###   ########.fr       */
+/*   Updated: 2025/07/29 17:47:32 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ void	set_camera(char *line, t_scene *scene)
 		up_direction = (t_vec3d){0.0f, 0.0f, 1.0f};
 	}
 	t_vec3d temp = cross_vecs(scene->cam.norm, &up_direction);
-	*scene->cam.foward = norm_vec(scene->cam.norm); // z
-	*scene->cam.right = norm_vec(&temp); // x
-	*scene->cam.up = cross_vecs(scene->cam.foward, scene->cam.right); // y
+	*scene->cam.foward = norm_vec(scene->cam.norm);
+	*scene->cam.right = norm_vec(&temp);
+	*scene->cam.up = cross_vecs(scene->cam.foward, scene->cam.right);
 }
 
 void	set_ambient(char *line, t_scene *scene)

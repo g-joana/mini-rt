@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 17:50:24 by nranna            #+#    #+#             */
-/*   Updated: 2025/07/16 16:57:47 by jgils            ###   ########.fr       */
+/*   Updated: 2025/07/29 17:44:12 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	set_normalization(char *str, t_vec3d *norm)
 	norm->y = ft_atof(values[1]);
 	norm->z = ft_atof(values[2]);
 	free_split(values);
+    *norm = norm_vec(norm);
 }
 
 // range: 0.0 ~ 1.0
