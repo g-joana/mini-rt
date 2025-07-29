@@ -133,6 +133,7 @@ int	power(int base, int expoent);
 float	ft_atof(char *str);
 
 // init_utils_scene.c
+t_vec3d *new_vec3d();
 t_camera	init_camera();
 t_alight	init_ambient();
 t_light		init_light();

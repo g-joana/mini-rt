@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 17:50:24 by nranna            #+#    #+#             */
-/*   Updated: 2025/07/29 17:44:12 by jgils            ###   ########.fr       */
+/*   Updated: 2025/07/29 18:34:25 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,17 @@
 /* set = set values on it's corresponding structs
  each element on scene has it's on properties and in this file we set them.
 */
+
+void    set_vec3d(char *str, t_vec3d *vec)
+{
+	char	**values;
+
+	values = ft_split(str, ',');
+	vec->x = ft_atof(values[0]);
+	vec->y = ft_atof(values[1]);
+	vec->z = ft_atof(values[2]);
+	free_split(values);
+}
 
 // range: fe
 void	set_coordinates(char *str, t_vec3d *coord)
