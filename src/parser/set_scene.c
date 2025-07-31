@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 17:57:27 by nranna            #+#    #+#             */
-/*   Updated: 2025/07/29 19:49:00 by jgils            ###   ########.fr       */
+/*   Updated: 2025/07/30 21:30:34 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,25 @@
 //
 // tratar erros: se nao houver input (properties[index]) chamar exit_error
 // problemas: free da gnl
+
+void    set_vec3d(char *str, t_vec3d *vec)
+{
+    int status;
+    char *ref;
+    
+    ref = str;
+    if (!ref)
+        status = 1;
+	vec->x = ref_atof(ref);
+    if (!ref)
+        status = 1;
+	vec->y = ref_atof(ref);
+    if (!ref)
+        status = 1;
+	vec->z = ref_atof(ref);
+    if (status == 1)
+        vec = NULL;
+}
 
 void	set_camera(char *line, t_scene *scene)
 {

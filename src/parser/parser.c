@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 12:48:59 by nranna            #+#    #+#             */
-/*   Updated: 2025/07/29 19:50:36 by jgils            ###   ########.fr       */
+/*   Updated: 2025/07/30 21:27:13 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ char	*extract_shape(char *str)
 		count++;
 	}
 	word[count] = '\0';
+    str = str + i;
 	return (word);
 }
 
@@ -84,7 +85,8 @@ static void	parse_line(char *line, t_scene *scene, int *count)
 {
 	char	*id;
 
-	id = get_first_word(line, 0);
+	// id = get_first_word(line, 0);
+	id = extract_shape(line);
 	if (!id || id[0] == '\n')
 	{
 		free(id);
