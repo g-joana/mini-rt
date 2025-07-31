@@ -55,14 +55,14 @@ float	ft_atof(char *str)
 
 float ref_atof(char *str)
 {
-	int		i;
+	static int		i;
 	float		sign = 1.0f;
 	float		div = 10.0f;
 	float	ret = 0.0f;
 	float	fract = 0.0f;
 
-	i = 0;
-	while (str[i] && (str[i] == ' ' || str[i] == '\t' || str[i] == ','))
+	// i = 0;
+	while (str[i] && (str[i] == ' ' || str[i] == '\t' || str[i] == ',' || ft_isalpha(str[i])))
 		i++;
 	if (str[i] && str[i] == '-')
 	{
@@ -86,7 +86,9 @@ float ref_atof(char *str)
 			div *= 10.0f;
 		}
 	}
-    str = str + i;
+    if (str && str[i] == '\0')
+        i = 0;
+    // str = str + i;
 	ret += fract;
 	ret *= sign;
 	return (ret);

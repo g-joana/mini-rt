@@ -6,11 +6,12 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 12:48:59 by nranna            #+#    #+#             */
-/*   Updated: 2025/07/30 21:27:13 by jgils            ###   ########.fr       */
+/*   Updated: 2025/07/30 22:02:13 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minirt.h"
+#include <stdio.h>
 
 static t_scene	*validade_init_scene(char *file);
 static void		parse_line(char *line, t_scene *scene, int *count);
@@ -55,39 +56,14 @@ static t_scene	*validade_init_scene(char *file)
 	return (scene);
 }
 
-char	*extract_shape(char *str)
-{
-	int		i;
-	int		count;
-	char	*word;
-
-	i = 0;
-	count = 0;
-	if (str == NULL)
-		return (NULL);
-	while (str && str[i] == ' ')
-		i++;
-	while (str && str[i + count] != '\0' && str[i + count] != ' ')
-		count++;
-	word = malloc((count + 1) * sizeof(char));
-	count = 0;
-	while (str && str[i + count] != '\0' && str[i + count] != ' ')
-	{
-		word[count] = str[i + count];
-		count++;
-	}
-	word[count] = '\0';
-    str = str + i;
-	return (word);
-}
-
-static void	parse_line(char *line, t_scene *scene, int *count)
+static void	parse_line(char *str, t_scene *scene, int *count)
 {
 	char	*id;
+	char	*line;
 
-	// id = get_first_word(line, 0);
-	id = extract_shape(line);
-	if (!id || id[0] == '\n')
+    line = str;
+	id = get_first_word(line, 0);
+	if (!id || id[0] == '\n' || id[0] == '#')
 	{
 		free(id);
 		return ;

@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 17:57:27 by nranna            #+#    #+#             */
-/*   Updated: 2025/07/30 21:30:34 by jgils            ###   ########.fr       */
+/*   Updated: 2025/07/30 22:15:51 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,20 +39,19 @@ void    set_vec3d(char *str, t_vec3d *vec)
 
 void	set_camera(char *line, t_scene *scene)
 {
-	char	**properties;
+    char *ref;
 
-	properties = ft_split(line, ' ');
-	if (!properties[1] || !properties[2] || !properties[3])
+    ref = line;
+	set_vec3d(line, scene->cam.coord);
+	set_vec3d(line, scene->cam.norm);
+	if (scene->cam.coord == NULL || scene->cam.norm == NULL) // not working
 	{
 		free(line);
-		free(properties);
 		free_gnl(scene->fd);
 		exit_error(scene, "missing camera (C) settings", 1);
 	}
-	set_coordinates(properties[1], scene->cam.coord);
-	set_normalization(properties[2], scene->cam.norm);
-	set_fov(properties[3], &scene->cam.fov);
-	free_split(properties);
+    *scene->cam.norm = norm_vec(scene->cam.norm);
+    scene->cam.fov = ref_atof(ref);
 	t_vec3d up_direction = {0.0f, 1.0f, 0.0f};
 	if (fabs(dot_vecs(scene->cam.norm, &up_direction)) > 0.99f) {
 		up_direction = (t_vec3d){0.0f, 0.0f, 1.0f};
