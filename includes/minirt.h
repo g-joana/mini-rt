@@ -145,11 +145,11 @@ t_plane		*init_planes(int amount);
 t_sphere	*init_spheres(int amount);
 
 // set_properties.c
-void    set_coordinates(char *str, t_vec3d *coord);
-void    set_normalization(char *str, t_vec3d *norm);
-void    set_brightness(char *str, float *bright);
-void    set_rgb(char *str, t_vec3d* rgb);
-void    set_fov(char *str, uint8_t *fov);
+void    set_vec3d(char *line, t_vec3d **vec);
+void    set_norm(char *line, t_vec3d **vec);
+void    set_rgb(char *line, t_vec3d **vec);
+void	set_bright(char *str, float *bright);
+void	set_fov(char *str, uint8_t *fov);
 
 // set_scene.c
 void    set_camera(char *line, t_scene *scene);
@@ -162,6 +162,11 @@ void    set_sphere(char *line, t_scene *scene, int i);
 void    set_cylinder(char *line, t_scene *scene, int i);
 void    set_diameter(char *str, float *diam);
 void    set_height(char *str, float *height);
+
+// validate.c
+int split_len(char **split);
+int valid_float(char *str);
+int valid_vec(char **split);
 
 /* ----------[END]---------- */
 

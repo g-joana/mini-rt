@@ -13,11 +13,11 @@ void	set_cylinder(char *line, t_scene *scene, int i)
 		free_gnl(scene->fd);
 		exit_error(scene, "missing cylinder (cy) settings", 1);
 	}
-	set_coordinates(properties[1], scene->cylinders[i].coord);
-	set_normalization(properties[2], scene->cylinders[i].norm);
+	set_vec3d(properties[1], &scene->cylinders[i].coord);
+	set_norm(properties[2], &scene->cylinders[i].norm);
 	set_diameter(properties[3], &scene->cylinders[i].diam);
 	set_height(properties[4], &scene->cylinders[i].height);
-	set_rgb(properties[5], scene->cylinders[i].rgb);
+	set_rgb(properties[5], &scene->cylinders[i].rgb);
 	free_split(properties);
 }
 
@@ -33,9 +33,9 @@ void	set_sphere(char *line, t_scene *scene, int i)
 		free_gnl(scene->fd);
 		exit_error(scene, "missing sphere (sp) settings", 1);
 	}
-	set_coordinates(properties[1], scene->spheres[i].coord);
+	set_vec3d(properties[1], &scene->spheres[i].coord);
 	set_diameter(properties[2], &scene->spheres[i].diam);
-	set_rgb(properties[3], scene->spheres[i].rgb);
+	set_rgb(properties[3], &scene->spheres[i].rgb);
 	free_split(properties);
 }
 
@@ -51,9 +51,9 @@ void	set_plane(char *line, t_scene *scene, int i)
 		free_gnl(scene->fd);
 		exit_error(scene, "missing plane (pl) settings", 1);
 	}
-	set_coordinates(properties[1], scene->planes[i].coord);
-	set_normalization(properties[2], scene->planes[i].norm);
-	set_rgb(properties[3], scene->planes[i].rgb);
+	set_vec3d(properties[1], &scene->planes[i].coord);
+	set_norm(properties[2], &scene->planes[i].norm);
+	set_rgb(properties[3], &scene->planes[i].rgb);
 	free_split(properties);
 }
 
