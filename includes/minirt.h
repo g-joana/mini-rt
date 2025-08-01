@@ -152,6 +152,7 @@ int     set_bright(char *str, float *bright);
 int 	set_fov(char *str, uint8_t *fov);
 
 // set_scene.c
+void exit_setters(char *line, char **split, t_scene *scene, char *msg);
 void    set_camera(char *line, t_scene *scene);
 void    set_ambient(char *line, t_scene *scene);
 void	set_light(char *line, t_scene *scene);

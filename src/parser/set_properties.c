@@ -14,7 +14,7 @@ int    set_vec3d(char *line, t_vec3d **vec)
 	(*vec)->x = ft_atof(split[0]);
 	(*vec)->y = ft_atof(split[1]);
 	(*vec)->z = ft_atof(split[2]);
-    free(split);
+    free_split(split);
     return 0;
 }
 
