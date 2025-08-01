@@ -1,78 +1,101 @@
 #include "../../includes/minirt.h"
 
+static int	set_diameter(char *str, float *diam)
+{
+    if (!valid_float(str))
+        return 1;
+	*diam = ft_atof(str);
+    if (*diam < 0)
+        return 1;
+    return 0;
+}
+
+static int	set_height(char *str, float *height)
+{
+    if (!valid_float(str))
+        return 1;
+	*height = ft_atof(str);
+    if (*height < 0)
+        return 1;
+    return 0;
+}
+
 void	set_cylinder(char *line, t_scene *scene, int i)
 {
-	char	**properties;
+	char	**split;
+    int ret = 0;
 
-	properties = ft_split(line, ' ');
-	if (!properties[1] || !properties[2] || !properties[3] || !properties[4]
-		|| !properties[5])
+	split = ft_split(line, ' ');
+	if (split_len(split) != 6)
 	{
 		free(line);
-		free(properties);
+		free_split(split);
 		free_gnl(scene->fd);
-		exit_error(scene, "missing cylinder (cy) settings", 1);
+		exit_error(scene, "invalid cylinder (cy) settings", 1);
 	}
-	set_vec3d(properties[1], &scene->cylinders[i].coord);
-	set_norm(properties[2], &scene->cylinders[i].norm);
-	set_diameter(properties[3], &scene->cylinders[i].diam);
-	set_height(properties[4], &scene->cylinders[i].height);
-	set_rgb(properties[5], &scene->cylinders[i].rgb);
-	free_split(properties);
+	ret += set_vec3d(split[1], &scene->cylinders[i].coord);
+	ret += set_norm(split[2], &scene->cylinders[i].norm);
+	ret += set_diameter(split[3], &scene->cylinders[i].diam);
+	ret += set_height(split[4], &scene->cylinders[i].height);
+	ret += set_rgb(split[5], &scene->cylinders[i].rgb);
+	if (ret != 0)
+	{
+		free(line);
+        free_split(split);
+		free_gnl(scene->fd);
+		exit_error(scene, "invalid cylinder (cy) settings", 1);
+	}
+	free_split(split);
 }
 
 void	set_sphere(char *line, t_scene *scene, int i)
 {
-	char	**properties;
+	char	**split;
+    int ret = 0;
 
-	properties = ft_split(line, ' ');
-	if (!properties[1] || !properties[2] || !properties[3])
+	split = ft_split(line, ' ');
+	if (split_len(split) != 4)
 	{
 		free(line);
-		free(properties);
+		free(split);
 		free_gnl(scene->fd);
-		exit_error(scene, "missing sphere (sp) settings", 1);
+		exit_error(scene, "invalid sphere (sp) settings", 1);
 	}
-	set_vec3d(properties[1], &scene->spheres[i].coord);
-	set_diameter(properties[2], &scene->spheres[i].diam);
-	set_rgb(properties[3], &scene->spheres[i].rgb);
-	free_split(properties);
+	ret += set_vec3d(split[1], &scene->spheres[i].coord);
+	ret += set_diameter(split[2], &scene->spheres[i].diam);
+	ret += set_rgb(split[3], &scene->spheres[i].rgb);
+	if (ret != 0)
+	{
+		free(line);
+        free_split(split);
+		free_gnl(scene->fd);
+		exit_error(scene, "invalid sphere (sp) settings", 1);
+	}
+	free_split(split);
 }
 
 void	set_plane(char *line, t_scene *scene, int i)
 {
-	char	**properties;
+	char	**split;
+    int ret = 0;
 
-	properties = ft_split(line, ' ');
-	if (!properties[1] || !properties[2] || !properties[3])
+	split = ft_split(line, ' ');
+	if (split_len(split) != 4)
 	{
 		free(line);
-		free(properties);
+		free(split);
 		free_gnl(scene->fd);
-		exit_error(scene, "missing plane (pl) settings", 1);
+		exit_error(scene, "invalid plane (pl) settings", 1);
 	}
-	set_vec3d(properties[1], &scene->planes[i].coord);
-	set_norm(properties[2], &scene->planes[i].norm);
-	set_rgb(properties[3], &scene->planes[i].rgb);
-	free_split(properties);
-}
-
-// range: positive (measure)
-void	set_diameter(char *str, float *diam)
-{
-	char	**values;
-
-	values = ft_split(str, ',');
-	*diam = ft_atof(values[0]);
-	free_split(values);
-}
-
-// range: positive (measure)
-void	set_height(char *str, float *height)
-{
-	char	**values;
-
-	values = ft_split(str, ',');
-	*height = ft_atof(values[0]);
-	free_split(values);
+	ret += set_vec3d(split[1], &scene->planes[i].coord);
+	ret += set_norm(split[2], &scene->planes[i].norm);
+	ret += set_rgb(split[3], &scene->planes[i].rgb);
+	if (ret != 0)
+	{
+		free(line);
+        free_split(split);
+		free_gnl(scene->fd);
+		exit_error(scene, "invalid plane (pl) settings", 1);
+	}
+	free_split(split);
 }
