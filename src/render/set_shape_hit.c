@@ -20,19 +20,21 @@ static void set_plane_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 static void set_cylinder_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 {
 	// hit position in local space
-	t_vec3d local_hit_pos = vec_x_scalar(&ray->dir, hit->distance);
-	local_hit_pos = add_vecs(&ray->ori, &local_hit_pos);
+	hit->position = vec_x_scalar(&ray->dir, hit->distance);
+	hit->position = add_vecs(scene->cam.coord, &hit->position);
 
 	// world normal
-	float axis_projection = dot_vecs(&local_hit_pos, scene->cylinders[hit->id].norm);
-	t_vec3d axis_component = vec_x_scalar(scene->cylinders[hit->id].norm, axis_projection);
-	t_vec3d normal = sub_vecs(&local_hit_pos, &axis_component);
-	normal = norm_vec(&normal);
+    t_vec3d to_hit;
+    to_hit = sub_vecs(&hit->position, scene->cylinders[hit->id].coord);
+	float axis_proj = dot_vecs(&to_hit, scene->cylinders[hit->id].norm);
+	t_vec3d axis_component = vec_x_scalar(scene->cylinders[hit->id].norm, axis_proj);
 
-	hit->direction = normal;
-	hit->position = add_vecs(&local_hit_pos, scene->cylinders[hit->id].coord);
+	hit->direction = sub_vecs(&to_hit, &axis_component);
+	hit->direction = norm_vec(&hit->direction);
+
 	hit->rgb = scene->cylinders[hit->id].rgb;
 	hit->shape_origin = scene->cylinders[hit->id].coord;
+
 	if (hit->inside)
 		hit->direction = vec_x_scalar(&hit->direction, -1);
 }
@@ -55,8 +57,9 @@ static void set_sphere_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 void set_shape_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 {
 	t_vec3d ray_origin;
-	t_ray local_ray = *ray;
+	t_ray local_ray;
 
+	local_ray = *ray;
 	if (!hit)
 		return;
 	if (hit->shape == PL)
@@ -71,7 +74,7 @@ void set_shape_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 	}
 	else if (hit->shape == CY)
 	{
-		local_ray.ori = sub_vecs(scene->cam.coord, scene->cylinders[hit->id].coord);
+		// local_ray.ori = sub_vecs(scene->cam.coord, scene->cylinders[hit->id].coord);
 		set_cylinder_hit(&local_ray, scene, hit);
 	}
 }
