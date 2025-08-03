@@ -52,7 +52,7 @@ int	set_bright(char *str, float *bright)
     if (!valid_float(str))
         return 1;
 	*bright = ft_atof(str);
-    if (*bright < 0.0001 || *bright > 1.0000)
+    if (*bright < 0.0 || *bright > 1.0)
         return 1;
     return 0;
 }

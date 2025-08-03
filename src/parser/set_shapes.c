@@ -24,8 +24,8 @@ void	set_cylinder(char **split, t_scene *scene, int i)
 {
     int ret = 0;
 
-	if (split_len(split) != 6)
-        exit_set(split, scene, "invalid cylinder (cy) settings");
+	if (split_len(split) < 6)
+        exit_set(split, scene, "missing cylinder (cy) settings");
 	ret += set_vec3d(split[1], &scene->cylinders[i].coord);
 	ret += set_norm(split[2], &scene->cylinders[i].norm);
 	ret += set_diameter(split[3], &scene->cylinders[i].diam);
@@ -39,8 +39,8 @@ void	set_sphere(char **split, t_scene *scene, int i)
 {
     int ret = 0;
 
-	if (split_len(split) != 4)
-        exit_set(split, scene, "invalid sphere (sp) settings");
+	if (split_len(split) < 4)
+        exit_set(split, scene, "missing sphere (sp) settings");
 	ret += set_vec3d(split[1], &scene->spheres[i].coord);
 	ret += set_diameter(split[2], &scene->spheres[i].diam);
 	ret += set_rgb(split[3], &scene->spheres[i].rgb);
@@ -52,8 +52,8 @@ void	set_plane(char **split, t_scene *scene, int i)
 {
     int ret = 0;
 
-	if (split_len(split) != 4)
-        exit_set(split, scene, "invalid plane (pl) settings");
+	if (split_len(split) < 4)
+        exit_set(split, scene, "missing plane (pl) settings");
 	ret += set_vec3d(split[1], &scene->planes[i].coord);
 	ret += set_norm(split[2], &scene->planes[i].norm);
 	ret += set_rgb(split[3], &scene->planes[i].rgb);
