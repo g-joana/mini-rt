@@ -44,8 +44,8 @@ static int	*count_elements(char *file)
 	while (line)
 	{
 		id = get_first_word(line, 1);
-        if (id)
-            printf("id: %s\n", id );
+        // if (id)
+        //     printf("id: %s\n", id );
 		if (!increment_elements_count(id, amount))
 		{
 			free(amount);

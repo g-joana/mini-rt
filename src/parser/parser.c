@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 12:48:59 by nranna            #+#    #+#             */
-/*   Updated: 2025/08/03 12:50:42 by jgils            ###   ########.fr       */
+/*   Updated: 2025/08/03 13:01:25 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,8 @@ t_scene	*parser(char *file)
 	while (line)
 	{
 		parse_line(line, scene, count);
-		// free(line);
 		line = get_next_line(scene->fd);
 	}
-	// free(count);
 	close(scene->fd);
 	return (scene);
 }
@@ -66,7 +64,7 @@ static void	parse_line(char *str, t_scene *scene, int *count)
 	id = line[0];
 	if (!id || id[0] == '\n' || id[0] == '#')
 	{
-		free(line);
+		free_split(line);
 		return ;
 	}
 	if (ft_strncmp("A", id, 2) == 0)
