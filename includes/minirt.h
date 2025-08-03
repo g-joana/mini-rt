@@ -179,6 +179,7 @@ int	mouse_hook(t_scene *scene);
 // error.c
 void exit_error(t_scene* scene, char *msg, int ret);
 void exit_set(char **split, t_scene *scene, char *msg);
+void exit_count(int *amount, int fd, char *line, char *msg);
 
 // parser_utils.c
 float round4(float value);

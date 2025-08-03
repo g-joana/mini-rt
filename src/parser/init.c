@@ -40,19 +40,14 @@ static int	*count_elements(char *file)
 	fd = open(file, O_RDONLY);
     line = get_next_line(fd);
 	if (!line)
-		exit_error(NULL, "empty file", 1);
+		exit_count(amount, fd, line, "empty file");
 	while (line)
 	{
 		id = get_first_word(line, 1);
-        // if (id)
-        //     printf("id: %s\n", id );
 		if (!increment_elements_count(id, amount))
 		{
-			free(amount);
 			free(id);
-			free(line);
-			free_gnl(fd);
-			exit_error(NULL, "invalid id", 1);
+		    exit_count(amount, fd, line, "invalid id");
 		}
         if (id)
             free(id);
