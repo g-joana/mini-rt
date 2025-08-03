@@ -4,27 +4,25 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
 	char	*dest;
 
-	dest = data->addr + (y * data->line_len + x
-			* (data->bits_per_pixel / 8));
+	dest = data->addr + (y * data->line_len + x * (data->bits_per_pixel / 8));
 	*(unsigned int *)dest = color;
 }
 
-/* if the number passes max/min, it returns max/min, else returns the number */
-float clamp(float n, float min, float max){
-
+float	clamp(float n, float min, float max)
+{
 	if (n < min)
-		return min;
+		return (min);
 	if (n > max)
-		return max;
-	return n;
+		return (max);
+	return (n);
 }
 
-uint32_t color_per_pixel(t_vec3d *vec, float alpha)
+uint32_t	color_per_pixel(t_vec3d *vec, float alpha)
 {
-	uint8_t r;
-	uint8_t g;
-	uint8_t b;
-	uint8_t a;
+	uint8_t	r;
+	uint8_t	g;
+	uint8_t	b;
+	uint8_t	a;
 
 	vec->x = clamp(vec->x, vec->x, 255.0f);
 	vec->y = clamp(vec->y, vec->y, 255.0f);
@@ -33,5 +31,5 @@ uint32_t color_per_pixel(t_vec3d *vec, float alpha)
 	g = (uint8_t)(vec->y);
 	b = (uint8_t)(vec->z);
 	a = (uint8_t)(alpha);
-	return (a << 24) | (r << 16) | (g << 8) | b;
+	return ((a << 24) | (r << 16) | (g << 8) | b);
 }
