@@ -91,10 +91,23 @@ int valid_t(float *proj, float t, float cy_height)
     return 1;
 }
 
+t_hit *cy_hit(float *t)
+{
+    t_hit *hit;
+
+    hit = malloc(sizeof(t_hit));
+    if (!hit)
+        return NULL;
+    hit->distance = t[0];
+    hit->inside = 0;
+    if (t[0] == t[2])
+        hit->inside = 1;
+    return (hit);
+}
+
 t_hit *cylinder_hit(t_ray *ray, t_cylinder *cy)
 {
     t_hit *hit;
-    float hit_axis_pos;
     float proj[2];
     t_ray local;
     float t[3];
@@ -105,23 +118,15 @@ t_hit *cylinder_hit(t_ray *ray, t_cylinder *cy)
     t[0] = cy_quadratic(&local, cy->diam/2, t);
     if (t[0] < 0.001f)
         return NULL;
-    hit_axis_pos = proj[0] + t[0] * proj[1];
-    if (hit_axis_pos < -cy->height/2.0f || hit_axis_pos > cy->height/2.0f)
+    if (!valid_t(proj, t[0], cy->height))
     {
-        if (t[0] == t[1] && t[2] > 0.001f)
-            t[0] = t[2];
-        else
+        if (t[0] != t[1] || t[2] <= 0.001f)
             return NULL;
+        t[0] = t[2];
         if (!valid_t(proj, t[2], cy->height))
             return NULL;
     }
-    hit = malloc(sizeof(t_hit));
-    if (!hit)
-        return NULL;
-    hit->distance = t[0];
-    hit->inside = 0;
-    if (t[0] == t[2])
-        hit->inside = 1;
+    hit = cy_hit(t);
     return hit;
 }
 
