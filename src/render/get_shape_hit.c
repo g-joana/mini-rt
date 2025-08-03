@@ -107,6 +107,17 @@ t_hit *cylinder_hit(t_ray *ray, t_cylinder *cy)
     return hit;
 }
 
+t_vec3d ori(t_ray *global_ray, t_vec3d *shape_ori, t_vec3d *cam_ori)
+{
+	t_vec3d ray_ori;
+
+    if (global_ray->shadow == false)
+        ray_ori = sub_vecs(cam_ori, shape_ori);
+    else
+        ray_ori = sub_vecs(&global_ray->ori, shape_ori);
+    return ray_ori;
+}
+
 t_hit *get_shape_hit(t_ray *ray, t_scene *scene, int shape, int id)
 {
 	t_hit *hit;
@@ -114,26 +125,17 @@ t_hit *get_shape_hit(t_ray *ray, t_scene *scene, int shape, int id)
 
 	if (shape == PL)
 	{
-	    if (ray->shadow == false)
-		local_ray.ori = sub_vecs(scene->cam.coord, scene->planes[id].coord);
-	    else
-		local_ray.ori = sub_vecs(&ray->ori, scene->planes[id].coord);
+        local_ray.ori = ori(ray, scene->planes[id].coord, scene->cam.coord);
 	    hit = plane_hit(&local_ray, &scene->planes[id]);
 	}
 	else if (shape == SP)
 	{
-	    if (ray->shadow == false)
-		local_ray.ori = sub_vecs(scene->cam.coord, scene->spheres[id].coord);
-	    else
-		local_ray.ori = sub_vecs(&ray->ori, scene->spheres[id].coord);
+        local_ray.ori = ori(ray, scene->spheres[id].coord, scene->cam.coord);
 	    hit = sphere_hit(&local_ray, &scene->spheres[id]);
 	}
 	else if (shape == CY)
 	{
-	    if (ray->shadow == false)
-		local_ray.ori = sub_vecs(scene->cam.coord, scene->cylinders[id].coord);
-	    else
-		local_ray.ori = sub_vecs(&ray->ori, scene->cylinders[id].coord);
+        local_ray.ori = ori(ray, scene->cylinders[id].coord, scene->cam.coord);
 	    hit = cylinder_hit(&local_ray, &scene->cylinders[id]);
 	}
 	if (hit)
