@@ -19,7 +19,7 @@ t_hit *trace_ray(t_ray *ray, t_scene *scene)
             if (!closest)
                 closest = hit;
             else if (hit && hit->distance > 0.0f && hit->distance < closest->distance)
-                closest = update_hit(hit);
+                closest = update_hit(closest, hit);
             else if (hit)
                 free(hit);
         }

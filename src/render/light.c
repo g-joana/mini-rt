@@ -27,10 +27,8 @@ uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient)
 	return (color_per_pixel(&rgb, 1));
 }
 
-t_hit *update_hit(t_hit *hit)
+t_hit *update_hit(t_hit *closest, t_hit *hit)
 {
-    t_hit *closest;
-
     if (closest)
         free(closest);
     closest = hit;
@@ -55,7 +53,7 @@ t_hit *trace_shadow(t_ray *ray, t_scene *scene)
             if (!closest)
                 closest = hit;
             else if (hit && hit->distance > 0.001f && hit->distance < closest->distance)
-                closest = update_hit(hit);
+                closest = update_hit(closest, hit);
             else if (hit)
                 free(hit);
         }

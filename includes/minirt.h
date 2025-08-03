@@ -214,6 +214,6 @@ bool in_shadow(t_hit *surface, t_scene *scene);
 t_hit *trace_shadow(t_ray *ray, t_scene *scene);
 uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient);
 uint32_t apply_ambient(t_hit *hit, t_alight *ambient);
-t_hit *update_hit(t_hit *hit);
+t_hit *update_hit(t_hit *closest, t_hit *hit);
 
 #endif
