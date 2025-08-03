@@ -1,5 +1,4 @@
 #include "../../includes/minirt.h"
-#include <float.h>
 
 uint32_t apply_ambient(t_hit *hit, t_alight *ambient)
 {
@@ -69,15 +68,14 @@ bool in_shadow(t_hit *surface, t_scene *scene)
     t_hit *hit;
     t_ray ray;
     float light_distance;
-    
-    t_vec3d to_light = sub_vecs(scene->light.coord, &surface->position);
+    t_vec3d to_light;
+
+    to_light = sub_vecs(scene->light.coord, &surface->position);
     light_distance = magni_vec(&to_light);
-    
     ray.ori = vec_x_scalar(&surface->direction, 0.01f);
     ray.ori = add_vecs(&surface->position, &ray.ori);
     ray.dir = norm_vec(&to_light);
     ray.shadow = true;
-    
     hit = trace_shadow(&ray, scene);
     if (hit)
     {
