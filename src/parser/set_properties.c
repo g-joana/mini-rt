@@ -1,74 +1,69 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   set_properties.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/13 17:50:24 by nranna            #+#    #+#             */
-/*   Updated: 2025/07/29 17:44:12 by jgils            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../../includes/minirt.h"
 
 /* set = set values on it's corresponding structs
  each element on scene has it's on properties and in this file we set them.
 */
 
-// range: fe
-void	set_coordinates(char *str, t_vec3d *coord)
+int    set_vec3d(char *str, t_vec3d **vec)
 {
-	char	**values;
-
-	values = ft_split(str, ',');
-	coord->x = ft_atof(values[0]);
-	coord->y = ft_atof(values[1]);
-	coord->z = ft_atof(values[2]);
-	free_split(values);
+    char **split;
+    
+    split = ft_split(str, ',');
+    if (split_len(split) != 3 || !valid_vec(split))
+        return 1;
+	(*vec)->x = ft_atof(split[0]);
+	(*vec)->y = ft_atof(split[1]);
+	(*vec)->z = ft_atof(split[2]);
+    free_split(split);
+    return 0;
 }
 
 // range: -1 ~ 1
-void	set_normalization(char *str, t_vec3d *norm)
+int    set_norm(char *str, t_vec3d **vec)
 {
-	char	**values;
-
-	values = ft_split(str, ',');
-	norm->x = ft_atof(values[0]);
-	norm->y = ft_atof(values[1]);
-	norm->z = ft_atof(values[2]);
-	free_split(values);
-    *norm = norm_vec(norm);
-}
-
-// range: 0.0 ~ 1.0
-void	set_brightness(char *str, float *bright)
-{
-	char	**values;
-
-	values = ft_split(str, ',');
-	*bright = ft_atof(values[0]);
-	free_split(values);
+	if (set_vec3d(str, vec) == 1)
+        return 1;
+    if ((*vec)->x < -1.0000 || (*vec)->x > 1.0000)
+        return 1;
+    else if ((*vec)->y < -1.0000 || (*vec)->y > 1.0000)
+        return 1;
+    else if ((*vec)->z < -1.0000 || (*vec)->z > 1.0000)
+        return 1;
+    return 0;
 }
 
 // range: 0 ~ 255
-void	set_rgb(char *str, t_vec3d *rgb)
+int    set_rgb(char *str, t_vec3d **vec)
 {
-	char	**values;
+	if (set_vec3d(str, vec) == 1)
+        return 1;
+    if ((*vec)->x < 0 || (*vec)->x > 255)
+        return 1;
+    else if ((*vec)->y < 0 || (*vec)->y > 255)
+        return 1;
+    else if ((*vec)->z < 0 || (*vec)->z > 255)
+        return 1;
+    return 0;
+}
 
-	values = ft_split(str, ',');
-	rgb->x = ft_atoi(values[0]);
-	rgb->y = ft_atoi(values[1]);
-	rgb->z = ft_atoi(values[2]);
-	free_split(values);
+// range: 0.0 ~ 1.0
+int	set_bright(char *str, float *bright)
+{
+    if (!valid_float(str))
+        return 1;
+	*bright = ft_atof(str);
+    if (*bright < 0.0 || *bright > 1.0)
+        return 1;
+    return 0;
 }
 
 // range: 0 ~ 180
-void	set_fov(char *str, uint8_t *fov)
+int	set_fov(char *str, uint8_t *fov)
 {
-	char	**values;
-
-	values = ft_split(str, ',');
-	*fov = ft_atoi(values[0]);
-	free_split(values);
+    if (!valid_float(str))
+        return 1;
+	*fov = ft_atoi(str);
+    if (*fov > 180)
+        return 1;
+    return 0;
 }

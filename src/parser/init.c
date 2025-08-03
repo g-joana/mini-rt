@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/13 13:52:34 by nranna            #+#    #+#             */
-/*   Updated: 2025/06/27 18:58:37 by jou              ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../../includes/minirt.h"
 
 static int	*count_elements(char *file);
@@ -20,15 +8,15 @@ t_scene	*init_scene(char *file)
 	t_scene	*scene;
 	int		*amount;
 
-	scene = (t_scene *)malloc(sizeof(t_scene));
 	amount = count_elements(file);
+	scene = (t_scene *)malloc(sizeof(t_scene));
 	scene->amount = amount;
 	if (scene->amount[A] != 1)
-		exit_error(NULL, "ERROR: scene needs 1 ambient light placed", 1);
+		exit_error(scene, "ERROR: scene needs 1 ambient light placed", 1);
 	if (scene->amount[C] != 1)
-		exit_error(NULL, "ERROR: scene needs 1 camera placed", 1);
+		exit_error(scene, "ERROR: scene needs 1 camera placed", 1);
 	if (scene->amount[L] != 1)
-		exit_error(NULL, "ERROR: scene needs 1 light placed", 1);
+		exit_error(scene, "ERROR: scene needs 1 light placed", 1);
 	scene->amb_light = init_ambient();
 	scene->cam = init_camera();
 	scene->light = init_light();
@@ -45,26 +33,27 @@ static int	*count_elements(char *file)
 {
 	int		*amount;
 	char	*id;
+	char	*line;
 	int		fd;
 
 	amount = calloc(MAX_ELEMENTS, sizeof(int));
 	fd = open(file, O_RDONLY);
-	id = get_first_word(get_next_line(fd), 1);
-	if (!id)
-		exit_error(NULL, "empty file", 1);
-	while (id)
+    line = get_next_line(fd);
+	if (!line)
+		exit_count(amount, fd, line, "empty file");
+	while (line)
 	{
-		if (increment_elements_count(id, amount))
+		id = get_first_word(line, 1);
+		if (!increment_elements_count(id, amount))
 		{
-			free(amount);
 			free(id);
-			free_gnl(fd);
-			exit_error(NULL, "invalid id", 1);
+		    exit_count(amount, fd, line, "invalid id");
 		}
-		free(id);
-		id = get_first_word(get_next_line(fd), 1);
+        if (id)
+            free(id);
+        free(line);
+        line = get_next_line(fd);
 	}
-	free(id);
 	close(fd);
 	return (amount);
 }
@@ -91,8 +80,6 @@ char	*get_first_word(char *str, bool free_str)
 		count++;
 	}
 	word[count] = '\0';
-	if (free_str)
-		free(str);
 	return (word);
 }
 
@@ -110,7 +97,7 @@ static int	increment_elements_count(char *id, int *amount)
 		amount[SP]++;
 	else if (ft_strncmp("cy", id, 3) == 0)
 		amount[CY]++;
-	else if (id[0] != '\n')
-		return (1);
-	return (0);
+	else if (id[0] != '\n' && id[0] != '#')
+		return (0);
+	return (1);
 }

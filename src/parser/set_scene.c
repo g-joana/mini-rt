@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   set_scene.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/13 17:57:27 by nranna            #+#    #+#             */
-/*   Updated: 2025/07/29 17:47:32 by jgils            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../../includes/minirt.h"
 
 // set = seta os valores no seu devido campo da struct
@@ -18,63 +6,48 @@
 // tratar erros: se nao houver input (properties[index]) chamar exit_error
 // problemas: free da gnl
 
-void	set_camera(char *line, t_scene *scene)
+void	set_camera(char **split, t_scene *scene)
 {
-	char	**properties;
+    int ret = 0;
 
-	properties = ft_split(line, ' ');
-	if (!properties[1] || !properties[2] || !properties[3])
-	{
-		free(line);
-		free(properties);
-		free_gnl(scene->fd);
-		exit_error(scene, "missing camera (C) settings", 1);
-	}
-	set_coordinates(properties[1], scene->cam.coord);
-	set_normalization(properties[2], scene->cam.norm);
-	set_fov(properties[3], &scene->cam.fov);
-	free_split(properties);
+	if (split_len(split) < 4)
+        exit_set(split, scene, "missing camera (C) settings");
+	ret += set_vec3d(split[1], &scene->cam.coord);
+    ret += set_vec3d(split[2], &scene->cam.norm);
+    *scene->cam.norm = norm_vec(scene->cam.norm);
+    ret += set_fov(split[3], &scene->cam.fov);
+	if (ret != 0)
+        exit_set(split, scene, "invalid camera (C) settings");
 	t_vec3d up_direction = {0.0f, 1.0f, 0.0f};
-	if (fabs(dot_vecs(scene->cam.norm, &up_direction)) > 0.99f) {
+	if (fabs(dot_vecs(scene->cam.norm, &up_direction)) > 0.99f)
 		up_direction = (t_vec3d){0.0f, 0.0f, 1.0f};
-	}
 	t_vec3d temp = cross_vecs(scene->cam.norm, &up_direction);
 	*scene->cam.foward = norm_vec(scene->cam.norm);
 	*scene->cam.right = norm_vec(&temp);
 	*scene->cam.up = cross_vecs(scene->cam.foward, scene->cam.right);
 }
 
-void	set_ambient(char *line, t_scene *scene)
+void	set_ambient(char **split, t_scene *scene)
 {
-	char	**properties;
+    int ret = 0;
 
-	properties = ft_split(line, ' ');
-	if (!properties[1] || !properties[2])
-	{
-		free(line);
-		free(properties);
-		free_gnl(scene->fd);
-		exit_error(scene, "missing ambient light (A) settings", 1);
-	}
-	set_brightness(properties[1], &scene->amb_light.bright);
-	set_rgb(properties[2], scene->amb_light.rgb);
-	free_split(properties);
+	if (split_len(split) < 3)
+        exit_set(split, scene, "missing ambient light (A) settings");
+	ret += set_bright(split[1], &scene->amb_light.bright);
+    ret += set_rgb(split[2], &scene->amb_light.rgb);
+	if (ret != 0)
+        exit_set(split, scene, "invalid ambient light (A) settings");
 }
 
-void	set_light(char *line, t_scene *scene)
+void	set_light(char **split, t_scene *scene)
 {
-	char	**properties;
+    int ret = 0;
 
-	properties = ft_split(line, ' ');
-	if (!properties[1] || !properties[2] || !properties[3])
-	{
-		free(line);
-		free(properties);
-		free_gnl(scene->fd);
-		exit_error(scene, "missing light (L) settings", 1);
-	}
-	set_coordinates(properties[1], scene->light.coord);
-	set_brightness(properties[2], &scene->light.bright);
-	set_rgb(properties[3], scene->light.rgb);
-	free_split(properties);
+	if (split_len(split) < 4)
+        exit_set(split, scene, "missing light (L) settings");
+	ret += set_vec3d(split[1], &scene->light.coord);
+	ret += set_bright(split[2], &scene->light.bright);
+	ret += set_rgb(split[3], &scene->light.rgb);
+	if (ret != 0)
+        exit_set(split, scene, "invalid light (L) settings");
 }

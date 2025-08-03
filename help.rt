@@ -1,0 +1,32 @@
+
+scene configs of a .rt file:
+
+scene set-up
+(elements that MUST be declared and only ONCE)
+A                 bright                    rgb
+C    coord        norm     fov
+L    coord        bright                    rgb
+
+scene shapes
+(any amount of each can be declared)
+pl   coord        norm                      rgb
+sp   coord                 diam             rgb
+cy   coord        norm     diam   height    rgb
+
+
+values must be in the following format and [range]:
+
+coord = x,y,z [float];
+bright = [0.0~1.0];
+norm = x,y,z [-1~1];
+diam = [positive value];
+height = [positive value];
+rgb = r,g,b [0~255];
+fov = [0~180];
+
+! norm of shapes:
+choose one axis to be the orientation (1 or -1). the others will be 0.
+ex:
+x = 1,0,0
+y = 0,1,0
+z = 0,0,1

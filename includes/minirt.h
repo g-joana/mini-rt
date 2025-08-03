@@ -123,7 +123,7 @@ typedef struct s_ray {
 // parser.c
 t_scene		*parser(char *file);
 
-//init.c
+// init.c
 t_scene		*init_scene(char *file);
 char		*get_first_word(char *str, bool free_str);
 
@@ -131,8 +131,10 @@ char		*get_first_word(char *str, bool free_str);
 float	round4(float value);
 int	power(int base, int expoent);
 float	ft_atof(char *str);
+void print_split(char **splited, char *tag);
 
 // init_utils_scene.c
+t_vec3d *new_vec3d();
 t_camera	init_camera();
 t_alight	init_ambient();
 t_light		init_light();
@@ -143,23 +145,27 @@ t_plane		*init_planes(int amount);
 t_sphere	*init_spheres(int amount);
 
 // set_properties.c
-void    set_coordinates(char *str, t_vec3d *coord);
-void    set_normalization(char *str, t_vec3d *norm);
-void    set_brightness(char *str, float *bright);
-void    set_rgb(char *str, t_vec3d* rgb);
-void    set_fov(char *str, uint8_t *fov);
+int    set_vec3d(char *str, t_vec3d **vec);
+int    set_norm(char *str, t_vec3d **vec);
+int    set_rgb(char *str, t_vec3d **vec);
+int     set_bright(char *str, float *bright);
+int 	set_fov(char *str, uint8_t *fov);
 
 // set_scene.c
-void    set_camera(char *line, t_scene *scene);
-void    set_ambient(char *line, t_scene *scene);
-void	set_light(char *line, t_scene *scene);
+void exit_setters(char **split, t_scene *scene, char *msg);
+void    set_camera(char **split, t_scene *scene);
+void    set_ambient(char **split, t_scene *scene);
+void	set_light(char **split, t_scene *scene);
 
 // set_shapes.c
-void    set_plane(char *line, t_scene *scene, int i);
-void    set_sphere(char *line, t_scene *scene, int i);
-void    set_cylinder(char *line, t_scene *scene, int i);
-void    set_diameter(char *str, float *diam);
-void    set_height(char *str, float *height);
+void    set_plane(char **split, t_scene *scene, int i);
+void    set_sphere(char **split, t_scene *scene, int i);
+void    set_cylinder(char **split, t_scene *scene, int i);
+
+// validate.c
+int split_len(char **split);
+int valid_float(char *str);
+int valid_vec(char **split);
 
 /* ----------[END]---------- */
 
@@ -172,11 +178,14 @@ int	mouse_hook(t_scene *scene);
 
 // error.c
 void exit_error(t_scene* scene, char *msg, int ret);
+void exit_set(char **split, t_scene *scene, char *msg);
+void exit_count(int *amount, int fd, char *line, char *msg);
 
 // parser_utils.c
 float round4(float value);
 int	power(int base, int expoent);
 float   ft_atof(char *str);
+float ref_atof(char *str);
 
 // print.c
 void print_scene(t_scene *scene);

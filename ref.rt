@@ -1,0 +1,26 @@
+id                bright                    rgb
+A                 0.2                       255,255,255
+
+id   coord        norm     fov
+C   -50,0,20      0,0,1    70
+
+id   coord        bright                    rgb
+L    -40,0,30     0.7                       255,255,255
+
+id   coord        norm                      rgb
+pl   0,0,0        0,1,0                     255,0,225
+
+id   coord                 diam             rgb
+sp   0,0,20                20               255,0,0
+
+id   coord        norm     diam   height    rgb
+cy   50.0,0,20.6  0,0,1    14.2   21.42     10,0,255
+
+
+coord = x,y,z [float];
+bright = [0.0~1.0];
+norm = x,y,z [-1~1];
+diam = [positive value];
+height = [positive value];
+rgb = r,g,b [0~255];
+fov = [0~180];
