@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 16:52:12 by nranna            #+#    #+#             */
-/*   Updated: 2025/07/29 18:02:34 by jgils            ###   ########.fr       */
+/*   Updated: 2025/08/03 20:47:40 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 void	start_mlx(t_scene *scene);
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-    t_scene	*scene;
+	t_scene	*scene;
 
-    if (argc != 2)
+	if (argc != 2)
 		exit_error(NULL, "(ERROR) no input file: ./minirt [file.rt]", 1);
 	scene = parser(argv[1]);
 	print_scene(scene);
@@ -31,11 +31,12 @@ int main(int argc, char **argv)
 
 void	start_mlx(t_scene *scene)
 {
-    scene->mlx = mlx_init();
-    scene->mlx_win = mlx_new_window(scene->mlx, WIDTH, HEIGHT, "minirt");
-    scene->img.img = mlx_new_image(scene->mlx, WIDTH, HEIGHT);
-    scene->img.addr = mlx_get_data_addr(scene->img.img, &scene->img.bits_per_pixel,
-            &scene->img.line_len, &scene->img.endian);
-    mlx_key_hook(scene->mlx_win, key_hook, scene);
-    mlx_hook(scene->mlx_win, 17, 1L << 17, mouse_hook, scene);
+	scene->mlx = mlx_init();
+	scene->mlx_win = mlx_new_window(scene->mlx, WIDTH, HEIGHT, "minirt");
+	scene->img.img = mlx_new_image(scene->mlx, WIDTH, HEIGHT);
+	scene->img.addr = mlx_get_data_addr(scene->img.img,
+			&scene->img.bits_per_pixel, &scene->img.line_len,
+			&scene->img.endian);
+	mlx_key_hook(scene->mlx_win, key_hook, scene);
+	mlx_hook(scene->mlx_win, 17, 1L << 17, mouse_hook, scene);
 }

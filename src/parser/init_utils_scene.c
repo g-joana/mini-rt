@@ -6,26 +6,23 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:55:15 by nranna            #+#    #+#             */
-/*   Updated: 2025/07/29 18:25:06 by jgils            ###   ########.fr       */
+/*   Updated: 2025/08/03 20:48:24 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minirt.h"
 
-t_vec3d *new_vec3d() {
-    t_vec3d *new;
+t_vec3d	*new_vec3d(void)
+{
+	t_vec3d	*new;
 
 	new = malloc(sizeof(t_vec3d));
 	new->x = 0;
 	new->y = 0;
 	new->z = 0;
-    return new;
+	return (new);
 }
 
-/* init = malloc and set values to 0
-   setup = camera, light, ambient light
-   (elements that can only be declared once have a capital letter)
-*/
 t_alight	init_ambient(void)
 {
 	t_alight	ambient;
