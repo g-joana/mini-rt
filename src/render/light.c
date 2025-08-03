@@ -1,4 +1,5 @@
 #include "../../includes/minirt.h"
+#include <float.h>
 
 uint32_t apply_ambient(t_hit *hit, t_alight *ambient)
 {
@@ -9,47 +10,56 @@ uint32_t apply_ambient(t_hit *hit, t_alight *ambient)
 
 uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient)
 {
-	hit->direction = norm_vec(&hit->direction); // do this on parser
-	t_vec3d light_dir = sub_vecs(light->coord, &hit->position);
+	t_vec3d rgb;
+	t_vec3d ambient_rgb;
+	float intensity;
+    t_vec3d light_dir;
+
+    light_dir = sub_vecs(light->coord, &hit->position);
 	light_dir = norm_vec(&light_dir);
 	light_dir = vec_x_scalar(&light_dir, -1);
-	float intensity = dot_vecs(&hit->direction, &light_dir); 
+	intensity = dot_vecs(&hit->direction, &light_dir); 
 	intensity *= light->bright;
 	intensity *= -1.0f;
 	intensity = clamp(intensity, 0.0f, intensity);
-	t_vec3d rgb;
-	t_vec3d ambient_rgb;
 	ambient_rgb = vec_x_scalar(hit->rgb, ambient->bright);
 	rgb = vec_x_scalar(hit->rgb, intensity * light->bright);
 	rgb = add_vecs(&rgb , &ambient_rgb);
 	return (color_per_pixel(&rgb, 1));
 }
 
+t_hit *update_hit(t_hit *hit)
+{
+    t_hit *closest;
+
+    if (closest)
+        free(closest);
+    closest = hit;
+    return (closest);
+}
+
 t_hit *trace_shadow(t_ray *ray, t_scene *scene)
 {
     t_hit *hit;
-    t_hit *closest = NULL;
-    int shape = PL;
+    t_hit *closest;
+    int shape;
     int count;
-    float closest_distance = FLT_MAX;
     
-    while (shape <= CY)
+    shape = PL - 1;
+    closest = NULL;
+    while (++shape <= CY)
     {
         count = 0;
         while (count < scene->amount[shape])
         {
             hit = get_shape_hit(ray, scene, shape, count++);
-            if (hit && hit->distance > 0.001f && hit->distance < closest_distance)
-            {
-                if (closest)
-                    free(closest);
-                closest_distance = hit->distance;
+            if (!closest)
                 closest = hit;
-            }
+            else if (hit && hit->distance > 0.001f && hit->distance < closest->distance)
+                closest = update_hit(hit);
             else if (hit)
                 free(hit);
         }
-        shape++;
     }
     return closest;
 }
