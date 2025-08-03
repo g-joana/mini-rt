@@ -11,7 +11,7 @@ REND_DIR	= $(SRC_DIR)/render
 VEC_DIR		= trivec
 
 # Sources
-SRCS		= main.c free.c error.c print.c
+SRCS		= main.c free.c free_scene.c error.c print.c
 
 # Parser files
 PARS		= init.c init_utils_scene.c init_utils_shapes.c parser.c parser_utils.c \

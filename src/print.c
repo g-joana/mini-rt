@@ -118,4 +118,3 @@ void print_split(char **splited, char *tag){
     printf("\n");
 
 }
-

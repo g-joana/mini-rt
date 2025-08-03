@@ -170,11 +170,13 @@ int valid_vec(char **split);
 /* ----------[END]---------- */
 
 // free.c
-void free_scene(t_scene *scene);
 void free_gnl(int fd);
 void	free_split(char **array);
 int	key_hook(int key, t_scene *scene);
 int	mouse_hook(t_scene *scene);
+
+// free_scene.c
+void free_scene(t_scene *scene);
 
 // error.c
 void exit_error(t_scene* scene, char *msg, int ret);
