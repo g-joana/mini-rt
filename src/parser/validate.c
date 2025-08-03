@@ -42,4 +42,3 @@ int valid_vec(char **split)
     }
     return ret;
 }
-

@@ -1,55 +1,5 @@
 #include "../includes/minirt.h"
 
-void free_scene(t_scene *scene)
-{
-    int count = 0;
-    free(scene->cam.coord);
-    free(scene->cam.norm);
-    free(scene->cam.foward);
-    free(scene->cam.up);
-    free(scene->cam.right);
-    free(scene->amb_light.rgb);
-    free(scene->light.coord);
-    free(scene->light.rgb);
-    if (scene->amount[SP])
-    {
-        count = 0;
-        while (count < scene->amount[SP])
-        {
-            free(scene->spheres[count].coord);
-            free(scene->spheres[count].rgb);
-            count++;
-        }
-        free(scene->spheres);
-    }
-    if (scene->amount[PL])
-    {
-        count = 0;
-        while (count < scene->amount[PL])
-        {
-            free(scene->planes[count].coord);
-            free(scene->planes[count].norm);
-            free(scene->planes[count].rgb);
-            count++;
-        }
-        free(scene->planes);
-    }
-    if (scene->amount[CY])
-    {
-        count = 0;
-        while (count < scene->amount[CY])
-        {
-            free(scene->cylinders[count].coord);
-            free(scene->cylinders[count].norm);
-            free(scene->cylinders[count].rgb);
-            count++;
-        }
-        free(scene->cylinders);
-    }
-    free(scene->amount);
-    free(scene);
-}
-
 void free_gnl(int fd)
 {
     char *buf = get_next_line(fd);

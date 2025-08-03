@@ -170,11 +170,13 @@ int valid_vec(char **split);
 /* ----------[END]---------- */
 
 // free.c
-void free_scene(t_scene *scene);
 void free_gnl(int fd);
 void	free_split(char **array);
 int	key_hook(int key, t_scene *scene);
 int	mouse_hook(t_scene *scene);
+
+// free_scene.c
+void free_scene(t_scene *scene);
 
 // error.c
 void exit_error(t_scene* scene, char *msg, int ret);
@@ -203,8 +205,10 @@ uint32_t color_per_pixel(t_vec3d *vec, float alpha);
 
 // get_shape_hit.c
 t_hit *sphere_hit( t_ray *ray, t_sphere *sp);
-t_hit *cylinder_hit( t_ray *ray, t_cylinder *cylin);
 t_hit *get_shape_hit(t_ray *ray, t_scene *scene, int shape, int id);
+
+// get_cy_hit.c
+t_hit *cylinder_hit( t_ray *ray, t_cylinder *cylin);
 
 // set_shape_hit.c
 void set_shape_hit(t_ray *ray, t_scene *scene, t_hit *hit);
@@ -214,5 +218,6 @@ bool in_shadow(t_hit *surface, t_scene *scene);
 t_hit *trace_shadow(t_ray *ray, t_scene *scene);
 uint32_t apply_light(t_hit *hit, t_light *light, t_alight *ambient);
 uint32_t apply_ambient(t_hit *hit, t_alight *ambient);
+t_hit *update_hit(t_hit *closest, t_hit *hit);
 
 #endif

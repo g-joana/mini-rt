@@ -11,14 +11,14 @@ REND_DIR	= $(SRC_DIR)/render
 VEC_DIR		= trivec
 
 # Sources
-SRCS		= main.c free.c error.c print.c
+SRCS		= main.c free.c free_scene.c error.c print.c
 
 # Parser files
 PARS		= init.c init_utils_scene.c init_utils_shapes.c parser.c parser_utils.c \
 			  set_properties.c set_scene.c set_shapes.c validate.c \
 
 # Render files
-REND		= render.c render_utils.c get_shape_hit.c set_shape_hit.c light.c
+REND		= render.c render_utils.c get_shape_hit.c get_cy_hit.c set_shape_hit.c light.c
 
 # Object files
 OBJS		= \

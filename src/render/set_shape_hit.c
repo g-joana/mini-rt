@@ -1,6 +1,6 @@
 #include "../../includes/minirt.h"
 
-void set_plane_hit(t_ray *ray, t_scene *scene, t_hit *hit)
+static void set_plane_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 {
 	t_vec3d ray_origin;
 
@@ -17,7 +17,7 @@ void set_plane_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 		hit->direction = vec_x_scalar(&hit->direction, -1);
 }
 
-void set_cylinder_hit(t_ray *ray, t_scene *scene, t_hit *hit)
+static void set_cylinder_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 {
 	// hit position in local space
 	t_vec3d local_hit_pos = vec_x_scalar(&ray->dir, hit->distance);
@@ -37,7 +37,7 @@ void set_cylinder_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 		hit->direction = vec_x_scalar(&hit->direction, -1);
 }
 
-void set_sphere_hit(t_ray *ray, t_scene *scene, t_hit *hit)
+static void set_sphere_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 {
 	t_vec3d ray_origin;
 
