@@ -107,7 +107,7 @@ t_hit *cylinder_hit(t_ray *ray, t_cylinder *cy)
     return hit;
 }
 
-t_vec3d ori(t_ray *global_ray, t_vec3d *shape_ori, t_vec3d *cam_ori)
+t_vec3d get_ori(t_ray *global_ray, t_vec3d *shape_ori, t_vec3d *cam_ori)
 {
 	t_vec3d ray_ori;
 
@@ -121,22 +121,22 @@ t_vec3d ori(t_ray *global_ray, t_vec3d *shape_ori, t_vec3d *cam_ori)
 t_hit *get_shape_hit(t_ray *ray, t_scene *scene, int shape, int id)
 {
 	t_hit *hit;
-	t_ray local_ray = *ray;
+	t_ray local = *ray;
 
 	if (shape == PL)
 	{
-        local_ray.ori = ori(ray, scene->planes[id].coord, scene->cam.coord);
-	    hit = plane_hit(&local_ray, &scene->planes[id]);
+        local.ori = get_ori(ray, scene->planes[id].coord, scene->cam.coord);
+	    hit = plane_hit(&local, &scene->planes[id]);
 	}
 	else if (shape == SP)
 	{
-        local_ray.ori = ori(ray, scene->spheres[id].coord, scene->cam.coord);
-	    hit = sphere_hit(&local_ray, &scene->spheres[id]);
+        local.ori = get_ori(ray, scene->spheres[id].coord, scene->cam.coord);
+	    hit = sphere_hit(&local, &scene->spheres[id]);
 	}
 	else if (shape == CY)
 	{
-        local_ray.ori = ori(ray, scene->cylinders[id].coord, scene->cam.coord);
-	    hit = cylinder_hit(&local_ray, &scene->cylinders[id]);
+        local.ori = get_ori(ray, scene->cylinders[id].coord, scene->cam.coord);
+	    hit = cylinder_hit(&local, &scene->cylinders[id]);
 	}
 	if (hit)
 	{
