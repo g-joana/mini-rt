@@ -123,7 +123,7 @@ typedef struct s_ray {
 // parser.c
 t_scene		*parser(char *file);
 
-//init.c
+// init.c
 t_scene		*init_scene(char *file);
 char		*get_first_word(char *str, bool free_str);
 
@@ -145,22 +145,22 @@ t_plane		*init_planes(int amount);
 t_sphere	*init_spheres(int amount);
 
 // set_properties.c
-int    set_vec3d(char *line, t_vec3d **vec);
-int    set_norm(char *line, t_vec3d **vec);
-int    set_rgb(char *line, t_vec3d **vec);
+int    set_vec3d(char *str, t_vec3d **vec);
+int    set_norm(char *str, t_vec3d **vec);
+int    set_rgb(char *str, t_vec3d **vec);
 int     set_bright(char *str, float *bright);
 int 	set_fov(char *str, uint8_t *fov);
 
 // set_scene.c
-void exit_setters(char *line, char **split, t_scene *scene, char *msg);
-void    set_camera(char *line, t_scene *scene);
-void    set_ambient(char *line, t_scene *scene);
-void	set_light(char *line, t_scene *scene);
+void exit_setters(char **split, t_scene *scene, char *msg);
+void    set_camera(char **split, t_scene *scene);
+void    set_ambient(char **split, t_scene *scene);
+void	set_light(char **split, t_scene *scene);
 
 // set_shapes.c
-void    set_plane(char *line, t_scene *scene, int i);
-void    set_sphere(char *line, t_scene *scene, int i);
-void    set_cylinder(char *line, t_scene *scene, int i);
+void    set_plane(char **split, t_scene *scene, int i);
+void    set_sphere(char **split, t_scene *scene, int i);
+void    set_cylinder(char **split, t_scene *scene, int i);
 
 // validate.c
 int split_len(char **split);
@@ -178,6 +178,7 @@ int	mouse_hook(t_scene *scene);
 
 // error.c
 void exit_error(t_scene* scene, char *msg, int ret);
+void exit_set(char **split, t_scene *scene, char *msg);
 
 // parser_utils.c
 float round4(float value);

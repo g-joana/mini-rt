@@ -6,36 +6,36 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 12:48:59 by nranna            #+#    #+#             */
-/*   Updated: 2025/07/31 22:50:55 by jgils            ###   ########.fr       */
+/*   Updated: 2025/08/03 12:50:42 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minirt.h"
 
-static t_scene	*validade_init_scene(char *file);
+static t_scene	*validate_init_scene(char *file);
 static void		parse_line(char *line, t_scene *scene, int *count);
 
 t_scene	*parser(char *file)
 {
 	t_scene	*scene;
-	int		*count;
+	int		count[MAX_ELEMENTS];
 	char	*line;
 
-	scene = validade_init_scene(file);
-	count = (int *)calloc(MAX_ELEMENTS, sizeof(int));
+	scene = validate_init_scene(file);
+	ft_bzero(count, MAX_ELEMENTS * sizeof(int));
 	line = get_next_line(scene->fd);
 	while (line)
 	{
 		parse_line(line, scene, count);
-		free(line);
+		// free(line);
 		line = get_next_line(scene->fd);
 	}
-	free(count);
+	// free(count);
 	close(scene->fd);
 	return (scene);
 }
 
-static t_scene	*validade_init_scene(char *file)
+static t_scene	*validate_init_scene(char *file)
 {
 	t_scene	*scene;
 	char	*dot;
@@ -58,14 +58,15 @@ static t_scene	*validade_init_scene(char *file)
 static void	parse_line(char *str, t_scene *scene, int *count)
 {
 	char	*id;
-	char	*line;
+	char	**line;
 
-    line = str;
-    line[ft_strlen(line) - 1] = ' ';
-	id = get_first_word(line, 0); // leak -> change to get id
+    str[ft_strlen(str) - 1] = ' ';
+    line = ft_split(str, ' ');
+    free(str);
+	id = line[0];
 	if (!id || id[0] == '\n' || id[0] == '#')
 	{
-		free(id);
+		free(line);
 		return ;
 	}
 	if (ft_strncmp("A", id, 2) == 0)
@@ -80,5 +81,5 @@ static void	parse_line(char *str, t_scene *scene, int *count)
 		set_sphere(line, scene, count[SP]++);
 	else if (ft_strncmp("cy", id, 3) == 0)
 		set_cylinder(line, scene, count[CY]++);
-	free(id);
+	free_split(line);
 }

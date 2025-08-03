@@ -4,11 +4,11 @@
  each element on scene has it's on properties and in this file we set them.
 */
 
-int    set_vec3d(char *line, t_vec3d **vec)
+int    set_vec3d(char *str, t_vec3d **vec)
 {
     char **split;
     
-    split = ft_split(line, ',');
+    split = ft_split(str, ',');
     if (split_len(split) != 3 || !valid_vec(split))
         return 1;
 	(*vec)->x = ft_atof(split[0]);
@@ -19,9 +19,9 @@ int    set_vec3d(char *line, t_vec3d **vec)
 }
 
 // range: -1 ~ 1
-int    set_norm(char *line, t_vec3d **vec)
+int    set_norm(char *str, t_vec3d **vec)
 {
-	if (set_vec3d(line, vec) == 1)
+	if (set_vec3d(str, vec) == 1)
         return 1;
     if ((*vec)->x < -1.0000 || (*vec)->x > 1.0000)
         return 1;
@@ -33,9 +33,9 @@ int    set_norm(char *line, t_vec3d **vec)
 }
 
 // range: 0 ~ 255
-int    set_rgb(char *line, t_vec3d **vec)
+int    set_rgb(char *str, t_vec3d **vec)
 {
-	if (set_vec3d(line, vec) == 1)
+	if (set_vec3d(str, vec) == 1)
         return 1;
     if ((*vec)->x < 0 || (*vec)->x > 255)
         return 1;
