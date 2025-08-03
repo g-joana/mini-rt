@@ -1,5 +1,6 @@
 #include "../includes/minirt.h"
 
+// delete this file
 void print_scene(t_scene *scene)
 {
     // Print ambient light

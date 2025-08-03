@@ -1,7 +1,7 @@
 #include "../../includes/minirt.h"
 
 /* returns closest hit of scene objs */
-t_hit *trace_ray(t_ray *ray, t_scene *scene)
+static t_hit *trace_ray(t_ray *ray, t_scene *scene)
 {
 	t_hit *hit;
 	t_hit *closest;
@@ -28,7 +28,7 @@ t_hit *trace_ray(t_ray *ray, t_scene *scene)
 	return closest;
 }
 
-t_vec3d	get_direction(float x, float y, t_scene *scene) {
+static t_vec3d	get_direction(float x, float y, t_scene *scene) {
 	float u;
 	float v;
 	t_vec3d x_dir;
@@ -49,7 +49,7 @@ t_vec3d	get_direction(float x, float y, t_scene *scene) {
 	return ray_dir;
 }
 
-u_int32_t	perpixel(float x, float y, t_scene* scene) // raygen -> ray trace pipeline / shaders
+static u_int32_t	perpixel(float x, float y, t_scene* scene)
 {
     u_int32_t color;
     t_hit *closest_hit;

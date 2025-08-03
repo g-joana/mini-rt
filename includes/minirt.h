@@ -205,8 +205,10 @@ uint32_t color_per_pixel(t_vec3d *vec, float alpha);
 
 // get_shape_hit.c
 t_hit *sphere_hit( t_ray *ray, t_sphere *sp);
-t_hit *cylinder_hit( t_ray *ray, t_cylinder *cylin);
 t_hit *get_shape_hit(t_ray *ray, t_scene *scene, int shape, int id);
+
+// get_cy_hit.c
+t_hit *cylinder_hit( t_ray *ray, t_cylinder *cylin);
 
 // set_shape_hit.c
 void set_shape_hit(t_ray *ray, t_scene *scene, t_hit *hit);

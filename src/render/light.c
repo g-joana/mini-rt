@@ -52,7 +52,8 @@ t_hit *trace_shadow(t_ray *ray, t_scene *scene)
             hit = get_shape_hit(ray, scene, shape, count++);
             if (!closest)
                 closest = hit;
-            else if (hit && hit->distance > 0.001f && hit->distance < closest->distance)
+            else if (hit && hit->distance > 0.001f && 
+                        hit->distance < closest->distance)
                 closest = update_hit(closest, hit);
             else if (hit)
                 free(hit);
@@ -65,11 +66,11 @@ bool in_shadow(t_hit *surface, t_scene *scene)
 {
     t_hit *hit;
     t_ray ray;
-    float light_distance;
+    float light_dist;
     t_vec3d to_light;
 
     to_light = sub_vecs(scene->light.coord, &surface->position);
-    light_distance = magni_vec(&to_light);
+    light_dist = magni_vec(&to_light);
     ray.ori = vec_x_scalar(&surface->direction, 0.01f);
     ray.ori = add_vecs(&surface->position, &ray.ori);
     ray.dir = norm_vec(&to_light);
@@ -77,7 +78,7 @@ bool in_shadow(t_hit *surface, t_scene *scene)
     hit = trace_shadow(&ray, scene);
     if (hit)
     {
-        if (hit->distance > 0.001f && hit->distance < (light_distance - 0.001f))
+        if (hit->distance > 0.001f && hit->distance < (light_dist - 0.001f))
         {
             free(hit);
             return true;
