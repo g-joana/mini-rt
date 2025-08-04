@@ -38,7 +38,7 @@ static int	*count_elements(char *file)
 
 	amount = calloc(MAX_ELEMENTS, sizeof(int));
 	fd = open(file, O_RDONLY);
-    line = get_next_line(fd);
+	line = get_next_line(fd);
 	if (!line)
 		exit_count(amount, fd, line, "empty file");
 	while (line)
@@ -47,12 +47,12 @@ static int	*count_elements(char *file)
 		if (!increment_elements_count(id, amount))
 		{
 			free(id);
-		    exit_count(amount, fd, line, "invalid id");
+			exit_count(amount, fd, line, "invalid id");
 		}
-        if (id)
-            free(id);
-        free(line);
-        line = get_next_line(fd);
+		if (id)
+			free(id);
+		free(line);
+		line = get_next_line(fd);
 	}
 	close(fd);
 	return (amount);

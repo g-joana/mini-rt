@@ -6,14 +6,12 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:56:54 by nranna            #+#    #+#             */
-/*   Updated: 2025/07/29 18:28:23 by jgils            ###   ########.fr       */
+/*   Updated: 2025/08/03 20:48:38 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minirt.h"
 
-/* init = malloc and set values to 0
-   shapes = sphere, plane, cylinder */
 t_plane	*init_planes(int amount)
 {
 	int		i;

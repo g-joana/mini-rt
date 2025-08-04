@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 12:48:59 by nranna            #+#    #+#             */
-/*   Updated: 2025/08/03 13:01:25 by jgils            ###   ########.fr       */
+/*   Updated: 2025/08/03 20:48:45 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,9 @@ static void	parse_line(char *str, t_scene *scene, int *count)
 	char	*id;
 	char	**line;
 
-    str[ft_strlen(str) - 1] = ' ';
-    line = ft_split(str, ' ');
-    free(str);
+	str[ft_strlen(str) - 1] = ' ';
+	line = ft_split(str, ' ');
+	free(str);
 	id = line[0];
 	if (!id || id[0] == '\n' || id[0] == '#')
 	{
