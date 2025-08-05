@@ -14,7 +14,6 @@ int	set_vec3d(char *str, t_vec3d **vec)
 	return (0);
 }
 
-// range: -1 ~ 1
 int	set_norm(char *str, t_vec3d **vec)
 {
 	if (set_vec3d(str, vec) == 1)
@@ -25,10 +24,10 @@ int	set_norm(char *str, t_vec3d **vec)
 		return (1);
 	else if ((*vec)->z < -1.0000 || (*vec)->z > 1.0000)
 		return (1);
+    **vec = norm_vec(*vec);
 	return (0);
 }
 
-// range: 0 ~ 255
 int	set_rgb(char *str, t_vec3d **vec)
 {
 	if (set_vec3d(str, vec) == 1)
@@ -42,7 +41,6 @@ int	set_rgb(char *str, t_vec3d **vec)
 	return (0);
 }
 
-// range: 0.0 ~ 1.0
 int	set_bright(char *str, float *bright)
 {
 	if (!valid_float(str))
@@ -53,7 +51,6 @@ int	set_bright(char *str, float *bright)
 	return (0);
 }
 
-// range: 0 ~ 180
 int	set_fov(char *str, uint8_t *fov)
 {
 	if (!valid_float(str))
