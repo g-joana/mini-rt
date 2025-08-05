@@ -6,10 +6,12 @@ static float	cy_quadratic(t_ray *ray, float radius, float *t)
 	float	b;
 	float	c;
 	float	delta;
-
+    
 	a = dot_vecs(&ray->dir, &ray->dir);
 	b = 2.0f * dot_vecs(&ray->ori, &ray->dir);
 	c = dot_vecs(&ray->ori, &ray->ori) - radius * radius;
+	if (a < 1e-6f)
+		return (0);
 	delta = b * b - 4.0f * a * c;
 	if (delta < 0.0f)
 		return (0);
