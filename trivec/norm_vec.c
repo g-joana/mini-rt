@@ -6,7 +6,7 @@
 /*   By: nranna <nranna@student.42.rio>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 21:10:34 by nranna            #+#    #+#             */
-/*   Updated: 2025/05/28 21:26:40 by nranna           ###   ########.fr       */
+/*   Updated: 2025/08/09 19:54:41 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_vec3d	norm_vec(const t_vec3d *vec)
 {
-	t_vec3d versor;
+	t_vec3d	versor;
 	double	mod_vec;
 
 	if (vec->x == 0 && vec->y == 0 && vec->z == 0)
