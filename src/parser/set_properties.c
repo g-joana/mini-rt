@@ -6,7 +6,7 @@
 /*   By: jgils <jgils@student.42.rio>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 17:38:57 by jgils             #+#    #+#             */
-/*   Updated: 2025/08/09 17:38:57 by jgils            ###   ########.fr       */
+/*   Updated: 2025/08/09 18:24:58 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ int	set_vec3d(char *str, t_vec3d **vec)
 
 	split = ft_split(str, ',');
 	if (split_len(split) != 3 || !valid_vec(split))
+	{
+		free_split(split);
 		return (1);
+	}
 	(*vec)->x = ft_atof(split[0]);
 	(*vec)->y = ft_atof(split[1]);
 	(*vec)->z = ft_atof(split[2]);
