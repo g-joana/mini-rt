@@ -6,7 +6,7 @@
 /*   By: jgils <jgils@student.42.rio>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 17:38:53 by jgils             #+#    #+#             */
-/*   Updated: 2025/08/09 17:38:53 by jgils            ###   ########.fr       */
+/*   Updated: 2025/08/12 14:52:19 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,14 @@ static float	get_sign(char *str, int *i)
 	float	sign;
 
 	sign = 1.0f;
-	while (str[*i] && str[*i] == ' ' || str[*i] == '\t')
+	while (str[*i] && (str[*i] == ' ' || str[*i] == '\t'))
 		(*i)++;
 	if (str[*i] && str[*i] == '-')
 	{
 		sign = -1.0f;
 		(*i)++;
 	}
-	else if (str[*i] && str[*i] == '+' && str[*i + 1])
+	else if (str[*i] && (str[*i] == '+' && str[*i + 1]))
 		(*i)++;
 	return (sign);
 }

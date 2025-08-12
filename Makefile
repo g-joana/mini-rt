@@ -11,7 +11,7 @@ REND_DIR	= $(SRC_DIR)/render
 VEC_DIR		= trivec
 
 # Sources
-SRCS		= main.c free.c free_scene.c error.c print.c
+SRCS		= main.c free.c free_scene.c error.c
 
 # Parser files
 PARS		= init.c init_utils_scene.c init_utils_shapes.c parser.c parser_utils.c \
@@ -27,9 +27,8 @@ OBJS		= \
 			$(addprefix $(OBJ_DIR)/, $(REND:.c=.o))
 
 # Compiler
-CC			= clang
-# CFLAGS		= -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -I$(VEC_DIR) -ggdb3
-CFLAGS		= -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -I$(VEC_DIR) -ggdb3 -g -gdwarf-4
+CC			= cc
+CFLAGS		= -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -I$(VEC_DIR)
 
 # Libraries
 LIBFT		= $(LIBFT_DIR)/libft.a

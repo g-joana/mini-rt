@@ -6,7 +6,7 @@
 /*   By: jgils <jgils@student.42.rio>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 17:38:57 by jgils             #+#    #+#             */
-/*   Updated: 2025/08/09 18:24:58 by jgils            ###   ########.fr       */
+/*   Updated: 2025/08/09 19:39:19 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	set_norm(char *str, t_vec3d **vec)
 		return (1);
 	else if ((*vec)->z < -1.0000 || (*vec)->z > 1.0000)
 		return (1);
-    **vec = norm_vec(*vec);
+	**vec = norm_vec(*vec);
 	return (0);
 }
 
@@ -72,6 +72,6 @@ int	set_fov(char *str, uint8_t *fov)
 		return (1);
 	*fov = ft_atoi(str);
 	if (*fov > 180)
-		return 1;
-	return 0;
+		return (1);
+	return (0);
 }

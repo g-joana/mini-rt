@@ -6,7 +6,7 @@
 /*   By: jgils <jgils@student.42.rio>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 17:39:51 by jgils             #+#    #+#             */
-/*   Updated: 2025/08/09 17:39:51 by jgils            ###   ########.fr       */
+/*   Updated: 2025/08/12 14:55:16 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,10 @@
 
 static void	set_plane_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 {
-	t_vec3d	ray_origin;
-
 	hit->rgb = scene->planes[hit->id].rgb;
 	hit->shape_origin = scene->planes[hit->id].coord;
-	// world position
 	hit->position = vec_x_scalar(&ray->dir, hit->distance);
 	hit->position = add_vecs(scene->cam.coord, &hit->position);
-	// world direction
 	hit->direction = *scene->planes[hit->id].norm;
 	if (dot_vecs(&ray->dir, &hit->direction) > 0)
 		hit->direction = vec_x_scalar(&hit->direction, -1);
@@ -33,10 +29,8 @@ static void	set_cylinder_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 	float	axis_proj;
 	t_vec3d	axis_component;
 
-	// hit position in local space
 	hit->position = vec_x_scalar(&ray->dir, hit->distance);
 	hit->position = add_vecs(scene->cam.coord, &hit->position);
-	// world normal
 	to_hit = sub_vecs(&hit->position, scene->cylinders[hit->id].coord);
 	axis_proj = dot_vecs(&to_hit, scene->cylinders[hit->id].norm);
 	axis_component = vec_x_scalar(scene->cylinders[hit->id].norm, axis_proj);
@@ -55,17 +49,14 @@ static void	set_sphere_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 	ray_origin = sub_vecs(scene->cam.coord, scene->spheres[hit->id].coord);
 	hit->rgb = scene->spheres[hit->id].rgb;
 	hit->shape_origin = scene->spheres[hit->id].coord;
-	// world position
 	hit->position = vec_x_scalar(&ray->dir, hit->distance);
 	hit->position = add_vecs(scene->cam.coord, &hit->position);
-	// world direction
 	hit->direction = sub_vecs(&hit->position, hit->shape_origin);
 	hit->direction = norm_vec(&hit->direction);
 }
 
 void	set_shape_hit(t_ray *ray, t_scene *scene, t_hit *hit)
 {
-	t_vec3d	ray_origin;
 	t_ray	local_ray;
 
 	local_ray = *ray;

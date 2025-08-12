@@ -6,7 +6,7 @@
 /*   By: jgils <jgils@student.42.rio>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 17:39:42 by jgils             #+#    #+#             */
-/*   Updated: 2025/08/09 17:39:43 by jgils            ###   ########.fr       */
+/*   Updated: 2025/08/12 14:54:25 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ t_hit	*get_shape_hit(t_ray *ray, t_scene *scene, int shape, int id)
 	t_ray	local;
 
 	local = *ray;
+	hit = NULL;
 	if (shape == PL)
 	{
 		local.ori = get_ori(ray, scene->planes[id].coord, scene->cam.coord);
@@ -98,10 +99,9 @@ t_hit	*get_shape_hit(t_ray *ray, t_scene *scene, int shape, int id)
 		local.ori = get_ori(ray, scene->cylinders[id].coord, scene->cam.coord);
 		hit = cylinder_hit(&local, &scene->cylinders[id]);
 	}
-	if (hit)
-	{
-		hit->shape = shape;
-		hit->id = id;
-	}
+	if (!hit)
+		return (NULL);
+	hit->shape = shape;
+	hit->id = id;
 	return (hit);
 }

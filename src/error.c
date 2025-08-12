@@ -22,6 +22,16 @@ void	exit_error(t_scene *scene, char *msg, int ret)
 	exit(ret);
 }
 
+void	exit_init(t_scene *scene, char *msg, int ret)
+{
+	free(scene->amount);
+	free(scene);
+	ft_putstr_fd("Error: ", 2);
+	ft_putstr_fd(msg, 2);
+	ft_putstr_fd("\n", 2);
+	exit(ret);
+}
+
 void	exit_set(char **split, t_scene *scene, char *msg)
 {
 	free_split(split);

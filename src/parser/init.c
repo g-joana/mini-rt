@@ -6,7 +6,7 @@
 /*   By: jgils <jgils@student.42.rio>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 17:38:38 by jgils             #+#    #+#             */
-/*   Updated: 2025/08/09 17:38:38 by jgils            ###   ########.fr       */
+/*   Updated: 2025/08/12 14:51:33 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,11 @@ t_scene	*init_scene(char *file)
 	scene = (t_scene *)malloc(sizeof(t_scene));
 	scene->amount = amount;
 	if (scene->amount[A] != 1)
-		exit_error(scene, "ERROR: scene needs 1 ambient light placed", 1);
+		exit_init(scene, "ERROR: scene needs 1 ambient light placed", 1);
 	if (scene->amount[C] != 1)
-		exit_error(scene, "ERROR: scene needs 1 camera placed", 1);
+		exit_init(scene, "ERROR: scene needs 1 camera placed", 1);
 	if (scene->amount[L] != 1)
-		exit_error(scene, "ERROR: scene needs 1 light placed", 1);
+		exit_init(scene, "ERROR: scene needs 1 light placed", 1);
 	scene->amb_light = init_ambient();
 	scene->cam = init_camera();
 	scene->light = init_light();
@@ -92,6 +92,7 @@ char	*get_first_word(char *str, bool free_str)
 		count++;
 	}
 	word[count] = '\0';
+	(void)free_str;
 	return (word);
 }
 

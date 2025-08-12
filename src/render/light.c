@@ -6,7 +6,7 @@
 /*   By: jgils <jgils@student.42.rio>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 17:39:45 by jgils             #+#    #+#             */
-/*   Updated: 2025/08/09 17:39:45 by jgils            ###   ########.fr       */
+/*   Updated: 2025/08/09 19:43:34 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ t_hit	*trace_shadow(t_ray *ray, t_scene *scene)
 			hit = get_shape_hit(ray, scene, shape, count++);
 			if (!closest)
 				closest = hit;
-			else if (hit && hit->distance > 0.001f &&
-						hit->distance < closest->distance)
+			else if (hit && hit->distance > 0.001f && hit->distance
+				< closest->distance)
 				closest = update_hit(closest, hit);
 			else if (hit)
 				free(hit);

@@ -1,9 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cross_vecs.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jgils <jgils@student.42.rio>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/09 20:00:42 by jgils             #+#    #+#             */
+/*   Updated: 2025/08/09 20:00:43 by jgils            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "trivec.h"
 
-t_vec3d cross_vecs(t_vec3d *a, t_vec3d *b) {
-    t_vec3d result;
-    result.x = a->y * b->z - a->z * b->y;
-    result.y = a->z * b->x - a->x * b->z;
-    result.z = a->x * b->y - a->y * b->x;
-    return result;
+t_vec3d	cross_vecs(t_vec3d *a, t_vec3d *b)
+{
+	t_vec3d	result;
+
+	result.x = a->y * b->z - a->z * b->y;
+	result.y = a->z * b->x - a->x * b->z;
+	result.z = a->x * b->y - a->y * b->x;
+	return (result);
 }

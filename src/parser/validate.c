@@ -6,7 +6,7 @@
 /*   By: jgils <jgils@student.42.rio>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 17:39:04 by jgils             #+#    #+#             */
-/*   Updated: 2025/08/09 17:39:04 by jgils            ###   ########.fr       */
+/*   Updated: 2025/08/12 14:53:05 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	split_len(char **split)
 
 int	valid_float(char *str)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	if (!str)

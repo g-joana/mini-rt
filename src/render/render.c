@@ -6,13 +6,12 @@
 /*   By: jgils <jgils@student.42.rio>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 17:39:47 by jgils             #+#    #+#             */
-/*   Updated: 2025/08/09 17:39:47 by jgils            ###   ########.fr       */
+/*   Updated: 2025/08/12 14:53:39 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minirt.h"
 
-/* returns closest hit of scene objs */
 static t_hit	*trace_ray(t_ray *ray, t_scene *scene)
 {
 	t_hit	*hit;
@@ -31,7 +30,7 @@ static t_hit	*trace_ray(t_ray *ray, t_scene *scene)
 			if (!closest)
 				closest = hit;
 			else if (hit && hit->distance > 0.0f
-					&& hit->distance < closest->distance)
+				&& hit->distance < closest->distance)
 				closest = update_hit(closest, hit);
 			else if (hit)
 				free(hit);
@@ -90,7 +89,6 @@ int	render(t_scene *scene)
 	static int	count;
 	float		x;
 	float		y;
-	t_hit		*hit;
 	u_int32_t	color;
 
 	x = 0;

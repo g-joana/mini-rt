@@ -6,7 +6,7 @@
 /*   By: jgils <jgils@student.42.rio>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 17:38:59 by jgils             #+#    #+#             */
-/*   Updated: 2025/08/09 17:38:59 by jgils            ###   ########.fr       */
+/*   Updated: 2025/08/09 19:38:50 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	set_camera(char **split, t_scene *scene)
 	ret += set_fov(split[3], &scene->cam.fov);
 	if (ret != 0)
 		exit_set(split, scene, "invalid camera (C) settings");
-    up_direction = (t_vec3d){0.0f, 1.0f, 0.0f};
+	up_direction = (t_vec3d){0.0f, 1.0f, 0.0f};
 	if (fabs(dot_vecs(scene->cam.norm, &up_direction)) > 0.99f)
 		up_direction = (t_vec3d){0.0f, 0.0f, 1.0f};
 	temp = cross_vecs(scene->cam.norm, &up_direction);

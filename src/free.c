@@ -6,7 +6,7 @@
 /*   By: jgils <jgils@student.42.rio>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 17:39:19 by jgils             #+#    #+#             */
-/*   Updated: 2025/08/09 17:39:19 by jgils            ###   ########.fr       */
+/*   Updated: 2025/08/09 19:33:33 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,4 @@ int	mouse_hook(t_scene *scene)
 	free(scene->mlx);
 	free_scene(scene);
 	exit(0);
-	return (1);
 }

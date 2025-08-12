@@ -22,6 +22,7 @@ static void	free_setup(t_scene *scene)
 	free(scene->amb_light.rgb);
 	free(scene->light.coord);
 	free(scene->light.rgb);
+	free(scene->amount);
 }
 
 static void	free_spheres(t_scene *scene)

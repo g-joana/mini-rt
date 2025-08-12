@@ -6,7 +6,7 @@
 /*   By: jgils <jgils@student.42.rio>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 17:39:40 by jgils             #+#    #+#             */
-/*   Updated: 2025/08/09 17:39:40 by jgils            ###   ########.fr       */
+/*   Updated: 2025/08/09 19:41:42 by jgils            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static float	cy_quadratic(t_ray *ray, float radius, float *t)
 	float	b;
 	float	c;
 	float	delta;
-    
+
 	a = dot_vecs(&ray->dir, &ray->dir);
 	b = 2.0f * dot_vecs(&ray->ori, &ray->dir);
 	c = dot_vecs(&ray->ori, &ray->ori) - radius * radius;
