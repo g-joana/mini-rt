@@ -83,6 +83,5 @@ void	free_scene(t_scene *scene)
 	free_planes(scene);
 	free_spheres(scene);
 	free_cylinders(scene);
-	free(scene->amount);
 	free(scene);
 }
